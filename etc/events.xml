@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+
+    <event name="checkout_cart_product_add_after">
+        <observer name="razorpay_subscription_checkout_cart_product_add" instance="Razorpay\Subscription\Observer\CheckoutCartProductAddAfterObserver"/>
+    </event>
+<!--    <event name="sales_model_service_quote_submit_before">-->
+<!--        <observer name="razorpay_subscription_sales_model_service_quote_submit_before" instance="Razorpay\Subscription\Observer\SalesModelServiceQuoteSubmitBeforeObserver" />-->
+<!--    </event>-->
+
+    <event name="controller_action_predispatch_checkout_cart_add">
+        <observer name="razorpay_subscription_predispatch_checkout_cart_add" instance="Razorpay\Subscription\Observer\RestrictRecurringProductToCartObserver" />
+    </event>
+</config>

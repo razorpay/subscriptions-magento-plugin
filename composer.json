@@ -1,0 +1,25 @@
+{
+    "name": "razorpay/subscriptions-magento-plugin",
+    "description": "Razorpay Magento 2.X plugin for accepting recurring payments.",
+    "version": "1.0.0",
+    "require": {
+        "php": "~5.5.0|~5.6.0|^7.0",
+        "razorpay/razorpay": "2.*",
+        "razorpay/razorpay-magento": "3.*"
+    },
+    "authors": [
+        {
+            "name": "Team Razorpay",
+            "homepage": "https://razorpay.com/about/",
+            "role": "Developer"
+        }
+    ],
+    "type": "magento2-module",
+    "license": ["MIT"],
+    "autoload": {
+        "files": ["registration.php"],
+        "psr-4": {
+            "Razorpay\\Subscription\\": ""
+        }
+    }
+}
