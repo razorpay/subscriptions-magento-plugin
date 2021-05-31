@@ -3,19 +3,17 @@
 namespace Razorpay\Subscription\Logger;
 
 use Magento\Framework\Filesystem\DriverInterface;
-use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+
 /**
  *  Used to display webhook url link
  */
 class Logger extends \Magento\Framework\Logger\Handler\Base
 {
-     /**
+    /**
      * Logging level
      * @var int
      */
-    protected $loggerType = Logger::INFO;
+    protected $loggerType = \Monolog\Logger::INFO;
 
     /**
      * File name
