@@ -1,6 +1,6 @@
 <?php
 
-namespace Razorpay\Subscription\Model;
+namespace Razorpay\Subscription\Logger;
 
 use Magento\Framework\Filesystem\DriverInterface;
 use Monolog\Formatter\LineFormatter;
@@ -9,7 +9,7 @@ use Monolog\Logger;
 /**
  *  Used to display webhook url link
  */
-class LogHandler extends \Magento\Framework\Logger\Handler\Base
+class Logger extends \Magento\Framework\Logger\Handler\Base
 {
      /**
      * Logging level
@@ -44,7 +44,7 @@ class LogHandler extends \Magento\Framework\Logger\Handler\Base
 
 
         // Custom log file name for each day because log will be full for optimization
-        $filename = 'rzp_sub_'.Date('Y_m_d').'.log';
+        $filename = 'rzp_subsc_'.Date('Y_m_d').'.log';
 
         $filepath = $logpath . $filename;
 
