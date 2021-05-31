@@ -7,13 +7,14 @@
 -->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
     <virtualType name="RazorpayLogger" type="Magento\Framework\Logger\Monolog">
-	    <arguments>
-	        <argument name="handlers" xsi:type="array">
-	            <item name="error" xsi:type="object">Razorpay\Magento\Model\LogHandler</item>
-	        </argument>
-	    </arguments>
-	</virtualType>
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="error" xsi:type="object">Razorpay\Subscription\Model\LogHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
 
     <type name="Razorpay\Subscription\Observer\CheckoutCartProductAddAfterObserver">
         <arguments>
