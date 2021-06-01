@@ -53,7 +53,7 @@ class RestrictRecurringProductToCartObserver implements ObserverInterface
         $productId = $observer->getRequest()->getParam('product');
         $product = $this->_product->load($productId);
 
-//        if($product->getRazorpaySubscriptionEnabled()) {
+        if($product->getRazorpaySubscriptionEnabled()) {
             if ($cartItemsCount >= 1) {
                 $this->paymentType = $observer->getRequest()->getParam('paymentOption');
                 if ($this->paymentType == "subscription") {
@@ -67,7 +67,7 @@ class RestrictRecurringProductToCartObserver implements ObserverInterface
                     return $this->_messageManager->addErrorMessage(__($message));
                 }
             }
-//        }
+        }
     }
 
     /**
@@ -95,6 +95,7 @@ class RestrictRecurringProductToCartObserver implements ObserverInterface
      */
     private function validateNonSubscriptionProductInCart($cartItems, $validateTo): bool
     {
+        $this->_logger->info("-----------------Validating cart started-----------------");
         foreach ($cartItems as $item) {
             /* @var \Magento\Quote\Model\Quote\Item $item */
             foreach ($item->getOptions() as $option){
@@ -105,6 +106,7 @@ class RestrictRecurringProductToCartObserver implements ObserverInterface
                 }
             }
         }
+        $this->_logger->info("-----------------Validating cart ended-----------------");
         return false;
     }
 }
