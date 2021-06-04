@@ -7,7 +7,7 @@ use Magento\Framework\Filesystem\DriverInterface;
 /**
  *  Used to display webhook url link
  */
-class Logger extends \Magento\Framework\Logger\Handler\Base
+class SubscriptionLogger extends \Magento\Framework\Logger\Handler\Base
 {
     /**
      * Logging level
@@ -42,7 +42,7 @@ class Logger extends \Magento\Framework\Logger\Handler\Base
 
 
         // Custom log file name for each day because log will be full for optimization
-        $filename = 'rzp_subsc_'.Date('Y_m_d').'.log';
+        $filename = 'rzp_sub_'.Date('Y_m_d').'.log';
 
         $filepath = $logpath . $filename;
 

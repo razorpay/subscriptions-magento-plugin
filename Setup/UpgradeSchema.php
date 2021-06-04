@@ -57,6 +57,15 @@ class UpgradeSchema implements  UpgradeSchemaInterface
                 ]
             )
             ->addColumn(
+                'plan_name',
+                Table::TYPE_TEXT,
+                255,
+                [
+                    'nullable' => false,
+                    'comment' => 'Plan name'
+                ]
+            )
+            ->addColumn(
                 'plan_type',
                 Table::TYPE_TEXT,
                 30,
@@ -85,7 +94,7 @@ class UpgradeSchema implements  UpgradeSchemaInterface
             )
             ->addIndex(
                 'plan_product',
-                ['plan_id', 'plan_type','magento_product_id'],
+                ['plan_id', 'plan_type','magento_product_id','plan_name'],
                 [
                     'type'      => AdapterInterface::INDEX_TYPE_INDEX,
                 ]
