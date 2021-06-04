@@ -5,6 +5,8 @@ namespace Razorpay\Subscription\Helper;
 use Psr\Log\LoggerInterface;
 use Magento\Catalog\Model\Product;
 use Razorpay\Api\Errors\Error;
+use \Magento\Quote\Model\Quote;
+
 
 class Subscription
 {
@@ -50,14 +52,16 @@ class Subscription
             $this->logger->info("-------------------------Plan creation/fetch start---------------------------");
 
             $planType = $product = $planName = $productId = "";
+
+            /* @var \Magento\Quote\Model\Quote $quote */
             foreach( $quote->getItems() as $item){
                 $planType = $this->getAdditionalItemOption($item);
                 $productId = $item->getProduct()->getId();
                 $product = $this->_product->load($item->getProduct()->getId());
                 $planName = $product->getName()."_$planType";
-                }
+            }
 
-            $this->logger->info("Fetching plan id if existing for the following:\n Product id: $productId \n Plan name: $planName \n Plan type: $planType ");
+            $this->logger->info("Fetching plan id if existing for the following: Product id: $productId  product name: {$product->getName()}  Plan type: $planType ");
 
             //Fetching plan id if existing
             $planCollection = $this->_objectManagement->get('Razorpay\Subscription\Model\Plans')
@@ -85,7 +89,7 @@ class Subscription
                 ];
                 $this->logger->info("Creating new plan for the product $planName of the type $planType", $planData);
                 $planResponse = $rzp->plan->create($planData);
-                $this->logger->info("Razorpay plan creation response", $planResponse);
+                $this->logger->info("Razorpay plan creation response", json_decode(json_encode($planResponse),true));
 
                 $plan = $this->_objectManagement->create('Razorpay\Subscription\Model\Plans');
                 $plan->setPlanName($planName)
@@ -98,11 +102,11 @@ class Subscription
             return $planCollection["plan_id"];
 
         } catch(\Exception $e) {
-            $this->logger->info("Exception", $e->getMessage());
+            $this->logger->info("Exception: {$e->getMessage()}");
             throwException( $e->getMessage() );
         }
         catch(Error $e) {
-            $this->logger->info("Exception", $e->getMessage());
+            $this->logger->info("Exception: {$e->getMessage()}");
             throwException( $e->getMessage() );
 
         }
