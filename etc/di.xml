@@ -27,4 +27,16 @@
             <argument name="logger" xsi:type="object">RazorpaySubscriptionLogger</argument>
         </arguments>
     </type>
+
+    <type name="Razorpay\Subscription\Controller\SubscriptionPayment\SubscriptionOrder">
+        <arguments>
+            <argument name="logger" xsi:type="object">RazorpaySubscriptionLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Razorpay\Subscription\Helper\Subscription">
+        <arguments>
+            <argument name="logger" xsi:type="object">RazorpaySubscriptionLogger</argument>
+        </arguments>
+    </type>
 </config>

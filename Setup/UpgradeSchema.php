@@ -124,8 +124,8 @@ class UpgradeSchema implements  UpgradeSchemaInterface
             )
             ->addColumn(
                 'plan_entity_id',
-                Table::TYPE_TEXT,
-                30,
+                Table::TYPE_INTEGER,
+                null,
                 [
                     'nullable' => false,
                     'comment' => 'Razorpay Plan table Id'
@@ -139,6 +139,31 @@ class UpgradeSchema implements  UpgradeSchemaInterface
                     'unique'   => true,
                     'nullable' => false,
                     'comment' => 'Razorpay subscription id'
+                ]
+            )
+            ->addColumn(
+                'quote_id',
+                Table::TYPE_INTEGER,
+                [
+                    'nullable' => true
+                ]
+            )
+            ->addColumn(
+                'razorpay_customer_id',
+                Table::TYPE_TEXT,
+                30,
+                [
+                    'nullable' => false,
+                    'comment' => 'Razorpay Customer id'
+                ]
+            )
+            ->addColumn(
+                'magento_user_id',
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'nullable' => true,
+                    'comment' => 'Magento user id'
                 ]
             )
             ->addColumn(
@@ -181,6 +206,16 @@ class UpgradeSchema implements  UpgradeSchemaInterface
                 ]
             )
             ->addColumn(
+                'auth_attempts',
+                Table::TYPE_INTEGER,
+                30,
+                [
+                    'nullable' => false,
+                    'default' => 0,
+                    'comment' => 'The number of times that the charge for the current billing cycle has been attempted on the card.'
+                ]
+            )
+            ->addColumn(
                 'start_at',
                 \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
                 null,
@@ -213,7 +248,7 @@ class UpgradeSchema implements  UpgradeSchemaInterface
                 null,
                 [
                     'nullable' => true,
-                    'comment' => 'Nest charge date'
+                    'comment' => 'Next charge date'
                 ]
             )
             ->addColumn(
@@ -244,6 +279,13 @@ class UpgradeSchema implements  UpgradeSchemaInterface
             ->addIndex(
                 'subscription_status',
                 ['subscription_id','status'],
+                [
+                    'type'      => AdapterInterface::INDEX_TYPE_INDEX,
+                ]
+            )
+            ->addIndex(
+                'subscription_user',
+                ['subscription_id','razorpay_customer_id','magento_user_id'],
                 [
                     'type'      => AdapterInterface::INDEX_TYPE_INDEX,
                 ]
