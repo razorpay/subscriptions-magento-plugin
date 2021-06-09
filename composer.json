@@ -3,7 +3,7 @@
     "description": "Razorpay Magento 2.X plugin for accepting recurring payments.",
     "version": "1.0.0",
     "require": {
-        "php": "~5.5.0|~5.6.0|^7.0",
+        "php": "~5.6.0|^7.*|^8.*",
         "razorpay/razorpay": "2.*",
         "razorpay/razorpay-magento": "3.*"
     },

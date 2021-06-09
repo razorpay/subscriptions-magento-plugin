@@ -148,7 +148,7 @@ define(
 
             isSubscriptionProduct: function(){
                 if(customerData.get('cart')().items[0].options.length > 0 && customerData.get('cart')().items[0].options[0].label == "Subscription type"){
-                    orderUrl = "razorpay-subscription/subscriptionPayment/subscriptionorder?";
+                    orderUrl = "razorpay-subscription/subscription/subscriptionorder?";
                     callBackUrl = "razorpay/payment/order";
                     return true;
                 } else {
@@ -162,7 +162,6 @@ define(
             createRzpOrder: function(){
                 var self = this;
                 this.isSubscriptionProduct();
-
                 $.ajax({
                     type: 'POST',
                     url: url.build(orderUrl + Math.random().toString(36).substring(10)),
@@ -176,7 +175,6 @@ define(
                      * @param {Object} response
                      */
                     success: function (response) {
-
                         fullScreenLoader.stopLoader();
                         if (response.success) {
                             if (response.is_hosted) {
@@ -287,7 +285,7 @@ define(
             // check for razorpay order
             checkRzpOrder: function (data) {
                 var self = this;
-               this.isSubscriptionProduct();
+                this.isSubscriptionProduct();
                 $.ajax({
                     type: 'POST',
                     url: url.build(orderUrl + Math.random().toString(36).substring(10)),
@@ -385,6 +383,4 @@ define(
             }
         });
     }
-
-
 );

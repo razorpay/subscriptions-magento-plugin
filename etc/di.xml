@@ -28,7 +28,7 @@
         </arguments>
     </type>
 
-    <type name="Razorpay\Subscription\Controller\SubscriptionPayment\SubscriptionOrder">
+    <type name="Razorpay\Subscription\Controller\Subscription\SubscriptionOrder">
         <arguments>
             <argument name="logger" xsi:type="object">RazorpaySubscriptionLogger</argument>
         </arguments>
