@@ -87,7 +87,7 @@ class UpgradeData implements UpgradeDataInterface
                 'used_for_promo_rules' => true,
                 'required' => false
             ],
-            'razorpay_subscription_billing_count' => [
+            'razorpay_subscription_billing_cycles' => [
                 'type' => 'int',
                 'label' => 'Billing Count',
                 'input' => 'text',
@@ -95,7 +95,7 @@ class UpgradeData implements UpgradeDataInterface
                 'sort_order' => 130,
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
                 'group' => $groupName,
-                'note' => 'We support subscriptions for a maximum duration of 100 years',
+                'note' => 'The number of billing cycles for which the customer should be charged',
                 'is_used_in_grid' => false,
                 'is_visible_in_grid' => false,
                 'is_filterable_in_grid' => false,
@@ -144,5 +144,4 @@ class UpgradeData implements UpgradeDataInterface
 
         return true;
     }
-
 }
