@@ -11,4 +11,8 @@
     <event name="controller_action_predispatch_checkout_cart_add">
         <observer name="razorpay_subscription_predispatch_checkout_cart_add" instance="Razorpay\Subscription\Observer\RestrictRecurringProductToCartObserver" />
     </event>
+
+    <event name="payment_method_is_active">
+        <observer name="razorpay_payments_method_active" instance="Razorpay\Subscription\Observer\PaymentMethodActiveObserver" />
+    </event>
 </config>

@@ -3,7 +3,7 @@
     <group id="razorpay_subscription" translate="label" type="text" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Subscriptions via Razorpay</label>
         <comment>Create and manage subscriptions directly via your Magento Admin to easily add a recurring line of revenue to your business model. &lt;a href="https://razorpay.com/docs/subscriptions/" target="_blank" rel="noopener noreferrer"&gt;Learn More&lt;/a&gt; about Razorpay Subscription.</comment>
-        <field id="active" translate="label" type="select" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="active" translate="label" type="select" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="0">
             <label>Enabled</label>
             <comment><![CDATA[If you do not sell subscriptions, disabling them is recommended.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
