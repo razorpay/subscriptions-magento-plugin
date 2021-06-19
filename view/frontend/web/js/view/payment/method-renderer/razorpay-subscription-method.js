@@ -42,7 +42,7 @@ define(
             },
 
             getCode: function() {
-                return 'razorpay';
+                return 'razorpay_subscription';
             },
 
             isActive: function() {
