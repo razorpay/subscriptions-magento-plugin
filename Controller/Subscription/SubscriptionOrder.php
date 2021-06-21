@@ -4,6 +4,7 @@ namespace Razorpay\Subscription\Controller\Subscription;
 
 use Magento\Framework\Controller\ResultFactory;
 use Razorpay\Magento\Controller\BaseController;
+use Razorpay\Magento\Model\PaymentMethod;
 use Razorpay\Subscription\Helper\Subscription;
 
 class SubscriptionOrder extends BaseController
@@ -90,88 +91,195 @@ class SubscriptionOrder extends BaseController
     {
         try{
             $receiptId = $this->getQuote()->getId();
-            if (empty($_POST['email']) === true) {
-                $this->logger->info("Email field is required");
+            if(empty($_POST['error']) === false)
+            {
+                $this->messageManager->addError(__('Payment Failed'));
+                return $this->_redirect('checkout/cart');
+            }
 
-                $responseContent = [
-                    'message' => "Email field is required",
-                    'parameters' => []
-                ];
-
-                $code = 200;
-            } else {
-                $paymentAction = $this->config->getPaymentAction();
-                $this->customerSession->setCustomerEmailAddress($_POST['email']);
-
-                $responseContent = [
-                    'message'   => 'Unable to create your order. Please contact support.',
-                    'parameters' => []
-                ];
-
-                if ($paymentAction === 'authorize') {
-                    $paymentCapture = 0;
-                } else {
-                    $paymentCapture = 1;
-                }
-
-                $code = 400;
-
-                $subscription =  $this->subscription->createSubscription($this->getQuote(), $this->rzp);
-
-                if($subscription && $subscription->id){
-                    $merchantPreferences = $this->subscription->getMerchantPreferences($this->config->getKeyId());
+            if (isset($_POST['order_check']))
+            {
+                if (empty($this->cache->load("quote_processing_".$receiptId)) === false)
+                {
                     $responseContent = [
-                        'success'           => true,
-                        'rzp_order'         => $subscription->id,
-                        'order_id'          => $this->getQuote()->getId(),
-                        'amount'            => number_format($this->getQuote()->getGrandTotal(), 2, ".", ""),
-                        'quote_currency'    => $this->getQuote()->getQuoteCurrencyCode(),
-                        'quote_amount'      => number_format($this->getQuote()->getGrandTotal(), 2, ".", ""),
-                        'maze_version'      => $this->_objectManager->get('Magento\Framework\App\ProductMetadataInterface')->getVersion(),
-                        'module_version'    => $this->_objectManager->get('Magento\Framework\Module\ModuleList')->getOne('Razorpay_Magento')['setup_version'],
-                        'is_hosted'         => $merchantPreferences['is_hosted'],
-                        'image'             => $merchantPreferences['image'],
-                        'embedded_url'      => $merchantPreferences['embedded_url'],
+                        'success'   => true,
+                        'order_id'  => false,
+                        'parameters' => []
                     ];
 
-                    $code = 200;
-
-                    $this->checkoutSession->setRazorpayOrderID($subscription->id);
-                    $this->checkoutSession->setRazorpayOrderAmount(number_format($this->getQuote()->getGrandTotal(), 2, ".", ""));
-
-                    //save to razorpay orderLink
-                    $orderLinkCollection = $this->_objectManager->get('Razorpay\Magento\Model\OrderLink')
+                    # fetch the related sales order and verify the payment ID with rzp payment id
+                    # To avoid duplicate order entry for same quote
+                    $collection = $this->_objectManager->get('Magento\Sales\Model\Order')
                         ->getCollection()
+                        ->addFieldToSelect('entity_id')
                         ->addFilter('quote_id', $receiptId)
                         ->getFirstItem();
 
-                    $orderLinkData = $orderLinkCollection->getData();
+                    $salesOrder = $collection->getData();
 
-                    if (empty($orderLinkData['entity_id']) === false)
+                    if (empty($salesOrder['entity_id']) === false)
                     {
-                        $orderLinkCollection->setRzpOrderId($subscription->id)
-                            ->save();
+                        $this->logger->info("Razorpay inside order already processed with webhook quoteID:" . $receiptId
+                            ." and OrderID:".$salesOrder['entity_id']);
+
+                        $this->checkoutSession
+                            ->setLastQuoteId($this->getQuote()->getId())
+                            ->setLastSuccessQuoteId($this->getQuote()->getId())
+                            ->clearHelperData();
+
+                        $order = $this->orderRepository->get($salesOrder['entity_id']);
+
+                        if ($order) {
+                            $this->checkoutSession->setLastOrderId($order->getId())
+                                ->setLastRealOrderId($order->getIncrementId())
+                                ->setLastOrderStatus($order->getStatus());
+                        }
+
+                        $responseContent['order_id'] = true;
+                    }
+                }
+                else
+                {
+                    if(empty($receiptId) === false)
+                    {
+                        //set the chache to stop webhook processing
+                        $this->cache->save("started", "quote_Front_processing_$receiptId", ["razorpay"], 30);
+
+                        $this->logger->info("Razorpay front-end order processing started quoteID:" . $receiptId);
+
+                        $responseContent = [
+                            'success'   => false,
+                            'parameters' => []
+                        ];
                     }
                     else
                     {
-                        $orderLnik = $this->_objectManager->create('Razorpay\Magento\Model\OrderLink');
-                        $orderLnik->setQuoteId($receiptId)
-                            ->setRzpOrderId($subscription->id)
-                            ->save();
+                        $this->logger->info("Razorpay order already processed with quoteID:" . $this->checkoutSession
+                                ->getLastQuoteId());
+
+                        $responseContent = [
+                            'success'    => true,
+                            'order_id'   => true,
+                            'parameters' => []
+                        ];
+
+                    }
+                }
+
+                $response = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+                $response->setData($responseContent);
+                $response->setHttpResponseCode(200);
+
+                return $response;
+            }
+
+            if(isset($_POST['razorpay_payment_id']))
+            {
+                $this->getQuote()->getPayment()->setMethod(PaymentMethod::METHOD_CODE);
+
+                try
+                {
+                    if(!$this->customerSession->isLoggedIn()) {
+                        $this->getQuote()->setCheckoutMethod($this->cartManagement::METHOD_GUEST);
+                        $this->getQuote()->setCustomerEmail($this->customerSession->getCustomerEmailAddress());
+                    }
+                    $this->cartManagement->placeOrder($this->getQuote()->getId());
+                    return $this->_redirect('checkout/onepage/success');
+                }
+                catch(\Exception $e)
+                {
+                    $this->messageManager->addError(__($e->getMessage()));
+                    return $this->_redirect('checkout/cart');
+                }
+            }
+            else
+            {
+
+                if (empty($_POST['email']) === true) {
+                    $this->logger->info("Email field is required");
+
+                    $responseContent = [
+                        'message' => "Email field is required",
+                        'parameters' => []
+                    ];
+
+                    $code = 200;
+                } else {
+                    $paymentAction = $this->config->getPaymentAction();
+                    $this->customerSession->setCustomerEmailAddress($_POST['email']);
+
+                    $responseContent = [
+                        'message' => 'Unable to create your order. Please contact support.',
+                        'parameters' => []
+                    ];
+
+                    if ($paymentAction === 'authorize') {
+                        $paymentCapture = 0;
+                    } else {
+                        $paymentCapture = 1;
+                    }
+
+                    $code = 400;
+
+                    $subscription = $this->subscription->createSubscription($this->getQuote(), $this->rzp);
+
+                    if ($subscription && $subscription->id) {
+                        $merchantPreferences = $this->subscription->getMerchantPreferences($this->config->getKeyId());
+                        $responseContent = [
+                            'success' => true,
+                            'rzp_order' => $subscription->id,
+                            'order_id' => $this->getQuote()->getId(),
+                            'amount' => (int)(number_format($this->getQuote()->getGrandTotal() * 100, 0, ".", "")),
+                            'quote_currency' => $this->getQuote()->getQuoteCurrencyCode(),
+                            'quote_amount' => number_format($this->getQuote()->getGrandTotal(), 2, ".", ""),
+                            'maze_version' => $this->_objectManager->get('Magento\Framework\App\ProductMetadataInterface')->getVersion(),
+                            'module_version' => $this->_objectManager->get('Magento\Framework\Module\ModuleList')->getOne('Razorpay_Magento')['setup_version'],
+                            'is_hosted' => $merchantPreferences['is_hosted'],
+                            'image' => $merchantPreferences['image'],
+                            'embedded_url' => $merchantPreferences['embedded_url'],
+                        ];
+
+                        $code = 200;
+
+                        $this->checkoutSession->setRazorpayOrderID($subscription->id);
+                        $this->checkoutSession->setRazorpayOrderAmount((int) number_format($this->getQuote()->getGrandTotal() * 100, 0, ".", ""));
+
+                        //save to razorpay orderLink
+                        $orderLinkCollection = $this->_objectManager->get('Razorpay\Magento\Model\OrderLink')
+                            ->getCollection()
+                            ->addFilter('quote_id', $receiptId)
+                            ->getFirstItem();
+
+                        $orderLinkData = $orderLinkCollection->getData();
+
+                        if (empty($orderLinkData['entity_id']) === false) {
+                            $orderLinkCollection->setRzpOrderId($subscription->id)
+                                ->save();
+                        } else {
+                            $orderLink = $this->_objectManager->create('Razorpay\Magento\Model\OrderLink');
+                            $orderLink->setQuoteId($receiptId)
+                                ->setRzpOrderId($subscription->id)
+                                ->save();
+                        }
                     }
                 }
             }
         } catch (\Exception $e){
+            $this->logger->info("Exception subscription controller: {$e->getMessage()}");
+
             $responseContent = [
                 'message'   => $e->getMessage(),
                 'parameters' => []
             ];
-
         }
+
+        //set the chache for race with webhook
+        $this->cache->save("started", "quote_Front_processing_$receiptId", ["razorpay"], 300);
 
         $response = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $response->setData($responseContent);
         $response->setHttpResponseCode($code);
         return $response;
     }
+
 }

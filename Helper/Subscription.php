@@ -96,10 +96,10 @@ class Subscription
                 return $subscriptionResponse;
             }
         } catch(\Exception $e) {
-            $this->_logger->info("Exception: {$e->getMessage()}");
+            $this->_logger->critical("Exception: {$e->getMessage()}");
             throw new \Exception( $e->getMessage() );
-        } catch(Error $e) {
-            $this->_logger->info("Exception: {$e->getMessage()}");
+        }catch (Error $e) {
+            $this->_logger->critical("Exception: {$e->getMessage()}");
             throw new \Exception( $e->getMessage() );
         }
     }
@@ -168,11 +168,11 @@ class Subscription
                 return $planCollection;
             }
 
-        } catch(\Exception $e) {
-            $this->_logger->info("Exception: {$e->getMessage()}");
+        } catch (\Exception $e) {
+            $this->_logger->critical("Exception: {$e->getMessage()}");
             throw new \Exception( $e->getMessage() );
-        } catch(Error $e) {
-            $this->_logger->info("Exception: {$e->getMessage()}");
+        } catch (Error $e) {
+            $this->_logger->critical("Exception: {$e->getMessage()}");
             throw new \Exception( $e->getMessage() );
 
         }
@@ -245,8 +245,8 @@ class Subscription
         } catch(\Exception $e) {
             $this->_logger->info("Exception: {$e->getMessage()}");
             throw new \Exception( $e->getMessage() );
-        } catch(Error $e) {
-            $this->_logger->info("Exception: {$e->getMessage()}");
+        } catch (Error $e) {
+            $this->_logger->critical("Exception: {$e->getMessage()}");
             throw new \Exception( $e->getMessage() );
         }
     }
@@ -263,11 +263,13 @@ class Subscription
             $api = new Api($apiKey,"");
 
             $response = $api->request->request("GET", "preferences");
-        }
-        catch (\Razorpay\Api\Errors\Error $e)
+        } catch (Error $e)
         {
-            $this->_logger->info("preferrence: ". $e->getMessage());
-            echo 'Magento Error : ' . $e->getMessage();
+            $this->_logger->critical("preferrence: ". $e->getMessage());
+            throw new \Exception( $e->getMessage() );
+        } catch (\Exception $e) {
+            $this->_logger->info("Exception: {$e->getMessage()}");
+            throw new \Exception( $e->getMessage() );
         }
 
         $preferences = [];
