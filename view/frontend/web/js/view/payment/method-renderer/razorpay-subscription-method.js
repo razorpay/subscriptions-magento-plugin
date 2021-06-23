@@ -228,7 +228,7 @@ define(
                     key: self.getKeyId(),
                     name: self.getMerchantName(),
                     amount: data.amount,
-                    subscription_id: data.order_id,
+                    subscription_id: data.rzp_order,
                     notes: {
                         merchant_order_id: '',
                         merchant_quote_id: data.order_id
@@ -309,7 +309,7 @@ define(
                     key: self.getKeyId(),
                     name: self.getMerchantName(),
                     amount: data.amount,
-                    subscription_id: data.order_id,
+                    subscription_id: data.rzp_order,
                     handler: function (data) {
                         self.rzp_response = data;
                         self.checkRzpOrder(data);
