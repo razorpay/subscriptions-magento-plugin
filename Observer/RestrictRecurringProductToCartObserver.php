@@ -67,7 +67,7 @@ class RestrictRecurringProductToCartObserver implements ObserverInterface
         $productId = $observer->getRequest()->getParam('product');
         $product = $this->_product->load($productId);
 
-        if($product->getRazorpaySubscriptionEnabled() && $this->subscriptionConfig->isSubscriptionActive()) {
+        if($product->getRazorpaySubscriptionEnabled() /*&& $this->subscriptionConfig->isSubscriptionActive()*/) {
             if ($cartItemsCount >= 1) {
                 $this->paymentType = $observer->getRequest()->getParam('paymentOption');
                 if ($this->paymentType == "subscription") {
