@@ -4,9 +4,6 @@
     <event name="checkout_cart_product_add_after">
         <observer name="razorpay_subscription_checkout_cart_product_add" instance="Razorpay\Subscription\Observer\CheckoutCartProductAddAfterObserver"/>
     </event>
-<!--    <event name="sales_model_service_quote_submit_before">-->
-<!--        <observer name="razorpay_subscription_sales_model_service_quote_submit_before" instance="Razorpay\Subscription\Observer\SalesModelServiceQuoteSubmitBeforeObserver" />-->
-<!--    </event>-->
 
     <event name="controller_action_predispatch_checkout_cart_add">
         <observer name="razorpay_subscription_predispatch_checkout_cart_add" instance="Razorpay\Subscription\Observer\RestrictRecurringProductToCartObserver" />
@@ -14,5 +11,9 @@
 
     <event name="payment_method_is_active">
         <observer name="razorpay_payments_method_active" instance="Razorpay\Subscription\Observer\PaymentMethodActiveObserver" />
+    </event>
+
+    <event name="sales_order_save_after">
+        <observer name="razorpay_payment_gateway_after_place_order" instance="Razorpay\Subscription\Observer\OrderPlaceSaveAfterObserver"/>
     </event>
 </config>

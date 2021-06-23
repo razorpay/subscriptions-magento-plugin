@@ -6,6 +6,7 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Checkout\Model\Cart;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Message\ManagerInterface;
 use Razorpay\Magento\Model\PaymentMethod;
 use Razorpay\Subscription\Helper\Subscription;
 use Razorpay\Subscription\Model\SubscriptionConfig;
@@ -34,13 +35,18 @@ class PaymentMethodActiveObserver implements ObserverInterface
      * @var Cart
      */
     private $_cart;
+    /**
+     * @var ManagerInterface
+     */
+    private $_messageManager;
 
     public function __construct(
         LoggerInterface $logger,
         SubscriptionConfig $subscriptionConfig,
         ProductRepositoryInterface $productRepository,
         Subscription $helper,
-        Cart  $cart
+        Cart  $cart,
+        ManagerInterface $messageManager
     )
     {
         $this->_logger = $logger;
@@ -48,6 +54,7 @@ class PaymentMethodActiveObserver implements ObserverInterface
         $this->_productRepository = $productRepository;
         $this->_helper = $helper;
         $this->_cart = $cart;
+        $this->_messageManager = $messageManager;
     }
 
     /**
@@ -59,23 +66,27 @@ class PaymentMethodActiveObserver implements ObserverInterface
         $result = $observer->getEvent()->getResult();
         $code = $observer->getEvent()->getMethodInstance()->getCode();
         $quote = $this->_cart->getQuote();
-        /* @var \Magento\Quote\Model\Quote $quote */
 
-        if ($quote->getItemsCount() > 1) {
+        if ( $this->_cart->getQuote()->getItemsCount() > 1) {
             $this->disablePaymentMethod($result, SubscriptionPaymentMethod::METHOD_CODE, $code);
         } else {
-            foreach ($quote->getItems() as $item) {
-                /* @var \Magento\Quote\Model\Quote\Item $item */
-                $productId = $item->getProduct()->getId();
-            }
-            $product = $this->_productRepository->getById($productId);
+            /* @var \Magento\Quote\Model\Quote $quote */
+            if($quote->getIsActive()) {
+                foreach ($quote->getItems() as $item) {
+                    /* @var \Magento\Quote\Model\Quote\Item $item */
+                    $productId = $item->getProduct()->getId();
+                }
+                $product = $this->_productRepository->getById($productId);
 
-            $isSubscriptionProduct = $this->_helper->validateIsASubscriptionProduct($this->_cart->getQuote()->getAllItems(), "subscription");
+                $isSubscriptionProduct = $this->_helper->validateIsASubscriptionProduct($this->_cart->getQuote()->getAllItems(), "subscription");
 
-            if (/*$this->_subscriptionConfig->isSubscriptionActive() &&*/ $product->getRazorpaySubscriptionEnabled() && $isSubscriptionProduct) {
-                $this->disablePaymentMethod($result, PaymentMethod::METHOD_CODE, $code);
+                if (/*$this->_subscriptionConfig->isSubscriptionActive() &&*/ $product->getRazorpaySubscriptionEnabled() && $isSubscriptionProduct) {
+                    $this->disablePaymentMethod($result, PaymentMethod::METHOD_CODE, $code);
+                } else {
+                    $this->disablePaymentMethod($result, SubscriptionPaymentMethod::METHOD_CODE, $code);
+                }
             } else {
-                $this->disablePaymentMethod($result, SubscriptionPaymentMethod::METHOD_CODE, $code);
+                return $this->_messageManager->addErrorMessage(__(" No items in the cart"));
             }
         }
     }

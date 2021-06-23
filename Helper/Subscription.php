@@ -42,8 +42,8 @@ class Subscription
             list("planId" => $planId,"id" => $id) = $this->createOrGetPlanId($quote, $rzp);
             $this->_logger->info("-------------------------Creating Subscription---------------------------");
 
-            if($quote){
-                list("product" => $product) =$this->getProductDetailsFromQuote($quote);
+            if($quote->getIsActive()){
+                list("product" => $product, "productId" => $productId) =$this->getProductDetailsFromQuote($quote);
                 $trailDays = $product->getRazorpaySubscriptionTrial() ?? 0;
 
                 $subscriptionData = [
@@ -80,6 +80,7 @@ class Subscription
                     ->setSubscriptionId($subscriptionResponse->id)
                     ->setRazorpayCustomerId($subscriptionResponse->customer_id)
                     ->setmagentoUserId($quote->getCustomerId())
+                    ->setProductId($productId)
                     ->setQuoteId($quote->getId())
                     ->setStatus($subscriptionResponse->status)
                     ->setTotalCount($subscriptionResponse->total_count)
@@ -117,7 +118,7 @@ class Subscription
         try {
             $this->_logger->info("-------------------------Plan creation/fetch start---------------------------");
             $planType = $product = $planName = $productId = "";
-            if($quote) {
+            if($quote->getIsActive()) {
                 list("planType" => $planType, "productId" => $productId, "product" => $product, "planName" => $planName) =$this->getProductDetailsFromQuote($quote);
 
                 $this->_logger->info("Fetching plan id for the following: Product id: $productId  product name: {$product->getName()}  Plan type: $planType ");

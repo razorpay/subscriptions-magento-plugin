@@ -9,6 +9,7 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Razorpay\Subscription\Model\ResourceModel\Plans;
 use Razorpay\Subscription\Model\ResourceModel\Subscriptions;
+use Razorpay\Subscription\Model\ResourceModel\SubscriptionsOrderMapping;
 
 class UpgradeSchema implements  UpgradeSchemaInterface
 {
@@ -17,6 +18,7 @@ class UpgradeSchema implements  UpgradeSchemaInterface
 
         $this->createPlanTable($setup);
         $this->createSubscriptionTable($setup);
+        $this->createSubscriptionOrderMappingTable($setup);
 
         $setup->endSetup();
     }
@@ -145,7 +147,16 @@ class UpgradeSchema implements  UpgradeSchemaInterface
                 'quote_id',
                 Table::TYPE_INTEGER,
                 [
-                    'nullable' => true
+                    'nullable' => true,
+                    'comment' => 'Magento quote id'
+                ]
+            )
+            ->addColumn(
+                'product_id',
+                Table::TYPE_INTEGER,
+                [
+                    'nullable' => true,
+                    'comment' => 'Magento product id'
                 ]
             )
             ->addColumn(
@@ -284,6 +295,13 @@ class UpgradeSchema implements  UpgradeSchemaInterface
                 ]
             )
             ->addIndex(
+                'product_id',
+                ['subscription_id','product_id'],
+                [
+                    'type'      => AdapterInterface::INDEX_TYPE_INDEX,
+                ]
+            )
+            ->addIndex(
                 'subscription_user',
                 ['subscription_id','razorpay_customer_id','magento_user_id'],
                 [
@@ -292,6 +310,107 @@ class UpgradeSchema implements  UpgradeSchemaInterface
             )
         ;
 
+        $setup->getConnection()->createTable($table);
+
+    }
+
+    public function createSubscriptionOrderMappingTable($setup)
+    {
+        $table = $setup->getConnection()->newTable($setup->getTable(SubscriptionsOrderMapping::TABLE_NAME));
+
+        $table
+            ->addColumn(
+                'entity_id',
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'identity' => true,
+                    'unsigned' => true,
+                    'primary'  => true,
+                    'nullable' => false
+
+                ]
+            )
+            ->addColumn(
+                'subscription_entity_id',
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'nullable' => false,
+                    'comment' => 'Razorpay subscription table Id'
+                ]
+            )
+            ->addColumn(
+                'is_trial_order',
+                Table::TYPE_BOOLEAN,
+                1,
+                [
+                    'nullable' => false,
+                    'default' => 0,
+                    'comment' => 'Is a trial order'
+                ]
+            )
+            ->addColumn(
+                'increment_order_id',
+                Table::TYPE_TEXT,
+                32,
+                [
+                    'nullable' => true
+                ]
+            )
+            ->addColumn(
+                'rzp_payment_id',
+                Table::TYPE_TEXT,
+                25,
+                [
+                    'nullable' => true
+                ]
+            )
+            ->addColumn(
+                'by_webhook',
+                Table::TYPE_BOOLEAN,
+                1,
+                [
+                    'nullable' => false,
+                    'default' => 0
+                ]
+            )
+            ->addColumn(
+                'by_frontend',
+                Table::TYPE_BOOLEAN,
+                1,
+                [
+                    'nullable' => false,
+                    'default' => 0
+                ]
+            )
+            ->addColumn(
+                'created_at',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                null,
+                [
+                    'nullable' => false,
+                    'default' => Table::TIMESTAMP_INIT,
+                    'comment' => 'Created at'
+                ]
+            )
+            ->addIndex(
+                'subscription_id',
+                ['subscription_entity_id'],
+                [
+                    'type'      => AdapterInterface::INDEX_TYPE_INDEX,
+                    'nullable'  => false,
+                ]
+            )
+            ->addIndex(
+                'order_details',
+                ['is_trial_order','increment_order_id','rzp_payment_id'],
+                [
+                    'type'      => AdapterInterface::INDEX_TYPE_INDEX,
+                    'nullable'  => false,
+                ]
+            )
+        ;
         $setup->getConnection()->createTable($table);
 
     }

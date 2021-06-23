@@ -16,8 +16,6 @@ define(
     ],
     function (Component, quote, customerData, $, ko, additionalValidators, setPaymentInformationAction, url, customer, placeOrderAction, fullScreenLoader, messageList, shippingSaveProcessor) {
         'use strict';
-        let orderUrl ="";
-        let callBackUrl = "";
 
         return Component.extend({
             defaults: {
@@ -146,25 +144,12 @@ define(
                 }
             },
 
-            isSubscriptionProduct: function(){
-                if(customerData.get('cart')().items[0].options.length > 0 && customerData.get('cart')().items[0].options[0].label == "Subscription type"){
-                    orderUrl = "razorpay-subscription/subscription/subscriptionorder?";
-                    callBackUrl = "razorpay/payment/order";
-                    return true;
-                } else {
-                    orderUrl = "razorpay/payment/order?";
-                    callBackUrl = "razorpay/payment/order";
-                    return false;
-                }
-            },
-
             // Create order
             createRzpOrder: function(){
                 var self = this;
-                this.isSubscriptionProduct();
                 $.ajax({
                     type: 'POST',
-                    url: url.build(orderUrl + Math.random().toString(36).substring(10)),
+                    url: url.build("razorpay-subscription/subscription/subscriptionorder?" + Math.random().toString(36).substring(10)),
                     data: {
                         email: this.user.email,
                         billing_address: JSON.stringify(quote.billingAddress())
@@ -243,6 +228,7 @@ define(
                     key: self.getKeyId(),
                     name: self.getMerchantName(),
                     amount: data.amount,
+                    subscription_id: data.order_id,
                     notes: {
                         merchant_order_id: '',
                         merchant_quote_id: data.order_id
@@ -252,7 +238,7 @@ define(
                         contact: this.user.contact,
                         email: this.user.email
                     },
-                    callback_url: url.build(callBackUrl),
+                    callback_url: url.build("razorpay-subscription/subscription/subscriptionorder"),
                     cancel_url  : url.build('checkout/cart'),
                     _: {
                         integration: 'magento',
@@ -260,11 +246,7 @@ define(
                         integration_parent_version: data.maze_version,
                     }
                 }
-                if(this.isSubscriptionProduct()){
-                    opts.subscription_id =  data.rzp_order;
-                } else {
-                    opts.order_id =  data.rzp_order;
-                }
+
                 const options = JSON.parse(JSON.stringify(opts));
 
                 var form = document.createElement('form'),
@@ -285,10 +267,9 @@ define(
             // check for razorpay order
             checkRzpOrder: function (data) {
                 var self = this;
-                this.isSubscriptionProduct();
                 $.ajax({
                     type: 'POST',
-                    url: url.build(orderUrl + Math.random().toString(36).substring(10)),
+                    url: url.build("razorpay-subscription/subscription/subscriptionorder?" + Math.random().toString(36).substring(10)),
                     data: "order_check=1",
 
                     /**
@@ -328,6 +309,7 @@ define(
                     key: self.getKeyId(),
                     name: self.getMerchantName(),
                     amount: data.amount,
+                    subscription_id: data.order_id,
                     handler: function (data) {
                         self.rzp_response = data;
                         self.checkRzpOrder(data);
@@ -346,18 +328,13 @@ define(
                         contact: this.user.contact,
                         email: this.user.email
                     },
-                    callback_url: url.build(callBackUrl),
+                    callback_url: url.build("razorpay-subscription/subscription/subscriptionorder"),
                     _: {
                         integration: 'magento',
                         integration_version: data.module_version,
                         integration_parent_version: data.maze_version,
                     }
                 };
-                if(this.isSubscriptionProduct()){
-                    options.subscription_id =  data.rzp_order;
-                } else {
-                    options.order_id =  data.rzp_order;
-                }
 
                 if (data.quote_currency !== 'INR')
                 {
