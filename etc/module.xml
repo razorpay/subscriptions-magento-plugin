@@ -7,6 +7,11 @@
 	        <module name="Magento_Config" />
 			<module name="Magento_Catalog" />
             <module name="Razorpay_Magento"/>
+			<!-- Sofiya for custom admin-->
+			<module name="Magento_Backend"/>
+            <module name="Magento_Ui"/>
 	    </sequence>
 	</module>
 </config>
+
+
