@@ -41,7 +41,7 @@
     </type>
 
 
-    <!-- Admin subscriptions Grid - Sofiya  -->
+    <!-- Admin subscriptions Grid  -->
 
 
      <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
@@ -58,33 +58,7 @@
         </arguments>
     </virtualType>
 
-    <!-- <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
-        <arguments>
-            <argument name="collections" xsi:type="array">
-                <item name="razorpay_subscriptions_listing_data_source" xsi:type="string">Razorpay\Subscription\Model\ResourceModel\Post\Grid\Collection</item>
-            </argument>
-        </arguments>
-    </type>
-    <virtualType name="Razorpay\Subscription\Model\ResourceModel\Post\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
-        <arguments>
-            <argument name="mainTable" xsi:type="string">razorpay_subscriptions</argument>
-            <argument name="resourceModel" xsi:type="string">Razorpay\Subscription\Model\ResourceModel\Post</argument>
-        </arguments>
-    </virtualType> -->
-
-<!-- <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
-        <arguments>
-            <argument name="collections" xsi:type="array">
-                <item name="razorpay_subscriptions_listing_data_source" xsi:type="string">Razorpay\Subscription\Model\ResourceModel\Post\Grid\Collection</item>
-            </argument>
-        </arguments>
-    </type>
-    <virtualType name="Razorpay\Subscription\Model\ResourceModel\Post\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
-        <arguments>
-            <argument name="mainTable" xsi:type="string">razorpay_subscriptions</argument>
-            <argument name="resourceModel" xsi:type="string">Razorpay\Subscription\Model\ResourceModel\Post</argument>
-        </arguments>
-    </virtualType> -->
+    
     
 
      
