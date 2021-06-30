@@ -5,7 +5,6 @@ namespace Razorpay\Subscription\Model;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\CollectionFactory as TransactionCollectionFactory;
-use phpDocumentor\Reflection\Type;
 use Razorpay\Api\Api;
 use Razorpay\Magento\Model\Config;
 
