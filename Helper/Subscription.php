@@ -90,7 +90,6 @@ class Subscription
                     ->setStartAt(date("Y-m-d h:i:sa", $subscriptionResponse->start_at))
                     ->setEndAt(date("Y-m-d h:i:sa", $subscriptionResponse->end_at))
                     ->setSubscriptionCreatedAt(date("Y-m-d h:i:sa", $subscriptionResponse->created_at))
-                    ->setSubscriptionCreatedAt(date("Y-m-d h:i:sa", $subscriptionResponse->created_at))
                     ->setNextChargeAt(date("Y-m-d h:i:sa", $subscriptionResponse->charge_at))
                     ->save();
 
