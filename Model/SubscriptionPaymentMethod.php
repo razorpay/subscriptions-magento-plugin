@@ -341,17 +341,23 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
         //Update subscription order details
         $subscriptionCollection = $_objectManager->get('Razorpay\Subscription\Model\Subscriptions')
             ->getCollection()
-            ->addFieldToSelect('entity_id')
             ->addFilter('subscription_id', $rzpSubscriptionId)
             ->getFirstItem()
-            ->getData();
+            ;
+        $subscriptionData = $subscriptionCollection->getData();
 
-        if ($subscriptionCollection) {
+        if (!empty($subscriptionData)) {
+
             $subscriptionOrderMapping = $_objectManager->create('Razorpay\Subscription\Model\SubscriptionsOrderMapping');
-            $subscriptionOrderMapping->setSubscriptionEntityId($subscriptionCollection["entity_id"])
+            $subscriptionOrderMapping->setSubscriptionEntityId($subscriptionData["entity_id"])
                 ->setIncrementOrderId($order->getIncrementId())
                 ->setRzpPaymentId($paymentId);
 
+            $productId = "";
+            foreach ($order->getItems() as $item){
+                /* @var \Magento\Quote\Model\Quote\Item $item */
+                $productId = $item->getProduct()->getId();
+            }
 
             if ($isWebhookCall)
             {
@@ -360,11 +366,6 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
             else
             {
                 $subscriptionOrderMapping->setByFrontend(true);
-                $productId = "";
-                foreach ($order->getItems() as $item){
-                    /* @var \Magento\Quote\Model\Quote\Item $item */
-                    $productId = $item->getProduct()->getId();
-                }
                 $productObject  = $_objectManager->get('Magento\Catalog\Model\Product')->load($productId);
                 if($productObject){
                     /* @var Magento\Catalog\Model\Product $productObject */
@@ -374,6 +375,21 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
                 }
             }
             $subscriptionOrderMapping->save();
+
+            //Update Subscription details after payment of order
+            $subscriptionDetailsObject  = $this->rzp->subscription->fetch($rzpSubscriptionId);
+            $subscriptionCollection
+                ->setStatus($subscriptionDetailsObject->status)
+                ->setTotalCount($subscriptionDetailsObject->total_count)
+                ->setAuthAttempts($subscriptionDetailsObject->auth_attempts)
+                ->setPaidCount($subscriptionDetailsObject->paid_count)
+                ->setRemainingCount($subscriptionDetailsObject->remaining_count)
+                ->setStartAt(date("Y-m-d h:i:sa", $subscriptionDetailsObject->start_at))
+                ->setEndAt(date("Y-m-d h:i:sa", $subscriptionDetailsObject->end_at))
+                ->setSubscriptionCreatedAt(date("Y-m-d h:i:sa", $subscriptionDetailsObject->created_at))
+                ->setNextChargeAt(date("Y-m-d h:i:sa", $subscriptionDetailsObject->charge_at))
+                ->save();
+
         }
     }
 

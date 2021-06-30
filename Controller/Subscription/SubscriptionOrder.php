@@ -91,6 +91,7 @@ class SubscriptionOrder extends BaseController
     {
         try{
             $receiptId = $this->getQuote()->getId();
+
             if(empty($_POST['error']) === false)
             {
                 $this->messageManager->addError(__('Payment Failed'));
@@ -194,7 +195,6 @@ class SubscriptionOrder extends BaseController
             }
             else
             {
-
                 if (empty($_POST['email']) === true) {
                     $this->logger->info("Email field is required");
 
@@ -281,5 +281,4 @@ class SubscriptionOrder extends BaseController
         $response->setHttpResponseCode($code);
         return $response;
     }
-
 }
