@@ -7,6 +7,9 @@
 -->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\App\Request\CsrfValidator">
+        <plugin name="csrf_validator_skip" type="Razorpay\Subscription\Plugin\CsrfValidatorSkip" />
+    </type>
 
     <virtualType name="RazorpaySubscriptionLogger" type="Magento\Framework\Logger\Monolog">
 	    <arguments>
@@ -40,10 +43,13 @@
         </arguments>
     </type>
 
+    <type name="Razorpay\Subscription\Observer\PaymentMethodActiveObserver">
+        <arguments>
+            <argument name="logger" xsi:type="object">RazorpaySubscriptionLogger</argument>
+        </arguments>
+    </type>
 
     <!-- Admin subscriptions Grid  -->
-
-
      <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
@@ -57,9 +63,4 @@
             <argument name="resourceModel" xsi:type="string">Razorpay\Subscription\Model\ResourceModel\Subscrib</argument>
         </arguments>
     </virtualType>
-
-    
-    
-
-     
 </config>

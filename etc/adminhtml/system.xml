@@ -2,6 +2,16 @@
     <system>
         <section id="payment">
             <group id="razorpay" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="webhook_events" translate="label" type="multiselect" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Webhook Events</label>
+                    <source_model>Razorpay\Subscription\Model\SubscriptionWebhookEvents</source_model>
+                    <comment>List of Webhook Events that needs to be subscribed.</comment>
+                    <config_path>payment/razorpay/webhook_events</config_path>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="enable_webhook">1</field>
+                    </depends>
+                </field>
                 <include path="Razorpay_Subscription::subscription/subscription.xml"/>
             </group>
         </section>

@@ -6,11 +6,11 @@
 	        <module name="Magento_Payment" />
 	        <module name="Magento_Config" />
 			<module name="Magento_Catalog" />
-            <module name="Razorpay_Magento"/>
 			<!-- custom admin-->
 			<module name="Magento_Backend"/>
             <module name="Magento_Ui"/>
-	    </sequence>
+            <module name="Razorpay_Magento"/>
+        </sequence>
 	</module>
 </config>
 

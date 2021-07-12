@@ -331,13 +331,6 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
             }
         }
 
-        /**
-         * TODO:
-         * 1. Order is paid update order details and create entry in subscript order mapping from callback
-         * 2. Update subscription status from webhook for subscription
-         * 3. Check is already created for point 2 else create from webhook
-         */
-
         //Update subscription order details
         $subscriptionCollection = $_objectManager->get('Razorpay\Subscription\Model\Subscriptions')
             ->getCollection()
