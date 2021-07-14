@@ -292,19 +292,25 @@ class Subscription
      */
     public function validateIsASubscriptionProduct($cartItems, $validateTo): bool
     {
-        $this->_logger->info("-----------------Validating cart started-----------------");
-        foreach ($cartItems as $item) {
-            /* @var \Magento\Quote\Model\Quote\Item $item */
-            foreach ($item->getOptions() as $option){
-                /* @var \Magento\Quote\Model\Quote\Item\Option $option */
-                $optionData = json_decode($option->getValue(),true);
-                if(in_array($validateTo, $optionData)){
-                    return true;
+        try {
+            $this->_logger->info("-----------------Validating cart started-----------------");
+            foreach ($cartItems as $item) {
+                /* @var \Magento\Quote\Model\Quote\Item $item */
+                foreach ($item->getOptions() as $option) {
+                    /* @var \Magento\Quote\Model\Quote\Item\Option $option */
+                    $optionData = json_decode($option->getValue(), true);
+                    $this->_logger->info(json_encode($optionData));
+                    if (array_key_exists("paymentOption", $optionData) && in_array($validateTo, $optionData)) {
+                        return true;
+                    }
                 }
             }
-        }
 
-        $this->_logger->info("-----------------Validating cart ended-----------------");
-        return false;
+            $this->_logger->info("-----------------Validating cart ended-----------------");
+            return false;
+        } catch (\Exception $e) {
+            $this->_logger->critical("Exception: {$e->getMessage()}");
+            return false;
+        }
     }
 }
