@@ -65,7 +65,7 @@ class SubscriptionOrder extends BaseController
         \Razorpay\Magento\Model\CheckoutFactory $checkoutFactory,
         \Magento\Framework\App\CacheInterface $cache,
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
-        Subscription $subscription,
+        \Razorpay\Subscription\Helper\Subscription $subscription,
         \Psr\Log\LoggerInterface $logger
     ) {
         parent::__construct(
@@ -81,7 +81,7 @@ class SubscriptionOrder extends BaseController
         $this->checkoutFactory = $checkoutFactory;
         $this->cache           = $cache;
         $this->orderRepository = $orderRepository;
-        $this->subscription = $subscription;
+        $this->subscription    = $subscription;
         $this->logger          = $logger;
 
         $this->objectManagement   = \Magento\Framework\App\ObjectManager::getInstance();
@@ -272,9 +272,6 @@ class SubscriptionOrder extends BaseController
                 'parameters' => []
             ];
         }
-
-        //set the chache for race with webhook
-        $this->cache->save("started", "quote_Front_processing_$receiptId", ["razorpay"], 300);
 
         $response = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $response->setData($responseContent);
