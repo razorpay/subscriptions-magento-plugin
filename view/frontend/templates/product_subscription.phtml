@@ -1,10 +1,5 @@
 <?php
-/**
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
-
-// @codingStandardsIgnoreFile
+$config = $this->helper(\Razorpay\Subscription\Model\SubscriptionConfig::class);
 
 /** @var $block \Magento\Catalog\Block\Product\View */
 ?>
@@ -13,42 +8,42 @@
 <div class="box-tocart">
     <div class="fieldset">
         <!-- Custom Input Field -->
-        <?php if ($_product->getRazorpaySubscriptionEnabled()): ?>
-        <div class="control" style="margin-top: 30px;">
-            <input style="margin-bottom: 20px;"
-                   type="radio"
-                   checked
-                   class="radio required-entry validate-one-required-by-name"
-                   name="paymentOption"
-                   data-validate="{'validate-one-required-by-name':true}"
-                   value="oneTime"
-                   ifnot="method.error_message"
-                   ko-checked="element.isSelected"
-                   ko-value="method.carrier_code + '_' + method.method_code"
-                   attr="'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code,'checked': element.rates().length == 1 || element.isSelected"
-            ><?php /* @escapeNotVerified */echo __(" One Time Payment") ?> </input><br>
-            <input type="radio"
-                   class="radio required-entry validate-one-required-by-name"
-                   name="paymentOption"
-                   data-validate="{'validate-one-required-by-name':true}"
-                   value="subscription"
-                   ifnot="method.error_message"
-                   ko-checked="element.isSelected"
-                   ko-value="method.carrier_code + '_' + method.method_code"
-                   attr="'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code,'checked': element.rates().length == 1 || element.isSelected"
-            /> <?php /* @escapeNotVerified */echo __("Subscribe to this product") ?> </input>
-        </div>
-        <div style="margin-top: 23px;">
-            <label for="ps-frequency-option" class="label">
-                <span class="frequency">Select Frequency</span><br>
-                <select name="frequency" class="frequency" style="margin-top: 15px;">
-                    <option value="weekly"><?php /* @escapeNotVerified */ echo __("Weekly") ?></option>
-                    <option value="monthly" selected><?php /* @escapeNotVerified */ echo __("Monthly") ?></option>
-                    <option value="yearly"><?php /* @escapeNotVerified */ echo __("Yearly") ?></option>
-                </select>
-            </label>
-        </div>
-        <!-- Custom Input Field -->
+        <?php if ($_product->getRazorpaySubscriptionEnabled() && $config->isSubscriptionActive()): ?>
+            <div class="control" style="margin-top: 30px;">
+                <input style="margin-bottom: 20px;"
+                       type="radio"
+                       checked
+                       class="radio required-entry validate-one-required-by-name"
+                       name="paymentOption"
+                       data-validate="{'validate-one-required-by-name':true}"
+                       value="oneTime"
+                       ifnot="method.error_message"
+                       ko-checked="element.isSelected"
+                       ko-value="method.carrier_code + '_' + method.method_code"
+                       attr="'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code,'checked': element.rates().length == 1 || element.isSelected"
+                ><?php /* @escapeNotVerified */echo __(" One Time Payment") ?> </input><br>
+                <input type="radio"
+                       class="radio required-entry validate-one-required-by-name"
+                       name="paymentOption"
+                       data-validate="{'validate-one-required-by-name':true}"
+                       value="subscription"
+                       ifnot="method.error_message"
+                       ko-checked="element.isSelected"
+                       ko-value="method.carrier_code + '_' + method.method_code"
+                       attr="'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code,'checked': element.rates().length == 1 || element.isSelected"
+                /> <?php /* @escapeNotVerified */echo __("Subscribe to this product") ?> </input>
+            </div>
+            <div style="margin-top: 23px;">
+                <label for="ps-frequency-option" class="label">
+                    <span class="frequency">Select Frequency</span><br>
+                    <select name="frequency" class="frequency" style="margin-top: 15px;">
+                        <option value="weekly"><?php /* @escapeNotVerified */ echo __("Weekly") ?></option>
+                        <option value="monthly" selected><?php /* @escapeNotVerified */ echo __("Monthly") ?></option>
+                        <option value="yearly"><?php /* @escapeNotVerified */ echo __("Yearly") ?></option>
+                    </select>
+                </label>
+            </div>
+            <!-- Custom Input Field -->
 
         <?php endif; ?>
 

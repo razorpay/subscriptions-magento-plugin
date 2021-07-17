@@ -80,7 +80,7 @@ class PaymentMethodActiveObserver implements ObserverInterface
 
                 $isSubscriptionProduct = $this->_helper->validateIsASubscriptionProduct($this->_cart->getQuote()->getAllItems(), "subscription");
 
-                if (/*$this->_subscriptionConfig->isSubscriptionActive() &&*/ $product->getRazorpaySubscriptionEnabled() && $isSubscriptionProduct) {
+                if ($this->_subscriptionConfig->isSubscriptionActive() && $product->getRazorpaySubscriptionEnabled() && $isSubscriptionProduct) {
                     $this->disablePaymentMethod($result, PaymentMethod::METHOD_CODE, $code);
                 } else {
                     $this->disablePaymentMethod($result, SubscriptionPaymentMethod::METHOD_CODE, $code);

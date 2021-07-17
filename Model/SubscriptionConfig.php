@@ -4,9 +4,10 @@ namespace Razorpay\Subscription\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Storage\WriterInterface;
+use Magento\Framework\App\Helper\AbstractHelper;
 use Razorpay\Magento\Model\Config;
 
-class SubscriptionConfig
+class SubscriptionConfig extends AbstractHelper
 {
     const IS_SUBSCRIPTION_ACTIVE = 'active';
 
@@ -17,7 +18,7 @@ class SubscriptionConfig
     /**
      * @var ScopeConfigInterface
      */
-    private $scopeConfig;
+    protected $scopeConfig;
     /**
      * @var WriterInterface
      */
