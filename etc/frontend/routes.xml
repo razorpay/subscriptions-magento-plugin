@@ -4,5 +4,8 @@
         <route id="razorpaySubscription" frontName="razorpay-subscription">
             <module name="Razorpay_Subscription" />
         </route>
+         <route id="customer">
+           <module name="Razorpay_Subscription" before="Magento_Customer" />
+       </route>
     </router>
 </config>

@@ -1,0 +1,89 @@
+
+<?php /** @var Razorpay\Subscription\Block\View $block */ ?>
+
+<!-- <h1><?php //echo $block->getSubscrib()->getStatus(); ?></h1>
+<p><?php //echo $block->getSubscrib()->getNextChargeAt(); ?></p> -->
+
+
+
+<div class="block block-dashboard-info">
+    <div class="block-title"><strong>Order # <?php echo $block->getSubscrib()->getId();?></strong>
+    
+    <a class="action-primary"  title="Cancel">
+                    Cancel </a>
+    </div>
+    <div class="block-content">
+        <div class="box box-information ">
+            <strong class="box-title">
+                <span>Product Info</span>
+            </strong>
+            <span class="delimiter"></span>
+            <div class="box-content">
+            <strong class="account">
+                Product Name :
+            </strong>  <?php echo $block->getSubscrib()->getValue(); ?>
+            <span class="delimiter"></span>
+                            </div>
+                           
+                            <div class="box-content delimiter">
+            <strong class="account ">
+                SKU :
+            </strong>  <?php echo $block->getSubscrib()->getNextChargeAt(); ?>
+                         
+                            </div>
+
+                            
+                            <div class="box-content">
+            <strong class="account">
+                Quantity :
+            </strong>  <?php echo $block->getSubscrib()->getNextChargeAt(); ?>
+                         
+                            </div>
+
+
+                    
+                    
+
+           
+        </div>
+                    <div class="box box-newsletter">
+                <strong class="box-title">
+                    <span>Payment Schedule</span>
+                </strong>
+                 
+                <div class="box-content">
+            <strong class="account">
+                Subscription ID :
+            </strong>  <?php echo $block->getSubscrib()->getSubscriptionId(); ?>
+                         
+                            </div>
+
+                <div class="box-content">
+            <strong class="account">
+                Recurring Start Date :
+            </strong>  <?php echo $block->getSubscrib()->getNextChargeAt(); ?>
+                         
+                            </div>
+
+
+                             
+                            <div class="box-content">
+            <strong class="account">
+                Next Charge Date :
+            </strong>  <?php echo $block->getSubscrib()->getNextChargeAt(); ?>
+                         
+                            </div>
+                             
+                            <div class="box-content">
+            <strong class="account">
+                Status :
+            </strong>  <?php echo $block->getSubscrib()->getStatus(); ?>
+                         
+                            </div>
+                           
+            </div>
+            </div>
+
+
+            
+</div>

@@ -1,11 +1,12 @@
 <?php
 
 namespace Razorpay\Subscription\Model\ResourceModel\Subscrib;
+use \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 /**
  * Class Collection
- * @package MRazorpay\Subscription\Model\ResourceModel\Subscrib
+ * @package Razorpay\Subscription\Model\ResourceModel\Subscrib
  */
-class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+class Collection extends AbstractCollection
 {
     /**
      * @var string
@@ -14,11 +15,11 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     /**
      * @var string
      */
-    protected $_eventPrefix = 'md_customer_reviews_collection';
+    protected $_eventPrefix = 'razorpay_subscription_subscrib_collection';
     /**
      * @var string
      */
-    protected $_eventObject = 'reviews_collection';
+    protected $_eventObject = 'subscrib_collection';
 
     /**
      * Define resource model

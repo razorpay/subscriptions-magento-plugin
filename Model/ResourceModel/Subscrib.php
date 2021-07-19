@@ -1,12 +1,14 @@
 <?php
 namespace Razorpay\Subscription\Model\ResourceModel;
 
+use \Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+
 
 /**
  * Class Subscrib
  * @package Razorpay\Subscription\Model\ResourceModel
  */
-class Subscrib extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+class Subscrib extends AbstractDb
 {
     /**
      *
