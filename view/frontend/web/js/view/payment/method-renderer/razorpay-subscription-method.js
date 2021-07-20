@@ -149,7 +149,7 @@ define(
                 var self = this;
                 $.ajax({
                     type: 'POST',
-                    url: url.build("razorpay-subscription/subscription/subscriptionorder?" + Math.random().toString(36).substring(10)),
+                    url: url.build("razorpaysubscription/subscription/subscriptionorder?" + Math.random().toString(36).substring(10)),
                     data: {
                         email: this.user.email,
                         billing_address: JSON.stringify(quote.billingAddress())
@@ -238,7 +238,7 @@ define(
                         contact: this.user.contact,
                         email: this.user.email
                     },
-                    callback_url: url.build("razorpay-subscription/subscription/subscriptionorder"),
+                    callback_url: url.build("razorpaysubscription/subscription/subscriptionorder"),
                     cancel_url  : url.build('checkout/cart'),
                     _: {
                         integration: 'magento',
@@ -269,7 +269,7 @@ define(
                 var self = this;
                 $.ajax({
                     type: 'POST',
-                    url: url.build("razorpay-subscription/subscription/subscriptionorder?" + Math.random().toString(36).substring(10)),
+                    url: url.build("razorpaysubscription/subscription/subscriptionorder?" + Math.random().toString(36).substring(10)),
                     data: "order_check=1",
 
                     /**
@@ -328,7 +328,7 @@ define(
                         contact: this.user.contact,
                         email: this.user.email
                     },
-                    callback_url: url.build("razorpay-subscription/subscription/subscriptionorder"),
+                    callback_url: url.build("razorpaysubscription/subscription/subscriptionorder"),
                     _: {
                         integration: 'magento',
                         integration_version: data.module_version,
