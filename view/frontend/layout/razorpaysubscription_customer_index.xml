@@ -3,14 +3,11 @@
     <body>
         <referenceBlock name="page.main.title">
             <action method="setPageTitle">
-                <argument translate="true" name="title" xsi:type="string">My Subscription</argument>
+                <argument translate="true" name="title" xsi:type="string">My Subscriptions</argument>
             </action>
         </referenceBlock>
         <referenceContainer name="content">
-
-
             <block class="Razorpay\Subscription\Block\Display" name="razorpaysubscription" template="Razorpay_Subscription::subscrib/subscribed.phtml"/>
-           
         </referenceContainer>
     </body>
 </page>
