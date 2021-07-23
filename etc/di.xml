@@ -7,6 +7,18 @@
 -->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+<preference for="Magento\Framework\Session\StorageInterface" type="Magento\Framework\Session\Storage" />
+
+   <virtualType name="Magento\Framework\Message\Session\Storage" type="Magento\Framework\Session\Storage">
+        <arguments>
+            <argument name="namespace" xsi:type="string">message</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\Message\Session">
+        <arguments>
+            <argument name="storage" xsi:type="object">Magento\Framework\Message\Session\Storage</argument>
+        </arguments>
+    </type>
     <type name="Magento\Framework\App\Request\CsrfValidator">
         <plugin name="csrf_validator_skip" type="Razorpay\Subscription\Plugin\CsrfValidatorSkip" />
     </type>

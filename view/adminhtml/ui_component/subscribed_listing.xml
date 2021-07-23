@@ -6,14 +6,7 @@
             <item name="deps" xsi:type="string">subscribed_listing.subscribed_listing_data_source</item>
         </item>
         <item name="spinner" xsi:type="string">md_cr_columns</item>
-        <item name="buttons" xsi:type="array">
-            <item name="add" xsi:type="array">
-                <item name="name" xsi:type="string">add</item>
-                <item name="label" xsi:type="string">Add New Review</item>
-                <item name="class" xsi:type="string">primary</item>
-                <item name="url" xsi:type="string">md_cr/index/new</item>
-            </item>
-        </item>
+      
     </argument>
     <dataSource name="subscribed_listing_data_source">
         <argument name="dataProvider" xsi:type="configurableObject">
@@ -52,11 +45,11 @@
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
                         <item name="type" xsi:type="string">delete</item>
-                        <item name="label" xsi:type="string" translate="true">Delete</item>
+                        <item name="label" xsi:type="string" translate="true">Cancel</item>
                         <item name="url" xsi:type="url" path="md_cr/index/massDelete"/>
                         <item name="confirm" xsi:type="array">
-                            <item name="title" xsi:type="string" translate="true">Delete items</item>
-                            <item name="message" xsi:type="string" translate="true">Are you sure you want to delete selected items?</item>
+                            <item name="title" xsi:type="string" translate="true">Cancel items</item>
+                            <item name="message" xsi:type="string" translate="true">Are you sure you want to Cancel selected items?</item>
                         </item>
                     </item>
                 </argument>
@@ -79,10 +72,12 @@
         <paging name="listing_paging"/>
     </listingToolbar>
     <columns name="md_cr_columns">
-        <selectionsColumn name="ids">
+        <selectionsColumn name="subscription_created_at">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="indexField" xsi:type="string">entity_id</item>
+                    <item name="indexField" xsi:type="string">subscription_created_at</item>
+                     <item name="sorting" xsi:type="string">asc</item>
+            <item name="sortable" xsi:type="boolean">true</item>
                 </item>
             </argument>
         </selectionsColumn>
@@ -90,6 +85,7 @@
             <settings>
                 <filter>textRange</filter>
                 <label translate="true">ID</label>
+                <item name="sortOrder" xsi:type="number">1</item>
                 <resizeDefaultWidth>25</resizeDefaultWidth>
             </settings>
         </column>
@@ -98,13 +94,23 @@
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Subscription Id</label>
+                <item name="sortOrder" xsi:type="number">2</item>
             </settings>
         </column>
-         <column name="product_id">
+        <column name="firstname">
             <settings>
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
-                <label translate="true">Product ID</label>
+                <label translate="true">Customer </label>
+                <item name="sortOrder" xsi:type="number">3</item>
+            </settings>
+        </column>
+         <column name="value">
+            <settings>
+                <filter>text</filter>
+                <bodyTmpl>ui/grid/cells/text</bodyTmpl>
+                <label translate="true">Product Name</label>
+                <item name="sortOrder" xsi:type="number">4</item>
             </settings>
         </column>
         <column name="status">
@@ -112,6 +118,7 @@
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Status</label>
+                <item name="sortOrder" xsi:type="number">5</item>
             </settings>
         </column>
  <column name="total_count">
@@ -119,6 +126,7 @@
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Total Count</label>
+                <item name="sortOrder" xsi:type="number">6</item>
             </settings>
         </column>
 
@@ -127,6 +135,7 @@
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Paid Count</label>
+                <item name="sortOrder" xsi:type="number">7</item>
             </settings>
         </column>
  <column name="remaining_count">
@@ -134,6 +143,7 @@
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Remaining Count</label>
+                <item name="sortOrder" xsi:type="number">8</item>
             </settings>
         </column>
 
@@ -142,6 +152,8 @@
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Subscription Created At</label>
+               
+                <item name="sortOrder" xsi:type="number">9</item>
             </settings>
         </column>
  <column name="next_charge_at">
@@ -149,6 +161,7 @@
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Next Charge at</label>
+                <item name="sortOrder" xsi:type="number">10</item>
             </settings>
         </column>
  <column name="start_at">
@@ -156,6 +169,7 @@
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Start At</label>
+                <item name="sortOrder" xsi:type="number">11</item>
             </settings>
         </column>
 
@@ -164,20 +178,11 @@
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">End At</label>
+                <item name="sortOrder" xsi:type="number">12</item>
             </settings>
         </column>
 
-<column name="created_at">
-            <settings>
-                <filter>text</filter>
-                <bodyTmpl>ui/grid/cells/text</bodyTmpl>
-                <label translate="true">Created At</label>
-            </settings>
-        </column>
-        <!-- <actionsColumn name="actions" class="Razorpay\Subscription\Ui\Component\Subscription\Listing\Column\Actions" sortOrder="200">
-            <settings>
-                <indexField>entity_id</indexField>
-            </settings>
-        </actionsColumn> -->
+
+      
     </columns>
 </listing>

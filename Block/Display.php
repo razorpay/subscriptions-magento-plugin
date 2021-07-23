@@ -8,12 +8,15 @@ use \Razorpay\Subscription\Model\ResourceModel\Subscrib\CollectionFactory as Sub
 use \Razorpay\Subscription\Model\Subscrib;
 
 
+
 class Display extends Template
 {
 /**
      * CollectionFactory
      * @var null|CollectionFactory
      */
+    protected $customerSession;
+
     protected $_subscribCollectionFactory = null;
     protected $moduleReader;
     protected $_resource;
@@ -27,6 +30,7 @@ class Display extends Template
      */
     public function __construct(
         Context $context,
+        \Magento\Customer\Model\Session $customerSession,
         SubscribCollectionFactory $subscribCollectionFactory,
         \Magento\Framework\App\ResourceConnection $Resource,
         \Magento\Framework\Module\Dir\Reader $moduleReader,
@@ -36,7 +40,10 @@ class Display extends Template
         $this->_subscribCollectionFactory = $subscribCollectionFactory;
         $this->_resource = $Resource;
         parent::__construct($context, $data);
+
         $this->moduleReader = $moduleReader;
+        $this->customerSession = $customerSession;
+
     }
 
     /**
@@ -60,34 +67,29 @@ class Display extends Template
     }
     public function getSubscribs() 
     {
+        $customerId = $this->customerSession->getCustomer()->getId();
        
 
-    //    select value, r.* from razorpay_subscriptions r left join catalog_product_entity_varchar ON r.product_id=catalog_product_entity_varchar.entity_id left join eav_attribute on eav_attribute.attribute_id = catalog_product_entity_varchar.attribute_id where eav_attribute.attribute_code='name' and catalog_product_entity_varchar.entity_id =r.product_id
-
-    $subscribCollection = $this->_subscribCollectionFactory->create();
-   // $subscribCollection->addFieldToSelect('*')->load();
-   $second_table_name = $this->_resource->getTableName('catalog_product_entity_varchar');
-   $third_table_name = $this->_resource->getTableName('eav_attribute');
- //  $collection->getCollection()->addFieldToSelect('value');
-   $subscribCollection->getSelect()->joinLeft(array('second' => $second_table_name),
-                                          'main_table.product_id = second.entity_id',
-                                          array('second.value'));
-                                          
-$subscribCollection->getSelect()->joinLeft(array('third' => $third_table_name),
-                                          'third.attribute_id = second.attribute_id',
-                                          array('third.attribute_id as attribute_id'));
-
-$subscribCollection->getSelect()->where("third.attribute_code='name' and second.entity_id=main_table.product_id");
-
+        $subscribCollection = $this->_subscribCollectionFactory->create();
+   
+        $second_table_name = $this->_resource->getTableName('catalog_product_entity_varchar');
+        $third_table_name = $this->_resource->getTableName('eav_attribute');
+      
+        $subscribCollection->getSelect()->joinLeft(array('second' => $second_table_name),
+                                               'main_table.product_id = second.entity_id',
+                                               array('second.value'));
+                                               
+     $subscribCollection->getSelect()->joinLeft(array('third' => $third_table_name),
+                                               'third.attribute_id = second.attribute_id',
+                                               array('third.attribute_id as attribute_id'));
+     
+     $subscribCollection->getSelect()->where("third.attribute_code='name' and second.entity_id=main_table.product_id");
+     $subscribCollection->getSelect()->where("main_table.magento_user_id=".$customerId);
+     
+    
 
     return $subscribCollection->getItems();
-    // good to go
-         /** @var SubscribCollection $subscribCollection */
-    // $subscribCollection = $this->_subscribCollectionFactory->create();
-    // $subscribCollection->addFieldToSelect('*')->load();
-    // return $subscribCollection->getItems();
-
-    
+  
 
     
 
@@ -102,10 +104,7 @@ $subscribCollection->getSelect()->where("third.attribute_code='name' and second.
     public function getSubscribUrl(
         Subscrib $subscrib
     ) {
-        // $viewDir = $this->moduleReader->getModuleDir(
-        //     \Magento\Framework\Module\Dir::MODULE_VIEW_DIR,
-        //     'Razorpay_Subscription'
-        // );
+        
         return '/subscriptionMagento/razorpaysubscription/subscrib/view/id/' . $subscrib->getId();
         
     }

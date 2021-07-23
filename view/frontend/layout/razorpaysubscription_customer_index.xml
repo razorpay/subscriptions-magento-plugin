@@ -9,7 +9,7 @@
         <referenceContainer name="content">
 
 
-            <block class="Razorpay\Subscription\Block\Display" name="razorpaysubscription" template="Razorpay_Subscription::subscrib/subscribed.phtml"/>
+            <block class="Razorpay\Subscription\Block\Display" name="razorpaysubscription" template="Razorpay_Subscription::subscrib/subscribed.phtml" cacheable="false"/>
            
         </referenceContainer>
     </body>
