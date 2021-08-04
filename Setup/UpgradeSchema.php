@@ -187,6 +187,15 @@ class UpgradeSchema implements  UpgradeSchemaInterface
                 ]
             )
             ->addColumn(
+                'cancel_by',
+                Table::TYPE_TEXT,
+                30,
+                [
+                    'nullable' => false,
+                    'comment' => 'Razorpay Subscription cancel by user or admin'
+                ]
+            )
+            ->addColumn(
                 'total_count',
                 Table::TYPE_INTEGER,
                 30,
