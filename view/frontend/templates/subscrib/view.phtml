@@ -1,13 +1,18 @@
 
 <?php /** @var Razorpay\Subscription\Block\View $block */ ?>
 
+<!-- <h1><?php //echo $block->getSubscrib()->getStatus(); ?></h1>
+<p><?php //echo $block->getSubscrib()->getNextChargeAt(); ?></p> -->
 
+<?php $subscriptioninfo = $block->getSubscrib();?>
 
 <div class="block block-dashboard-info">
-    <div class="block-title"><strong>Order # <?php echo $block->getSubscrib()->getId();?></strong>
+    <div class="block-title"><strong>Order # <?php echo $subscriptioninfo['entity_id'];?></strong>
     
-    <a class="action-primary"  title="Cancel">
-                    Cancel </a>
+    <!-- <a class="action-primary"  title="Cancel">
+                    Cancel </a> -->
+                    <a href="<?php echo $block->getUrl('razorpaysubscription/customer/cancelSubscription/'); ?>s_id/<?php echo $subscriptioninfo['subscription_id']; ?>/oid/<?php echo $subscriptioninfo['entity_id']; ?>" class="action primary"  style="float:right;" <?php if($subscriptioninfo['status']=='cancelled') echo 'disabled';?> >Cancel</a>
+     <a href="<?php echo $block->getUrl('razorpaysubscription/customer/cancelSubscription/'); ?>s_id/<?php echo $subscriptioninfo['subscription_id']; ?>/oid/<?php echo $subscriptioninfo['entity_id']; ?>" class="action primary" style="float:right;">Upgrade</a>
     </div>
     <div class="block-content">
         <div class="box box-information ">
@@ -18,22 +23,22 @@
             <div class="box-content">
             <strong class="account">
                 Product Name :
-            </strong>  <?php echo $block->getSubscrib()->getValue(); ?>
+            </strong>  <?php echo $subscriptioninfo['value']; ?>
             <span class="delimiter"></span>
                             </div>
                            
                             <div class="box-content delimiter">
             <strong class="account ">
                 SKU :
-            </strong>  <?php echo $block->getSubscrib()->getNextChargeAt(); ?>
+            </strong>  <?php echo $subscriptioninfo['sku']; ?>
                          
                             </div>
 
                             
                             <div class="box-content">
             <strong class="account">
-                Quantity :
-            </strong>  <?php echo $block->getSubscrib()->getNextChargeAt(); ?>
+                Total Count :
+            </strong>  <?php echo $subscriptioninfo['total_count']; ?>
                          
                             </div>
 
@@ -51,14 +56,20 @@
                 <div class="box-content">
             <strong class="account">
                 Subscription ID :
-            </strong>  <?php echo $block->getSubscrib()->getSubscriptionId(); ?>
+            </strong>  <?php echo  $subscriptioninfo['subscription_id']; ?>
+                         
+                            </div>
+                            <div class="box-content">
+            <strong class="account">
+                Status :
+            </strong>  <?php echo ucfirst($subscriptioninfo['status']); ?>
                          
                             </div>
 
                 <div class="box-content">
             <strong class="account">
                 Recurring Start Date :
-            </strong>  <?php echo $block->getSubscrib()->getNextChargeAt(); ?>
+            </strong>  <?php echo $subscriptioninfo['start_at']; ?>
                          
                             </div>
 
@@ -67,16 +78,11 @@
                             <div class="box-content">
             <strong class="account">
                 Next Charge Date :
-            </strong>  <?php echo $block->getSubscrib()->getNextChargeAt(); ?>
+            </strong>  <?php echo $subscriptioninfo['next_charge_at']; ?>
                          
                             </div>
                              
-                            <div class="box-content">
-            <strong class="account">
-                Status :
-            </strong>  <?php echo $block->getSubscrib()->getStatus(); ?>
-                         
-                            </div>
+                          
                            
             </div>
             </div>

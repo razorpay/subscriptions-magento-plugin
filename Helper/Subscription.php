@@ -313,4 +313,21 @@ class Subscription
             return false;
         }
     }
+
+
+
+    public function cancelSubscription($id,$rzp) {
+
+
+        //fetch and cancel subscription
+        $subscriptionResponse = $rzp->subscription->fetch($id)->cancel([ "cancel_at_cycle_end" => 0 ]);
+        //update record
+        $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
+          $postUpdate = $subscription->load($subscriptionResponse->id,'subscription_id');
+           
+            $postUpdate->setStatus('cancelled');
+            $postUpdate->setCancelBy('customer');
+          
+            $postUpdate->save();
+    }        
 }
