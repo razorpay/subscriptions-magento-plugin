@@ -130,13 +130,14 @@ class Subscription
                     ->addFilter('plan_name', $planName)
                     ->addFilter('magento_product_id', $productId)
                     ->addFilter('plan_type', $planType)
+                    ->addFilter("plan_interval", 1)
                     ->getFirstItem()
                     ->getData();
 
                 if (empty($planCollection)) {
                     $planData = [
                         "period" => $planType,
-                        "interval" => (int) $product->getRazorpaySubscriptionIntervalCount(),
+                        "interval" => 1,//(int) $product->getRazorpaySubscriptionIntervalCount(),
                         "item" => [
                             "name" => $planName,
                             "amount" => (int)(number_format($product->getPrice() * 100, 0, ".", "")),
@@ -158,6 +159,7 @@ class Subscription
                         ->setPlanType($planType)
                         ->setMagentoProductId($productId)
                         ->setPlanId($planResponse->id)
+                        ->setPlanInterval(1)
                         ->save();
 
                     return [
