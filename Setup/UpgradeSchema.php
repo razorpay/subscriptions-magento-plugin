@@ -77,6 +77,16 @@ class UpgradeSchema implements  UpgradeSchemaInterface
                 ]
             )
             ->addColumn(
+                'plan_interval',
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'nullable' => false,
+                    'default' => 1,
+                    'comment' => 'Razorpay Plan Product Plan interval'
+                ]
+            )
+            ->addColumn(
                 'created_at',
                 \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
                 null,
