@@ -22,7 +22,7 @@ class SubscriptionWebhook
     private $_objectManagement;
 
 
-    public function __construct($config, $logger, $quoteRepository, $order, $storeManagement, $cache, $quoteManagement, $quoteFactory )
+    public function __construct($config, $logger, $quoteRepository, $order, $storeManagement, $cache, $quoteManagement )
     {
         $this->_logger = $logger;
         $this->_quoteRepository = $quoteRepository;
@@ -31,7 +31,7 @@ class SubscriptionWebhook
         $this->_cache = $cache;
         $this->_quoteManagement = $quoteManagement;
         $this->_objectManagement = \Magento\Framework\App\ObjectManager::getInstance();
-        $this->_quoteFactory = $quoteFactory;
+        $this->_quoteFactory = new  \Magento\Quote\Model\QuoteFactory($this->_objectManagement);
         $this->_config = $config;
 
     }
@@ -49,7 +49,7 @@ class SubscriptionWebhook
         $paymentId = $data['payload']['payment']['entity']['id'];
         $rzpSubscriptionId = $data['payload']['subscription']['entity']['id'];
         $quoteId = $data['payload']['subscription']['entity']['notes']['magento_quote_id'];
-        $webHookSource = $data['payload']['subscription']['entity']['notes']['source'];
+        $webHookSource = $data['payload']['subscription']['entity']['source'];
         $amount = number_format($data['payload']['payment']['entity']['amount'] / 100, 2, ".", "");
 
         if (empty($quoteId)) {
@@ -66,7 +66,7 @@ class SubscriptionWebhook
         $orderLink = $orderLinkCollection->getData();
 
         // Process only if its from magento source
-        if ($webHookSource == "magento") {
+        if ($webHookSource == "magento-subscription") {
             if (!empty($orderLink['entity_id'])) {
                 // Check if front-end cache flag active
                 if (empty($this->_cache->load("quote_Front_processing_" . $quoteId)) === false) {

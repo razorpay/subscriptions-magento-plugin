@@ -54,9 +54,11 @@ class Subscription
                     "quantity" => (int)$quote->getItemsQty(),
                     "customer_notify" => 0,
                     "notes" => [
-                        "source" => "magento",
+                        "source" => "magento-subscription",
                         "magento_quote_id" => $quote->getId(),
-                    ]
+                    ],
+                    "source" => "magento-subscription",
+
                 ];
                 if ($trailDays) {
                     $subscriptionData["start_at"] = strtotime("+$trailDays days");
@@ -147,7 +149,7 @@ class Subscription
                             "description" => "Plan creation " . $product->getName() . " of the type $planType"
                         ],
                         "notes" => [
-                            "source" => "magento"
+                            "source" => "magento-subscription"
                         ]
                     ];
                     $this->_logger->info("Creating new plan for the product $planName of the type $planType", $planData);
