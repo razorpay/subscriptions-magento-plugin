@@ -2,10 +2,12 @@
 
 namespace Razorpay\Subscription\Controller\Customer;
 
-
+//use \Magento\Framework\App\Action\Action;
 use Razorpay\Magento\Controller\BaseController;
 use Razorpay\Subscription\Helper\Subscription;
-
+//use \Razorpay\Subscription\Model\ResourceModel\Subscrib\Collection as SubscribCollection;
+//use \Razorpay\Subscription\Model\ResourceModel\Subscrib\CollectionFactory as SubscribCollectionFactory;
+//use \Razorpay\Subscription\Model\Subscrib;
 
 
 class CancelSubscription extends BaseController   {
@@ -65,13 +67,19 @@ class CancelSubscription extends BaseController   {
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Razorpay\Magento\Model\Config $config,
-      \Magento\Framework\App\CacheInterface $cache,
+       // \Magento\Quote\Api\CartManagementInterface $cartManagement,
+       // \Razorpay\Magento\Model\CheckoutFactory $checkoutFactory,
+        \Magento\Framework\App\CacheInterface $cache,
+       // \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
         \Razorpay\Subscription\Helper\Subscription $subscription,
+        //SubscribCollectionFactory $subscribCollectionFactory,
+        //\Magento\Framework\App\ResourceConnection $Resource,
         \Psr\Log\LoggerInterface $logger,
         \Magento\Framework\Message\ManagerInterface $messageManager
     ) {
-       
-     parent::__construct(
+       // $this->_subscribCollectionFactory = $subscribCollectionFactory;
+       // $this->_resource = $Resource;
+        parent::__construct(
             $context,
             $customerSession,
             $checkoutSession,
@@ -113,7 +121,29 @@ class CancelSubscription extends BaseController   {
         }
     
         
+        //  if($subscriptionResponse->status=="cancelled"){
+        //  $this->messageManager->addSuccess( __('Cancelled  Successfully !') );
+        //  }
+        //  else{
+        //      echo "Not cancelled";
+        //  }
         
+// $cancel = $this->_subscribCollectionFactory->create();
+// $cancel->load($subscriptionResponse->id);
+// $cancel->setData('status',$subscriptionResponse->status);
+// $cancel->save();
+
+
+// if($subscriptionResponse->status=="cancelled"){
+//     echo $subscriptionResponse->id;
+//     // $subscription = $this->objectManagement->create('\Razorpay\Subscription\Model\Subscrib');
+//     //    //print_r($subscriptionResponse->plan_id);die;
+//     //    $subscription->addFieldToFilter('subscription_id', $id);
+//     //    $subscription->setData('status',$subscriptionResponse->status);
+//     //    $subscription->save();die;
+// }
+
+      // exit;
     }
 
 }

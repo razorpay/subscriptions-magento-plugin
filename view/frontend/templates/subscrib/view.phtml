@@ -4,7 +4,17 @@
 <!-- <h1><?php //echo $block->getSubscrib()->getStatus(); ?></h1>
 <p><?php //echo $block->getSubscrib()->getNextChargeAt(); ?></p> -->
 
+<<<<<<< HEAD
 <?php $subscriptioninfo = $block->getSubscrib();?>
+=======
+<?php
+
+$subscriptioninfo = $block->getSubscrib();
+// print_r($subscriptioninfo);
+// echo $subscriptioninfo['entity_id'];
+// exit;
+//echo "Product SKU ".$subscriptioninfo['value'];?>
+>>>>>>> 8b128f78747f1f3f1f205c34c019097f01b53fdd
 
 <div class="block block-dashboard-info">
     <div class="block-title"><strong>Order # <?php echo $subscriptioninfo['entity_id'];?></strong>
