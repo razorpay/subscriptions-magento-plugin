@@ -1,6 +1,6 @@
 <?php
 
-namespace Razorpay\Subscription\Controller\Adminhtml\OrderDetails;
+namespace Razorpay\Subscription\Block\Adminhtml\OrderDetails;
 
 use Magento\Backend\Block\Template;
 use Magento\Sales\Api\OrderRepositoryInterface;

@@ -3,7 +3,7 @@
     <body>
         <!--add custom block -->
         <referenceBlock name="order_additional_info">
-            <block class="Razorpay\Subscription\Controller\Adminhtml\OrderDetails\SubscriptionOrderDetails" name="subscription_details_custom_view" template="Razorpay_Subscription::subscription_order_details_view.phtml" />
+            <block class="Razorpay\Subscription\Block\Adminhtml\OrderDetails\SubscriptionOrderDetails" name="subscription_details_custom_view" template="Razorpay_Subscription::subscription_order_details_view.phtml" />
         </referenceBlock>
     </body>
 </page>
