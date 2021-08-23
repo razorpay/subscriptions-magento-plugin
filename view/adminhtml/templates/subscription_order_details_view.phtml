@@ -18,7 +18,7 @@ $subscriptionDetails = $block->fetchSubscriptionOrderDetails();
             </div>
             <div class="admin__page-section-content">
                 <strong>Subscription Id:</strong>
-                <span class="actions"><a href="<?php echo $block->getUrl('subscribed/subscription/edit/'); ?>"><?php echo __($subscriptionDetails["entity_id"]) ?></a></span>
+                <span class="actions"><a href="<?php echo $block->getUrl('razorpaysubscription/customer/cancelSubscription/'); ?>"><?php echo __($subscriptionDetails["entity_id"]) ?></a></span>
             </div>
         </div>
     </section>
