@@ -55,9 +55,9 @@ class OrderPlaceSaveAfterObserver implements ObserverInterface
         /** @var Payment $payment */
         $payment = $order->getPayment();
 
-        $pay_method = $payment->getMethodInstance();
+        $paymentMethod = $payment->getMethodInstance();
 
-        $code = $pay_method->getCode();
+        $code = $paymentMethod->getCode();
 
         if($code === SubscriptionPaymentMethod::METHOD_CODE)
         {
@@ -81,10 +81,10 @@ class OrderPlaceSaveAfterObserver implements ObserverInterface
         $lastQuoteId = $order->getQuoteId();
         $rzpPaymentId  = $payment->getLastTransId();
 
-        $amount_paid = number_format($this->rzpMethod->getAmountPaid($rzpPaymentId) / 100, 2, ".", "");
+        $amountPaid = number_format($this->rzpMethod->getAmountPaid($rzpPaymentId) / 100, 2, ".", "");
 
         $order->addStatusHistoryComment(
-            __('Actual Amount Paid of %1, with Razorpay Offer/Fee applied.',  $order->getBaseCurrency()->formatTxt($amount_paid))
+            __('Actual Amount Paid of %1, with Razorpay Offer/Fee applied.',  $order->getBaseCurrency()->formatTxt($amountPaid))
         );
         $order->save();
 

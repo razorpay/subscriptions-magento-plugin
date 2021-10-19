@@ -292,7 +292,7 @@ class Subscription
      * @param $validateTo
      * @return bool
      */
-    public function validateIsASubscriptionProduct($cartItems, $validateTo): bool
+    public function validateIsASubscriptionProduct($cartItems, $validateTo)
     {
         try {
             $this->_logger->info("-----------------Validating cart started-----------------");
@@ -317,19 +317,18 @@ class Subscription
     }
 
 
-
-    public function cancelSubscription($id,$rzp) {
-
-
+    public function cancelSubscription($id, $rzp)
+    {
         //fetch and cancel subscription
-        $subscriptionResponse = $rzp->subscription->fetch($id)->cancel([ "cancel_at_cycle_end" => 0 ]);
+        $subscriptionResponse = $rzp->subscription->fetch($id)->cancel(["cancel_at_cycle_end" => 0]);
+
         //update record
         $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
-          $postUpdate = $subscription->load($subscriptionResponse->id,'subscription_id');
-           
-            $postUpdate->setStatus('cancelled');
-            $postUpdate->setCancelBy('customer');
-          
-            $postUpdate->save();
+        $postUpdate = $subscription->load($subscriptionResponse->id, 'subscription_id');
+
+        $postUpdate->setStatus('cancelled');
+        $postUpdate->setCancelBy('customer');
+
+        $postUpdate->save();
     }        
 }

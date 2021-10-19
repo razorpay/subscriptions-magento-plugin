@@ -28,9 +28,7 @@ class SalesModelServiceQuoteSubmitBeforeObserver implements ObserverInterface
                 if($quoteItem = $this->getQuoteItemById($orderItem->getQuoteItemId())){
                     if ($additionalOptionsQuote = $quoteItem->getOptionByCode('additional_options'))
                     {
-                        //To do
-                        // - check to make sure element are not added twice
-                        // - $additionalOptionsQuote - may not be an array
+
                         if($additionalOptionsOrder = $orderItem->getProductOptionByCode('additional_options'))
                         {
                             $additionalOptions = array_merge($additionalOptionsQuote, $additionalOptionsOrder);
