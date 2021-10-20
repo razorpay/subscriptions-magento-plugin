@@ -2,11 +2,9 @@
 
 namespace Razorpay\Subscription\Helper;
 
-use Magento\Catalog\Model\Product;
 use Magento\Framework\DataObject;
 use \Psr\Log\LoggerInterface;
 use Razorpay\Magento\Model\Config;
-use Razorpay\Magento\Model\PaymentMethod;
 use Razorpay\Subscription\Model\SubscriptionPaymentMethod;
 
 class SubscriptionWebhook
@@ -20,19 +18,41 @@ class SubscriptionWebhook
      * @var \Magento\Framework\App\ObjectManager
      */
     private $_objectManagement;
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    private $_storeManagement;
+    /**
+     * @var \Magento\Framework\App\CacheInterface
+     */
+    private $_cache;
+    /**
+     * @var \Magento\Quote\Model\QuoteRepository
+     */
+    private $_quoteRepository;
+    /**
+     * @var mixed|Config
+     */
+    private $_config;
+
+    private $_quoteFactory;
+
+    /**
+     * @var \Magento\Quote\Model\QuoteManagement
+     */
+    private $_quoteManagement;
 
 
-    public function __construct($config, $logger, $quoteRepository, $order, $storeManagement, $cache, $quoteManagement )
+    public function __construct($logger)
     {
         $this->_logger = $logger;
-        $this->_quoteRepository = $quoteRepository;
-        $this->_order = $order;
-        $this->_storeManagement = $storeManagement;
-        $this->_cache = $cache;
-        $this->_quoteManagement = $quoteManagement;
         $this->_objectManagement = \Magento\Framework\App\ObjectManager::getInstance();
+        $this->_storeManagement = $this->_objectManagement->get(\Magento\Store\Model\StoreManagerInterface::class);
+        $this->_cache= $this->_objectManagement->get(\Magento\Framework\App\CacheInterface::class);
+        $this->_quoteRepository= $this->_objectManagement->get(\Magento\Quote\Model\QuoteRepository::class);
+        $this->_config= $this->_objectManagement->get(\Razorpay\Magento\Model\Config::class);
+        $this->_quoteManagement= $this->_objectManagement->get(\Magento\Quote\Model\QuoteManagement::class);
         $this->_quoteFactory = new  \Magento\Quote\Model\QuoteFactory($this->_objectManagement);
-        $this->_config = $config;
 
     }
 
@@ -94,7 +114,7 @@ class SubscriptionWebhook
                 // checking if payment id is null hen processing same quote for order else creating new order
                 if (empty($orderLink['rzp_payment_id'])) {
                     //validate if the quote Order is still active
-                    $quote = $this->_quoteRepository->get($quoteId);
+                    $quote =  $this->_quoteRepository->get($quoteId);
 
                     //exit if quote is not active
                     if (!$quote->getIsActive()) {
@@ -118,8 +138,8 @@ class SubscriptionWebhook
 
 
                     if ($orderLink['order_placed']) {
-                            $this->_logger->info(__("Razorpay Subscription Webhook: Quote order is inactive for quoteID: $quoteId and Razorpay payment_id(:$paymentId) with Maze OrderID (:%1) ", $orderLink['increment_order_id']));
-                            return;
+                        $this->_logger->info(__("Razorpay Subscription Webhook: Quote order is inactive for quoteID: $quoteId and Razorpay payment_id(:$paymentId) with Maze OrderID (:%1) ", $orderLink['increment_order_id']));
+                        return;
                     }
 
                     //Now start processing the new order creation through webhook
@@ -161,7 +181,7 @@ class SubscriptionWebhook
                         return ;
                     }
 
-                    $quote = $this->_quoteRepository->get($quoteId);
+                    $quote  = $this->_quoteRepository->get($quoteId);
                     /* @var \Magento\Quote\Model\Quote $quote */
 
                     $subscriptionCollection = $this->_objectManagement->get('Razorpay\Subscription\Model\Subscriptions')
@@ -259,7 +279,7 @@ class SubscriptionWebhook
      */
     protected function getQuoteObject($post, $quoteId)
     {
-        $quote = $this->_quoteRepository->get($quoteId);
+        $quote  = $this->_quoteRepository->get($quoteId);
 
         $firstName = $quote->getBillingAddress()->getFirstname() ?? 'null';
         $lastName = $quote->getBillingAddress()->getLastname() ?? 'null';
@@ -330,7 +350,7 @@ class SubscriptionWebhook
         $salesOrder = $collection->getData();
 
         if (!empty($salesOrder['entity_id'])) {
-            $order = $this->_order->load($salesOrder['entity_id']);
+            $order = $this->_objectManagement->get('Magento\Sales\Model\Order')->load($salesOrder['entity_id']);
             /* @var \Magento\Sales\Model\Order $order */
             $orderRzpPaymentId = $order->getPayment()->getLastTransId();
             if ($orderRzpPaymentId === $paymentId) {
