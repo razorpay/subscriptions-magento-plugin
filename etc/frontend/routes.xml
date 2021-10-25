@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="standard">
+        <route id="razorpaySubscription" frontName="razorpaysubscription">
+            <module name="Razorpay_Subscription" />
+        </route>
+         <route id="customer">
+           <module name="Razorpay_Subscription" before="Magento_Customer" />
+       </route>
+    </router>
+</config>

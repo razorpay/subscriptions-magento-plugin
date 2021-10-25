@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Razorpay_Subscription::subscriptions" title="Razorpay Subscriptions" module="Razorpay_Subscription" sortOrder="1000" parent="Magento_Sales::sales_operation" resource="Razorpay_Subscription::subscriptions" action="subscribed/index/index"/>
+    </menu>
+</config>
