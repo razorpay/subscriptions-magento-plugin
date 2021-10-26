@@ -6,7 +6,7 @@
             <item name="deps" xsi:type="string">subscribed_listing.subscribed_listing_data_source</item>
         </item>
         <item name="spinner" xsi:type="string">md_cr_columns</item>
-      
+
     </argument>
     <dataSource name="subscribed_listing_data_source">
         <argument name="dataProvider" xsi:type="configurableObject">
@@ -95,7 +95,7 @@
             <settings>
                 <filter>textRange</filter>
                 <label translate="true">ID</label>
-              
+
                 <resizeDefaultWidth>25</resizeDefaultWidth>
             </settings>
         </column> -->
@@ -104,7 +104,7 @@
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Subscription Id</label>
-                 
+
             </settings>
         </column>
         <column name="firstname">
@@ -112,7 +112,7 @@
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Customer </label>
-                 
+
             </settings>
         </column>
          <column name="value">
@@ -120,7 +120,7 @@
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Product Name</label>
-               
+
             </settings>
         </column>
         <column name="status">
@@ -128,71 +128,68 @@
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Status</label>
-               
+
             </settings>
         </column>
- <column name="total_count">
+        <column name="total_count">
             <settings>
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Total Count</label>
-               
+
             </settings>
         </column>
 
- <column name="paid_count">
+        <column name="paid_count">
             <settings>
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Paid Count</label>
-                
+
             </settings>
         </column>
- <column name="remaining_count">
+        <column name="remaining_count">
             <settings>
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Remaining Count</label>
-            
+
             </settings>
         </column>
 
-         <column name="subscription_created_at">
+        <column name="subscription_created_at">
             <settings>
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Subscription Created At</label>
-               
-               
+
+
             </settings>
         </column>
- <column name="next_charge_at">
+        <column name="next_charge_at">
             <settings>
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Next Charge at</label>
-              
+
             </settings>
         </column>
- <column name="start_at">
+        <column name="start_at">
             <settings>
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">Start At</label>
-               
+
             </settings>
         </column>
 
-         <column name="end_at">
+        <column name="end_at">
             <settings>
                 <filter>text</filter>
                 <bodyTmpl>ui/grid/cells/text</bodyTmpl>
                 <label translate="true">End At</label>
-               
+
             </settings>
         </column>
-
-
-      
     </columns>
 </listing>

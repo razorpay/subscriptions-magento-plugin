@@ -49,6 +49,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
         $this->_serializer = $serializer;
         $this->_logger = $logger;
     }
+
     /**
      * Add order information into GA block to render on checkout success pages
      *

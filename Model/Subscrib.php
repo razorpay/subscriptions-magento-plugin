@@ -5,35 +5,21 @@ namespace Razorpay\Subscription\Model;
 use \Magento\Framework\Model\AbstractModel;
 use \Magento\Framework\DataObject\IdentityInterface;
 use \Razorpay\Subscription\Api\Data\SubscribInterface;
+
 /**
  * Class Subscrib
  * @package Razorpay\Subscription\Model
  */
 class Subscrib extends AbstractModel implements SubscribInterface, IdentityInterface
 {
-    /**
-     *
-     */
     const CACHE_TAG = 'razorpay_subscriptions';
-    /**
-     * @var string
-     */
-    // protected $_cacheTag = 'razorpay_subscriptions';
-    // /**
-    //  * @var string
-    //  */
-    // protected $_eventPrefix = 'razorpay_subscriptions';
 
-    /**
-     *
-     */
     protected function _construct()
     {
         $this->_init('Razorpay\Subscription\Model\ResourceModel\Subscrib');
     }
 
-
-/**
+    /**
      * Get SubscriptionId
      *
      * @return string|null
@@ -113,7 +99,8 @@ class Subscrib extends AbstractModel implements SubscribInterface, IdentityInter
     {
         return $this->setData(self::STATUS, $status);
     }
- /**
+
+    /**
      * Set Value
      *
      * @param string $value
@@ -123,6 +110,7 @@ class Subscrib extends AbstractModel implements SubscribInterface, IdentityInter
     {
         return $this->setData(self::VALUE, $value);
     }
+
     /**
      * Set Next Charge At
      *
@@ -144,9 +132,4 @@ class Subscrib extends AbstractModel implements SubscribInterface, IdentityInter
     {
         return $this->setData(self::ENTITY_ID, $id);
     }
-
-    
-
-
-
 }

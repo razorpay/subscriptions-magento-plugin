@@ -24,8 +24,6 @@ class OrderPlaceSaveAfterObserver implements ObserverInterface
      */
     private $orderRepository;
 
-
-
     /**
      * StatusAssignObserver constructor.
      *

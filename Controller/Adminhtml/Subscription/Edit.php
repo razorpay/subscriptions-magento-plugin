@@ -75,7 +75,6 @@ class Edit extends Action
         $id = $this->getRequest()->getParam('id');
         $model = $this->_model;
  
-        // If you have got an id, it's edition
         if ($id) {
             $model->load($id);
             if (!$model->getId()) {
