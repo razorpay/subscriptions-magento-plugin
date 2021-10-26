@@ -9,8 +9,8 @@ $subscriptioninfo = $block->getSubscrib();
         <a href="<?php echo $block->getUrl('razorpaysubscription/customer/cancelSubscription/'); ?>s_id/<?php echo $subscriptioninfo['subscription_id']; ?>/oid/<?php echo $subscriptioninfo['entity_id']; ?>"
            class="action primary"
            style="float:right;" <?php if ($subscriptioninfo['status'] == 'cancelled') echo 'disabled'; ?> >Cancel</a>
-        <a href="<?php echo $block->getUrl('razorpaysubscription/customer/cancelSubscription/'); ?>s_id/<?php echo $subscriptioninfo['subscription_id']; ?>/oid/<?php echo $subscriptioninfo['entity_id']; ?>"
-           class="action primary" style="float:right;">Upgrade</a>
+<!--        <a href="--><?php //echo $block->getUrl(''); ?><!--s_id/--><?php //echo $subscriptioninfo['subscription_id']; ?><!--/oid/--><?php //echo $subscriptioninfo['entity_id']; ?><!--"-->
+<!--           class="action primary" style="float:right;">Upgrade</a>-->
     </div>
     <div class="block-content">
         <div class="box box-information ">
