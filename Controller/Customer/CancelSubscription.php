@@ -71,10 +71,10 @@ class CancelSubscription extends BaseController
                 return $this->_redirect('customer/account/login');
             }
             $this->subscription->cancelSubscription($id, $this->rzp);
-            $this->messageManager->addSuccess(__("Subscription is cancelled successfully!"));
+            $this->messageManager->addErrorMessage(__("Subscription is cancelled successfully!"));
             return $this->_redirect('razorpaysubscription/subscrib/view/id/' . $oid);
         } catch (\Exception $e) {
-            $this->messageManager->addError(__($e->getMessage()));
+            $this->messageManager->addErrorMessage(__($e->getMessage()));
             return $this->_redirect('razorpaysubscription/subscrib/view/id/' . $oid);
         }
     }
