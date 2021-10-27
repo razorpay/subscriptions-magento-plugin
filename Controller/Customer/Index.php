@@ -10,8 +10,7 @@ use \Magento\Framework\Exception\LocalizedException;
 
 class Index extends Action
 {
-
-	   /**
+    /**
      * @var PageFactory
      */
     protected $resultPageFactory;
@@ -23,10 +22,8 @@ class Index extends Action
      * @codeCoverageIgnore
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
-    public function __construct(
-        Context $context,
-        PageFactory $resultPageFactory
-    ) {
+    public function __construct(Context $context,PageFactory $resultPageFactory)
+    {
         parent::__construct(
             $context
         );

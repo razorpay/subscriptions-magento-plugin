@@ -1,7 +1,4 @@
-<!-- <?php /** @var Razorpay\Subscription\Block\Display $block */ ?>
-<h1>Razorpay subscrib</h1>
-
--->
+<?php /** @var Razorpay\Subscription\Block\Display $block */ ?>
 
 <?php $_orders = $block->getSubscribs(); ?>
 
@@ -11,40 +8,41 @@
         <table class="data table table-order-items history" id="my-orders-table">
             <caption class="table-caption"><?= $block->escapeHtml(__('Orders')) ?></caption>
             <thead>
-                <tr>
-                    <th scope="col" class="col id">Order #</th>
-                    <th scope="col" class="col subscriptionid">Subscription ID</th>
-                    <th scope="col" class="col product">Product</th>
-                
-                    <th scope="col" class="col nextcharged">Next Charged At</th>
-                    
-                    <th scope="col" class="col status">Status</th>
-                   
-                </tr>
+            <tr>
+                <th scope="col" class="col id">Order #</th>
+                <th scope="col" class="col subscriptionid">Subscription ID</th>
+                <th scope="col" class="col product">Product</th>
+                <th scope="col" class="col status">Status</th>
+                <th scope="col" class="col nextcharged">Next Charged At</th>
+            </tr>
             </thead>
             <tbody>
-                <?php foreach ($block->getSubscribs() as $_order) : ?>
-                    <?php /** @var Razorpay\Subscription\Model\Subscrib */ ?>
-<tr>
-                  <td data-th="<?= $block->escapeHtml(__('ID')) ?>" class="col id">
-                <?php echo $_order->getId() ?>
-            </td>
-            <td data-th="<?= $block->escapeHtml(__('Subscription ID')) ?>" class="col subscriptionid">
-            <a href="<?php echo $block->getSubscribUrl($_order);?>"> <?php echo $_order->getSubscriptionId() ?></a></td>
+            <?php foreach ($block->getSubscribs() as $_order) : ?>
+                <?php /** @var Razorpay\Subscription\Model\Subscrib */ ?>
+                <tr>
+                    <td data-th="<?= $block->escapeHtml(__('ID')) ?>" class="col id">
+                        <?php echo $_order->getId() ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Subscription ID')) ?>" class="col subscriptionid">
+                        <a href="<?php echo $block->getSubscribUrl($_order); ?>"> <?php echo $_order->getSubscriptionId() ?></a>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Product')) ?>" class="col product">
+                        <?php echo $_order->getValue() ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Status')) ?>" class="col status">
+                        <?php echo $_order->getStatus() ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Next Charged At')) ?>" class="col nextcharged">
+                        <?php echo $_order->getNextChargeAt() ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
 
-                <td data-th="<?= $block->escapeHtml(__('Product')) ?>" class="col product">
-                <?php echo $_order->getValue() ?>
-            </td> <td data-th="<?= $block->escapeHtml(__('Next Charged At')) ?>" class="col nextcharged">
-                <?php echo $_order->getNextChargeAt() ?>
-            </td>
-             <td data-th="<?= $block->escapeHtml(__('Status')) ?>" class="col status">
-                <?php echo $_order->getStatus() ?>
-            </td> 
-           
-</tr>
-                    <?php endforeach; ?>      
-                    
-                          </tbody>
+            </tbody>
         </table>
-</div>
+    </div>
+<?php else: ?>
+    <div class="message info empty">
+        <span><?php echo __("You do not have any subscriptions yet."); ?></span>
+    </div>
 <?php endif ?>

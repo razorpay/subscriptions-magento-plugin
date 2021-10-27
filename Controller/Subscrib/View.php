@@ -42,7 +42,6 @@ class View extends Action
         );
         $this->_coreRegistry = $coreRegistry;
         $this->_resultPageFactory = $resultPageFactory;
-       
     }
 
     /**
@@ -52,10 +51,8 @@ class View extends Action
      */
     public function execute()
     {
-        //echo "111";
-        $this->_coreRegistry->register(self::REGISTRY_KEY_POST_ID, (int) $this->_request->getParam('id'));
+        $this->_coreRegistry->register(self::REGISTRY_KEY_POST_ID, (int)$this->_request->getParam('id'));
         $resultPage = $this->_resultPageFactory->create();
-       
         return $resultPage;
     }
 }
