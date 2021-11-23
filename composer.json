@@ -5,7 +5,7 @@
     "require": {
         "php": "~5.6.0|~7.0|~8.0",
         "razorpay/razorpay": "2.*",
-        "razorpay/magento": "dev-feature/webhook_support_subscription_charged"
+        "razorpay/magento": "3.*"
     },
     "keywords": [
         "razorpay",
