@@ -20,7 +20,8 @@ class Display extends Template
     protected $_subscribCollectionFactory = null;
     protected $moduleReader;
     protected $_resource;
-    
+    private  $urlInterface;
+
     /**
      * Constructor
      *
@@ -34,6 +35,7 @@ class Display extends Template
         SubscribCollectionFactory $subscribCollectionFactory,
         \Magento\Framework\App\ResourceConnection $Resource,
         \Magento\Framework\Module\Dir\Reader $moduleReader,
+        \Magento\Framework\UrlInterface $urlInterface,
         array $data = []
        
     ) {
@@ -43,7 +45,7 @@ class Display extends Template
 
         $this->moduleReader = $moduleReader;
         $this->customerSession = $customerSession;
-
+        $this->urlInterface = $urlInterface;
     }
 
     /**
@@ -105,7 +107,7 @@ class Display extends Template
         Subscrib $subscrib
     ) {
         
-        return '/subscriptionMagento/razorpaysubscription/subscrib/view/id/' . $subscrib->getId();
+        return $this->urlInterface->getUrl() ."razorpaysubscription/subscrib/view/id/{$subscrib->getId()}";
         
     }
 
