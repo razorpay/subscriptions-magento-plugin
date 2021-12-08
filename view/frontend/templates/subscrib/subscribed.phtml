@@ -7,7 +7,8 @@
     <div class="table-wrapper orders-history">
         <div class="field region">
             <select class="action-select">
-                <option>--Action--</option>   
+                <option>--Action--</option>
+                <option value="cancel">Cancel</option>   
                 <option value="pause">Pause</option>
                 <option value="resume">Resume</option>
             </select>
@@ -73,14 +74,14 @@
         })
        
         actionSelect.on('change', function(){
-          if(this.value == "pause" || this.value == "active" || this.value == "resume"){
+          if(this.value == "pause" || this.value == "cancel" || this.value == "resume"){
              switch (this.value) {
                  case "cancel":
-                     //console.log('Hello1')
+                    dataform.attr('action',"<?php echo $block->getUrl('razorpaysubscription/customer/massCancelSubscription') ?>")
                      break;
                 
                 case "resume":
-                    //console.log('Hello2')
+                    dataform.attr('action',"<?php echo $block->getUrl('razorpaysubscription/customer/massResumeSubscription') ?>")
                     break;
 
                 case "pause":

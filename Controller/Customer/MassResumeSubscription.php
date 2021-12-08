@@ -5,7 +5,7 @@ namespace Razorpay\Subscription\Controller\Customer;
 use Razorpay\Magento\Controller\BaseController;
 use Razorpay\Subscription\Helper\Subscription;
 
-class MassPauseSubscription extends BaseController
+class MassResumeSubscription extends BaseController
 {
     /**
      * @var \Razorpay\Magento\Model\Config
@@ -73,12 +73,12 @@ class MassPauseSubscription extends BaseController
             
             foreach ($orders as $order) {
                $subscriptionData =  $this->getSubscription($order);
-               if($subscriptionData['status'] == "active"){
-                  $this->subscription->pauseSubscription($subscriptionData['subscription_id'], $this->rzp);
+               if($subscriptionData['status'] == "paused"){
+                  $this->subscription->resumeSubscription($subscriptionData['subscription_id'], $this->rzp);
                 }
             }
 
-            $this->messageManager->addSuccess(__("Subscription is paused successfully!"));
+            $this->messageManager->addSuccess(__("Subscription is resume successfully!"));
             return $this->_redirect('razorpaysubscription/customer/index/');
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
