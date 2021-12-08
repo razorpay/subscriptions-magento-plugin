@@ -49,7 +49,7 @@ class View extends Template
      * @param Registry $coreRegistry
      * @param SubscribFactory $subscribFactory
      * @param SubscribCollectionFactory $subscribCollectionFactory
-     * @param \Magento\Framework\App\ResourceConnection $Resource
+     * @param ResourceConnection $Resource
      * @param Subscription $subscription
      * @param array $data
      */
@@ -137,7 +137,7 @@ class View extends Template
 
     }
 
-    public function _getCurrencySymbol($_code)
+    public function getCurrencySymbol($_code)
     {
         $_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $_Symbol = $_objectManager->create('Magento\Directory\Model\CurrencyFactory')->create()->load($_code);
@@ -153,7 +153,7 @@ class View extends Template
 
         $_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $self = $_objectManager->create('Razorpay\Subscription\Model\SubscriptionPaymentMethod');
-        $subscriptionInvoices = $this->_subscription->allSubscriptionInvoice($singleData->getSubscriptionId(), $self->rzp) ;
+        $subscriptionInvoices = $this->_subscription->fetchSubscriptionInvoice($singleData->getSubscriptionId(), $self->rzp) ;
         return $subscriptionInvoices ;
     }
 

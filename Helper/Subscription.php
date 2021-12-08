@@ -331,7 +331,12 @@ class Subscription
 
         $postUpdate->save();
     }
-
+    
+     /**
+     * Pause Subscription
+     * @param $id 
+     * @return array
+     */
     public function pauseSubscription($id, $rzp)
     {
         //fetch and pause subscription
@@ -346,7 +351,12 @@ class Subscription
 
         $postUpdate->save();
     }
-
+    
+    /**
+     * Resume Subscription
+     * @param $id 
+     * @return array
+     */
     public function resumeSubscription($id, $rzp)
     {
         //fetch and resume subscription
@@ -361,8 +371,13 @@ class Subscription
 
         $postUpdate->save();
     }
-
-    public function allSubscriptionInvoice($subscriptionId, $rzp){
+    
+    /**
+     * Fetch all Subscription invoices
+     * @param $subscriptionId 
+     * @return array
+     */
+    public function fetchSubscriptionInvoice($subscriptionId, $rzp){
 
         $subscriptionResponse = $rzp->invoice->all(["subscription_id"=>$subscriptionId]);
 

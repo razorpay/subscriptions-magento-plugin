@@ -7,7 +7,6 @@ $invoices = $block->getSubscriptionInvoice();
 
 <div class="block block-dashboard-info">
     <div class="block-title"><strong>Order # <?php echo $subscriptioninfo['entity_id']; ?></strong>
-     <?= $subscriptioninfo['status'] ?>
         <?php if ($subscriptioninfo['status'] != 'cancelled' && $subscriptioninfo['status'] != 'created'): ?>
             <a href="<?php echo $block->getUrl('razorpaysubscription/customer/cancelSubscription/'); ?>s_id/<?php echo $subscriptioninfo['subscription_id']; ?>/oid/<?php echo $subscriptioninfo['entity_id']; ?>"
                class="action primary"
@@ -63,17 +62,17 @@ $invoices = $block->getSubscriptionInvoice();
             <div class="box-content">
                 <strong class="account">
                     Amount :
-                </strong> <?php echo $block->_getCurrencySymbol($subscriptioninfo['store_currency_code'])." ".$subscriptioninfo['subtotal']; ?>
+                </strong> <?php echo $block->getCurrencySymbol($subscriptioninfo['store_currency_code'])." ".$subscriptioninfo['subtotal']; ?>
             </div>
             <div class="box-content">
                 <strong class="account">
                     Shipping :
-                </strong> <?php echo $block->_getCurrencySymbol($subscriptioninfo['store_currency_code'])." ".$subscriptioninfo['base_shipping_amount']; ?>
+                </strong> <?php echo $block->getCurrencySymbol($subscriptioninfo['store_currency_code'])." ".$subscriptioninfo['base_shipping_amount']; ?>
             </div>
             <div class="box-content">
                 <strong class="account">
                     Grand Total :
-                </strong> <?php echo $block->_getCurrencySymbol($subscriptioninfo['store_currency_code'])." ".$subscriptioninfo['grand_total']; ?>
+                </strong> <?php echo $block->getCurrencySymbol($subscriptioninfo['store_currency_code'])." ".$subscriptioninfo['grand_total']; ?>
             </div>
         </div>
         <div class="box box-newsletter">
@@ -129,7 +128,7 @@ $invoices = $block->getSubscriptionInvoice();
             <div class="box-content">
             <strong class="account">
                 Billing amount :
-                </strong> <?php echo $block->_getCurrencySymbol($subscriptioninfo['store_currency_code'])." ".$subscriptioninfo['subtotal']; ?>
+                </strong> <?php echo $block->getCurrencySymbol($subscriptioninfo['store_currency_code'])." ".$subscriptioninfo['subtotal']; ?>
             </div>
     </div>
     <br/><br/>
@@ -153,28 +152,28 @@ $invoices = $block->getSubscriptionInvoice();
                         <tr>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Date')) ?>" class="col date"><?= !empty($invoices['items'][0]['billing_end']) ? date('M d, Y', $invoices['items'][0]['billing_end']): '--'?></td>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Invoice Id')) ?>" class="col invoice">--</td>
-                                <td data-th="<?= $block->escapeHtmlAttr(__('Recurring Amount')) ?>" class="col recurring"><?= $block->_getCurrencySymbol($subscriptioninfo['store_currency_code'])." ".$invoices['items'][0]['line_items'][0]['net_amount']/100; ?>
-                                   <br/><small><?= $invoices['items'][0]['line_items'][0]['quantity'] ."x ".$block->_getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoices['items'][0]['line_items'][0]['unit_amount']/100;  ?> per unit</small>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Recurring Amount')) ?>" class="col recurring"><?= $block->getCurrencySymbol($subscriptioninfo['store_currency_code'])." ".$invoices['items'][0]['line_items'][0]['net_amount']/100; ?>
+                                   <br/><small><?= $invoices['items'][0]['line_items'][0]['quantity'] ."x ".$block->getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoices['items'][0]['line_items'][0]['unit_amount']/100;  ?> per unit</small>
                                 </td>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Add-Ons')) ?>" class="col addon">--</td>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Status')) ?>" class="col status"><?= 'Next Due' ?></td>
-                                <td data-th="<?= $block->escapeHtmlAttr(__('Total amount')) ?>" class="col total"><?= $block->_getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoices['items'][0]['amount_paid']/100 ?></td>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Total amount')) ?>" class="col total"><?= $block->getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoices['items'][0]['amount_paid']/100 ?></td>
                             </tr>
                     <?php endif ?>
                     <?php foreach ($invoices['items'] as $invoice) : ?>
                             <tr>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Date')) ?>" class="col date"><?=  !empty($invoice['billing_start']) ? date('M d, Y', $invoice['billing_start']) : '--' ?></td>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Invoice Id')) ?>" class="col invoice"><a href="<?php $invoice['short_url'] ?>"><?php echo $invoice['id'] ?></a></td>
-                                <td data-th="<?= $block->escapeHtmlAttr(__('Recurring Amount')) ?>" class="col recurring"><?php echo $block->_getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoice['line_items'][0]['net_amount']/100; ?>
-                                   <br/><small><?php echo $invoice['line_items'][0]['quantity'] ."x ".$block->_getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoice['line_items'][0]['unit_amount']/100  ?> per unit</small>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Recurring Amount')) ?>" class="col recurring"><?php echo $block->getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoice['line_items'][0]['net_amount']/100; ?>
+                                   <br/><small><?php echo $invoice['line_items'][0]['quantity'] ."x ".$block->getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoice['line_items'][0]['unit_amount']/100  ?> per unit</small>
                                 </td>
-                                <td data-th="<?= $block->escapeHtmlAttr(__('Add-Ons')) ?>" class="col addon"><?= isset($invoice['line_items'][1]) ? $invoice['line_items'][1]['name']."<br/>".$block->_getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoice['line_items'][1]['net_amount']/100 : '--'?>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Add-Ons')) ?>" class="col addon"><?= isset($invoice['line_items'][1]) ? $invoice['line_items'][1]['name']."<br/>".$block->getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoice['line_items'][1]['net_amount']/100 : '--'?>
                                 <?php if (isset($invoice['line_items'][1])) :?>
-                                   <br/> <small><?php echo $invoice['line_items'][1]['quantity'] ."x ".$block->_getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoice['line_items'][1]['unit_amount']/100  ?> per unit</small>
+                                   <br/> <small><?php echo $invoice['line_items'][1]['quantity'] ."x ".$block->getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoice['line_items'][1]['unit_amount']/100  ?> per unit</small>
                                 <?php endif ?>
                                 </td>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Status')) ?>" class="col status"><?= ucfirst($invoice['status']) ?></td>
-                                <td data-th="<?= $block->escapeHtmlAttr(__('Total amount')) ?>" class="col total"><?= $block->_getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoice['amount']/100 ?></td>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Total amount')) ?>" class="col total"><?= $block->getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoice['amount']/100 ?></td>
                             </tr>
                         <?php endforeach; ?>
                 </tbody>
