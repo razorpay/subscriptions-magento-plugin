@@ -218,7 +218,7 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
             if(empty($request['payload']['payment']['entity']['id']) === false)
             {
                 $payment_id = $request['payload']['payment']['entity']['id'];
-                $rzp_order_id = $request['payload']['order']['entity']['id'];
+                $rzp_order_id = $request['payload']['subscription']['entity']['id'];
 
                 $isWebhookCall = true;
                 //validate that request is from webhook only
@@ -239,8 +239,8 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
 
                 $this->validateSignature([
                     'razorpay_payment_id' => $payment_id,
-                    'razorpay_subscription_id'   => $rzp_order_id,
-                    'razorpay_signature'  => $request['paymentMethod']['additional_data']['rzp_signature']
+                    'razorpay_subscription_id' => $rzp_order_id,
+                    'razorpay_signature' => $request['paymentMethod']['additional_data']['rzp_signature']
                 ]);
 
             }
