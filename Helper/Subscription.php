@@ -330,5 +330,52 @@ class Subscription
         $postUpdate->setCancelBy('customer');
 
         $postUpdate->save();
-    }        
+    }
+    
+    public function pauseSubscription($id, $rzp)
+    {
+        //fetch and pause subscription
+        $subscriptionResponse = $rzp->subscription->fetch($id)->pause(["pause_at"=>"now"]);
+
+        //update record
+        $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
+        $postUpdate = $subscription->load($subscriptionResponse->id, 'subscription_id');
+
+        $postUpdate->setStatus('paused');
+        $postUpdate->setCancelBy('customer');
+
+        $postUpdate->save();
+    }
+
+    public function resumeSubscription($id, $rzp)
+    {
+        //fetch and resume subscription
+        $subscriptionResponse = $rzp->subscription->fetch($id)->resume(["resume_at"=>"now"]);
+
+        //update record
+        $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
+        $postUpdate = $subscription->load($subscriptionResponse->id, 'subscription_id');
+
+        $postUpdate->setStatus('active');
+        $postUpdate->setCancelBy('customer');
+
+        $postUpdate->save();
+    }
+
+    public function allSubscriptionInvoice($subscriptionId, $rzp){
+
+        $subscriptionResponse = $rzp->invoice->all(["subscription_id"=>$subscriptionId]);
+
+        //update record
+        $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
+        $postUpdate = $subscription->load($subscriptionId, 'subscription_id');
+
+        if($subscriptionResponse->count > $postUpdate->getPaidCount()){
+            $postUpdate->setRemainingCount($postUpdate->getTotalCount() - $subscriptionResponse->count);
+            $postUpdate->setPaidCount($subscriptionResponse->count);
+            $postUpdate->setNextChargeAt($subscriptionResponse->items[0]['billing_end']);
+            $postUpdate->save();
+        }
+        return $subscriptionResponse ;
+     }
 }
