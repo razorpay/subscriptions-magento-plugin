@@ -17,10 +17,12 @@ $invoices = $block->getSubscriptionInvoice();
                class="action primary"
                style="float:right;"  >Pause</a>
           <?php endif ?>
-
+         
+          <?php if ($subscriptioninfo['status'] != 'active'): ?> 
             <a href="<?php echo $block->getUrl('razorpaysubscription/customer/resumeSubscription/'); ?>s_id/<?php echo $subscriptioninfo['subscription_id']; ?>/oid/<?php echo $subscriptioninfo['entity_id']; ?>"
                class="action primary"
                style="float:right;"  >Resume</a>
+          <?php endif ?>     
         <?php endif ?>
 <!--        <a href="--><?php //echo $block->getUrl(''); ?><!--s_id/--><?php //echo $subscriptioninfo['subscription_id']; ?><!--/oid/--><?php //echo $subscriptioninfo['entity_id']; ?><!--"-->
 <!--           class="action primary" style="float:right;">Upgrade</a>-->
@@ -163,7 +165,7 @@ $invoices = $block->getSubscriptionInvoice();
                     <?php foreach ($invoices['items'] as $invoice) : ?>
                             <tr>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Date')) ?>" class="col date"><?=  !empty($invoice['billing_start']) ? date('M d, Y', $invoice['billing_start']) : '--' ?></td>
-                                <td data-th="<?= $block->escapeHtmlAttr(__('Invoice Id')) ?>" class="col invoice"><a href="<?php $invoice['short_url'] ?>"><?php echo $invoice['id'] ?></a></td>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Invoice Id')) ?>" class="col invoice"><a href="<?= $invoice['short_url'] ?>" target="_blank"><?php echo $invoice['id'] ?></a></td>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Recurring Amount')) ?>" class="col recurring"><?php echo $block->getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoice['line_items'][0]['net_amount']/100; ?>
                                    <br/><small><?php echo $invoice['line_items'][0]['quantity'] ."x ".$block->getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoice['line_items'][0]['unit_amount']/100  ?> per unit</small>
                                 </td>
