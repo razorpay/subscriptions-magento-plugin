@@ -1,8 +1,8 @@
 <?php /** @var Razorpay\Subscription\Block\Display $block */ ?>
 
-<?php $_orders = $block->getSubscribs(); ?>
+<?php $orders = $block->getSubscribs(); ?>
 
-<?php if ($_orders && count($_orders)) : ?>
+<?php if ($orders && count($orders)) : ?>
   <form id="action-form" method="post">
     <div class="table-wrapper orders-history">
         <div class="field region">
@@ -27,26 +27,26 @@
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($block->getSubscribs() as $_order) : ?>
+            <?php foreach ($block->getSubscribs() as $order) : ?>
                 <?php /** @var Razorpay\Subscription\Model\Subscrib */ ?>
                 <tr>
                     <td>
-                       <lable><input type="checkbox" name="orders[]" class="checkbox_select" value="<?= $_order->getId() ?>"></lable>
+                       <lable><input type="checkbox" name="orders[]" class="checkbox_select" value="<?= $order->getId() ?>"></lable>
                     </td>
                     <td data-th="<?= $block->escapeHtml(__('ID')) ?>" class="col id">
-                        <?php echo $_order->getId() ?>
+                        <?php echo $order->getId() ?>
                     </td>
                     <td data-th="<?= $block->escapeHtml(__('Subscription ID')) ?>" class="col subscriptionid">
-                        <a href="<?php echo $block->getSubscribUrl($_order); ?>"> <?php echo $_order->getSubscriptionId() ?></a>
+                        <a href="<?php echo $block->getSubscribUrl($order); ?>"> <?php echo $order->getSubscriptionId() ?></a>
                     </td>
                     <td data-th="<?= $block->escapeHtml(__('Product')) ?>" class="col product">
-                        <?php echo $_order->getValue() ?>
+                        <?php echo $order->getValue() ?>
                     </td>
                     <td data-th="<?= $block->escapeHtml(__('Status')) ?>" class="col status">
-                        <?php echo $_order->getStatus() ?>
+                        <?php echo $order->getStatus() ?>
                     </td>
                     <td data-th="<?= $block->escapeHtml(__('Next Charged At')) ?>" class="col nextcharged">
-                        <?php echo $_order->getNextChargeAt() ?>
+                        <?php echo $order->getNextChargeAt() ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

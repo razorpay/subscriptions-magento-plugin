@@ -88,8 +88,8 @@ class MassCancelSubscription extends BaseController
 
     public function getSubscription($id)
     {
-        $_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $subscribCollection = $_objectManager->create('Razorpay\Subscription\Model\ResourceModel\Subscrib\Collection');
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $subscribCollection = $objectManager->create('Razorpay\Subscription\Model\ResourceModel\Subscrib\Collection');
         
         $subscribCollection->addFieldToFilter('entity_id', $id);
         $singleData = $subscribCollection->getFirstItem();
