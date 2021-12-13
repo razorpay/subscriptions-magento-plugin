@@ -10,7 +10,7 @@ $invoices = $block->getSubscriptionInvoice();
         <?php if ($subscriptioninfo['status'] != 'cancelled' && $subscriptioninfo['status'] != 'created'): ?>
             <a href="<?php echo $block->getUrl('razorpaysubscription/customer/cancelSubscription/'); ?>s_id/<?php echo $subscriptioninfo['subscription_id']; ?>/oid/<?php echo $subscriptioninfo['entity_id']; ?>"
                class="action primary"
-               style="float:right;background-color: #dc3545;border-color: #dc3545;">Cancel</a>
+               style="float:right;background-color: #6c757d; border-color: #6c757d;">Cancel</a>
 
           <?php if ($subscriptioninfo['status'] != 'paused'): ?>
             <a href="<?php echo $block->getUrl('razorpaysubscription/customer/pauseSubscription/'); ?>s_id/<?php echo $subscriptioninfo['subscription_id']; ?>/oid/<?php echo $subscriptioninfo['entity_id']; ?>"
