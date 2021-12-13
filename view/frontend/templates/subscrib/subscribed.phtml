@@ -6,14 +6,14 @@
   <form id="action-form" method="post">
     <div class="table-wrapper orders-history">
         <div class="field region">
-            <select class="action-select">
+            <select class="action-select limiter-options">
                 <option>--Action--</option>
                 <option value="cancel">Cancel</option>   
                 <option value="pause">Pause</option>
                 <option value="resume">Resume</option>
             </select>
         
-        </div> 
+        </div> <br/>
         <table class="data table table-order-items history" id="my-orders-table">
             <caption class="table-caption"><?= $block->escapeHtml(__('Orders')) ?></caption>
             <thead>
