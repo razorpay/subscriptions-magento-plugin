@@ -22,6 +22,11 @@ class Display extends Template
     protected $_resource;
     
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
+
+    /**
      * Constructor
      *
      * @param Context $context
@@ -34,6 +39,7 @@ class Display extends Template
         SubscribCollectionFactory $subscribCollectionFactory,
         \Magento\Framework\App\ResourceConnection $Resource,
         \Magento\Framework\Module\Dir\Reader $moduleReader,
+        \Psr\Log\LoggerInterface $logger,
         array $data = []
        
     ) {
@@ -43,7 +49,7 @@ class Display extends Template
 
         $this->moduleReader = $moduleReader;
         $this->customerSession = $customerSession;
-
+        $this->logger          = $logger;
     }
 
     /**
@@ -67,6 +73,10 @@ class Display extends Template
     }
     public function getSubscribs() 
     {
+        // get param values
+        $page = ($this->getRequest()->getParam('p')) ? $this->getRequest()->getParam('p') : 1;
+        $pageSize = ($this->getRequest()->getParam('limit')) ? $this->getRequest()->getParam('limit') : 10; // set minimum records
+
         $customerId = $this->customerSession->getCustomer()->getId();
        
 
@@ -79,21 +89,18 @@ class Display extends Template
                                                'main_table.product_id = second.entity_id',
                                                array('second.value'));
                                                
-     $subscribCollection->getSelect()->joinLeft(array('third' => $third_table_name),
-                                               'third.attribute_id = second.attribute_id',
-                                               array('third.attribute_id as attribute_id'));
-     
-     $subscribCollection->getSelect()->where("third.attribute_code='name' and second.entity_id=main_table.product_id");
-     $subscribCollection->getSelect()->where("main_table.magento_user_id=".$customerId);
-     
-    
+        $subscribCollection->getSelect()->joinLeft(array('third' => $third_table_name),
+                                                'third.attribute_id = second.attribute_id',
+                                                array('third.attribute_id as attribute_id'));
+        
+        $subscribCollection->getSelect()->where("third.attribute_code='name' and second.entity_id=main_table.product_id");
+        $subscribCollection->getSelect()->where("main_table.magento_user_id=".$customerId);
+        
+        $subscribCollection->setPageSize($pageSize);
+        $subscribCollection->setCurPage($page);   
 
-    return $subscribCollection->getItems();
+        return $subscribCollection;
   
-
-    
-
-
     }
 
     /**
@@ -109,6 +116,39 @@ class Display extends Template
         
     }
 
+    /**
+     * @inheritDoc
+     */
+    protected function _prepareLayout()
+    {
+        $subscribCollection = $this->_subscribCollectionFactory->create();
 
+        try{
+        parent::_prepareLayout();
+        if ($this->getSubscribs()) {
+            $pager = $this->getLayout()->createBlock(
+                \Magento\Theme\Block\Html\Pager::class,
+                'razorpaysubscription.customer.index'
+            )->setCollection(
+                $this->getSubscribs() 
+            );
+            $this->setChild('pager', $pager);
+            $this->getSubscribs()->load();
+        }
+        return $this;
+       }catch(\Exception $e){
+        $this->logger->info("Exception subscription paging: {$e->getMessage()}");
+      }
+    }
+    
+    /**
+     * Get Pager child block output
+     *
+     * @return string
+     */
+    public function getPagerHtml()
+    {
+        return $this->getChildHtml('pager');
+    }
 	
 }
