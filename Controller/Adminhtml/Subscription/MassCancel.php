@@ -1,30 +1,31 @@
 <?php
+
 namespace Razorpay\Subscription\Controller\Adminhtml\Subscription;
- 
-use Magento\Framework\Controller\ResultFactory;
+
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\Controller\ResultFactory;
 use Magento\Ui\Component\MassAction\Filter;
-use Razorpay\Subscription\Model\ResourceModel\Subscrib\CollectionFactory;
 use Razorpay\Magento\Controller\BaseController;
 use Razorpay\Subscription\Helper\Subscription;
- 
+use Razorpay\Subscription\Model\ResourceModel\Subscrib\CollectionFactory;
+
 class MassCancel extends BaseController
 {
-/**
- * @var Magento\Backend\Helper\Data
- */
+    /**
+     * @var Magento\Backend\Helper\Data
+     */
     private $backendHelper;
     /**
      * @var Filter
      */
     protected $filter;
- 
+
     /**
      * @var CollectionFactory
      */
     protected $collectionFactory;
- 
-  /**
+
+    /**
      * @var \Razorpay\Magento\Model\Config
      */
     private $config;
@@ -61,19 +62,23 @@ class MassCancel extends BaseController
      * @var CheckoutSession
      */
     protected $checkoutSession;
+
     /**
      * @param Context $context
      * @param Filter $filter
      * @param CollectionFactory $collectionFactory
      */
-    public function __construct(\Magento\Framework\App\Action\Context $context,
-    \Magento\Customer\Model\Session $customerSession,
-    \Magento\Checkout\Model\Session $checkoutSession,
-    \Razorpay\Magento\Model\Config $config,
-     Filter $filter, CollectionFactory $collectionFactory,
-     \Magento\Backend\Helper\Data $backendHelper, 
-     \Razorpay\Subscription\Helper\Subscription $subscription, 
-      \Magento\Framework\Message\ManagerInterface $messageManager)
+    public function __construct(
+        \Magento\Framework\App\Action\Context       $context,
+        \Magento\Customer\Model\Session             $customerSession,
+        \Magento\Checkout\Model\Session             $checkoutSession,
+        \Razorpay\Magento\Model\Config              $config,
+        Filter                                      $filter,
+        CollectionFactory                           $collectionFactory,
+        \Magento\Backend\Helper\Data                $backendHelper,
+        \Razorpay\Subscription\Helper\Subscription  $subscription,
+        \Magento\Framework\Message\ManagerInterface $messageManager
+    )
     {
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
@@ -82,19 +87,14 @@ class MassCancel extends BaseController
             $customerSession,
             $checkoutSession,
             $config
-            
         );
         $this->backendHelper = $backendHelper;
         $this->messageManager = $messageManager;
-        $this->config          = $config;
-        //$this->cartManagement  = $cartManagement;
+        $this->config = $config;
         $this->customerSession = $customerSession;
-       
-       
-      
-        $this->subscription    = $subscription;
- 
+        $this->subscription = $subscription;
     }
+
     /**
      * Execute action
      *
@@ -106,47 +106,26 @@ class MassCancel extends BaseController
         $collection = $this->filter->getCollection($this->collectionFactory->create());
         $collectionSize = $collection->getSize();
 
-    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-$adminSession = $objectManager->get('Magento\Backend\Model\Auth\Session');
-if($adminSession->isLoggedIn()) {
-  
-    try
-        {
-            foreach ($collection as $item) {
-                
-             $id= $item['subscription_id'];
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $adminSession = $objectManager->get('Magento\Backend\Model\Auth\Session');
+        if ($adminSession->isLoggedIn()) {
+            try {
+                foreach ($collection as $item) {
+                    $id = $item['subscription_id'];
+                    $this->subscription->cancelSubscription($id, $this->rzp);
+                }
 
-              $this->subscription->cancelSubscription($id, $this->rzp);
-           
-             }
-           
-           
-            $this->messageManager->addSuccess(__('A total of %1 subscription(s) have been canceled.', $collectionSize));
- 
-            //$this->messageManager->addSuccess(__("Subscription is cancelled successfully!"));
-            $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-            return $resultRedirect->setPath('subscribed/index/index');
-            //return $this->_redirect('razorpaysubscription/subscrib/view/id/'.$oid);
-            
+                $this->messageManager->addSuccess(__('A total of %1 subscription(s) have been canceled.', $collectionSize));
+                $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+                return $resultRedirect->setPath('subscribed/index/index');
+            } catch (\Exception $e) {
+                $this->messageManager->addError(__($e->getMessage()));
+                $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+                return $resultRedirect->setPath('subscribed/index/index');
+            }
+
+        } else {
+            return $this->backendHelper->getHomePageUrl();
         }
-        catch(\Exception $e)
-        {
-            $this->messageManager->addError(__($e->getMessage()));
-            //return $this->_redirect('razorpaysubscription/subscrib/view/id/'.$oid);
-            $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-            return $resultRedirect->setPath('subscribed/index/index');
-        }
-
-} else{
-
-    return $this->backendHelper->getHomePageUrl();
-}
-       
-
-        
-
-         
-       
-        
     }
 }

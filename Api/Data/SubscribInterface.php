@@ -4,17 +4,14 @@ namespace Razorpay\Subscription\Api\Data;
 
 interface SubscribInterface
 {
-    /**#@+
+    /**
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
-    const ENTITY_ID               = 'entity_id';
-    const SUBSCRIPTION_ID                 = 'subscription_id';
-    const NEXT_CHARGE_AT               = 'next_charge_at';
-    const STATUS            = 'status';
-    const VALUE         = 'value';
-    
-    /**#@-*/
-
+    const ENTITY_ID = 'entity_id';
+    const SUBSCRIPTION_ID = 'subscription_id';
+    const NEXT_CHARGE_AT = 'next_charge_at';
+    const STATUS = 'status';
+    const VALUE = 'value';
 
     /**
      * Get SubscriptionId
@@ -29,12 +26,14 @@ interface SubscribInterface
      * @return string|null
      */
     public function getStatus();
-/**
+
+    /**
      * Get Value
      *
      * @return string|null
      */
     public function getValue();
+
     /**
      * Get next charge at
      *
@@ -72,6 +71,7 @@ interface SubscribInterface
      * @return $this
      */
     public function setValue($value);
+
     /**
      * Set Crated At
      *

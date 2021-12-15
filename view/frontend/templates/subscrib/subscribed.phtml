@@ -1,6 +1,8 @@
 <?php /** @var Razorpay\Subscription\Block\Display $block */ ?>
 
+
 <?php $orders = $block->getSubscribs(); ?>
+
 
 <?php if ($orders && count($orders)) : ?>
   <form id="action-form" method="post">
@@ -18,6 +20,7 @@
             <caption class="table-caption"><?= $block->escapeHtml(__('Orders')) ?></caption>
             <thead>
             <tr>
+
                 <th scope="col" class="col id"><lable><input type="checkbox" id="select-all"></lable></th>
                 <th scope="col" class="col id">Order #</th>
                 <th scope="col" class="col subscriptionid">Subscription ID</th>
@@ -27,6 +30,7 @@
             </tr>
             </thead>
             <tbody>
+
             <?php foreach ($block->getSubscribs() as $order) : ?>
                 <?php /** @var Razorpay\Subscription\Model\Subscrib */ ?>
                 <tr>
@@ -54,16 +58,19 @@
             </tbody>
         </table>
     </div>
+
 </form>  
 <br/>
 <?php if ($block->getPagerHtml()) : ?>
         <div class="order-products-toolbar toolbar bottom"><?= $block->getPagerHtml() ?></div>
 <?php endif ?>
+
 <?php else: ?>
     <div class="message info empty">
         <span><?php echo __("You do not have any subscriptions yet."); ?></span>
     </div>
 <?php endif ?>
+
 <script>
     require([
         "jquery"
@@ -101,3 +108,4 @@
         })
      })
 </script>
+

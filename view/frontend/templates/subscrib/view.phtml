@@ -7,6 +7,7 @@ $invoices = $block->getSubscriptionInvoice();
 
 <div class="block block-dashboard-info">
     <div class="block-title"><strong>Order # <?php echo $subscriptioninfo['entity_id']; ?></strong>
+
         <?php if ($subscriptioninfo['status'] != 'cancelled' && $subscriptioninfo['status'] != 'created'): ?>
             <a href="<?php echo $block->getUrl('razorpaysubscription/customer/cancelSubscription/'); ?>s_id/<?php echo $subscriptioninfo['subscription_id']; ?>/oid/<?php echo $subscriptioninfo['entity_id']; ?>"
                class="action primary"
@@ -23,6 +24,7 @@ $invoices = $block->getSubscriptionInvoice();
                class="action primary"
                style="float:right;"  >Resume</a>
           <?php endif ?>     
+
         <?php endif ?>
 <!--        <a href="--><?php //echo $block->getUrl(''); ?><!--s_id/--><?php //echo $subscriptioninfo['subscription_id']; ?><!--/oid/--><?php //echo $subscriptioninfo['entity_id']; ?><!--"-->
 <!--           class="action primary" style="float:right;">Upgrade</a>-->
@@ -35,12 +37,14 @@ $invoices = $block->getSubscriptionInvoice();
             <span class="delimiter"></span>
             <div class="box-content">
                 <strong class="account">
+
                     Customer Id :
                 </strong> <?php echo $subscriptioninfo['razorpay_customer_id']; ?>
                 <span class="delimiter"></span>
             </div>
             <div class="box-content">
                 <strong class="account">
+
                     Product Name :
                 </strong> <?php echo $subscriptioninfo['value']; ?>
                 <span class="delimiter"></span>
@@ -56,6 +60,7 @@ $invoices = $block->getSubscriptionInvoice();
                     Total Count :
                 </strong> <?php echo $subscriptioninfo['total_count']; ?>
             </div>
+
             <div class="box-content">
                 <strong class="account">
                     Qty :
@@ -182,4 +187,5 @@ $invoices = $block->getSubscriptionInvoice();
             </table>
         </div>
     <?php endif ?>
+
 </div>
