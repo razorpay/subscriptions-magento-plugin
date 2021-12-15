@@ -20,7 +20,8 @@ class Display extends Template
     protected $_subscribCollectionFactory = null;
     protected $moduleReader;
     protected $_resource;
-    
+    private  $urlInterface;
+
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -40,6 +41,7 @@ class Display extends Template
         \Magento\Framework\App\ResourceConnection $Resource,
         \Magento\Framework\Module\Dir\Reader $moduleReader,
         \Psr\Log\LoggerInterface $logger,
+        \Magento\Framework\UrlInterface $urlInterface,
         array $data = []
        
     ) {
@@ -50,6 +52,7 @@ class Display extends Template
         $this->moduleReader = $moduleReader;
         $this->customerSession = $customerSession;
         $this->logger          = $logger;
+        $this->urlInterface = $urlInterface;
     }
 
     /**
@@ -112,7 +115,7 @@ class Display extends Template
         Subscrib $subscrib
     ) {
         
-        return '/subscriptionMagento/razorpaysubscription/subscrib/view/id/' . $subscrib->getId();
+        return $this->urlInterface->getUrl() ."razorpaysubscription/subscrib/view/id/{$subscrib->getId()}";
         
     }
 
