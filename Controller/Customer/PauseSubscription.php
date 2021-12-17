@@ -70,7 +70,9 @@ class PauseSubscription extends BaseController
             if (!$this->customerSession->isLoggedIn()) {
                 return $this->_redirect('customer/account/login');
             }
-            $this->subscription->pauseSubscription($id, $this->rzp);
+
+            $updateBy = 'customer';
+            $this->subscription->pauseSubscription($id, $this->rzp, $updateBy);
             $this->messageManager->addWarning(__("Subscription is paused successfully!"));
             return $this->_redirect('razorpaysubscription/subscrib/view/id/' . $oid);
         } catch (\Exception $e) {

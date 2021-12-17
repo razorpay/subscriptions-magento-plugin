@@ -110,9 +110,10 @@ class MassCancel extends BaseController
         $adminSession = $objectManager->get('Magento\Backend\Model\Auth\Session');
         if ($adminSession->isLoggedIn()) {
             try {
+                $updateBy = 'admin';
                 foreach ($collection as $item) {
                     $id = $item['subscription_id'];
-                    $this->subscription->cancelSubscription($id, $this->rzp);
+                    $this->subscription->cancelSubscription($id, $this->rzp, $updateBy);
                 }
 
                 $this->messageManager->addSuccess(__('A total of %1 subscription(s) have been canceled.', $collectionSize));

@@ -318,8 +318,7 @@ class Subscription
         }
     }
 
-
-    public function cancelSubscription($id, $rzp)
+    public function cancelSubscription($id, $rzp, $updateBy)
     {
         //fetch and cancel subscription
         $subscriptionResponse = $rzp->subscription->fetch($id)->cancel(["cancel_at_cycle_end" => 0]);
@@ -329,17 +328,17 @@ class Subscription
         $postUpdate = $subscription->load($subscriptionResponse->id, 'subscription_id');
 
         $postUpdate->setStatus('cancelled');
-        $postUpdate->setCancelBy('customer');
+        $postUpdate->setCancelBy($updateBy);
 
         $postUpdate->save();
     }
-    
-     /**
+
+    /**
      * Pause Subscription
-     * @param $id 
+     * @param $id
      * @return array
      */
-    public function pauseSubscription($id, $rzp)
+    public function pauseSubscription($id, $rzp, $updateBy)
     {
         //fetch and pause subscription
         $subscriptionResponse = $rzp->subscription->fetch($id)->pause(["pause_at"=>"now"]);
@@ -349,17 +348,17 @@ class Subscription
         $postUpdate = $subscription->load($subscriptionResponse->id, 'subscription_id');
 
         $postUpdate->setStatus('paused');
-        $postUpdate->setCancelBy('customer');
+        $postUpdate->setCancelBy($updateBy);
 
         $postUpdate->save();
     }
-    
+
     /**
      * Resume Subscription
-     * @param $id 
+     * @param $id
      * @return array
      */
-    public function resumeSubscription($id, $rzp)
+    public function resumeSubscription($id, $rzp, $updateBy)
     {
         //fetch and resume subscription
         $subscriptionResponse = $rzp->subscription->fetch($id)->resume(["resume_at"=>"now"]);
@@ -369,7 +368,7 @@ class Subscription
         $postUpdate = $subscription->load($subscriptionResponse->id, 'subscription_id');
 
         $postUpdate->setStatus('active');
-        $postUpdate->setCancelBy('customer');
+        $postUpdate->setCancelBy($updateBy);
 
         $postUpdate->save();
     }

@@ -191,5 +191,12 @@
 
             </settings>
         </column>
+
+        <actionsColumn name="actions" class="Razorpay\Subscription\Ui\Component\Listing\Column\Actions">
+            <settings>
+                <indexField>entity_id</indexField>
+                <label translate="true">Actions</label>
+            </settings>
+        </actionsColumn>
     </columns>
 </listing>
