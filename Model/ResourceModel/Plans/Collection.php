@@ -5,6 +5,9 @@ use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 class Collection extends AbstractCollection
 {
+    protected $_idFieldName = \Razorpay\Subscription\Model\Plans::PLAN_ID;
+
+
     /**
      * Initialize resource collection
      *

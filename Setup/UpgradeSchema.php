@@ -68,6 +68,15 @@ class UpgradeSchema implements  UpgradeSchemaInterface
                 ]
             )
             ->addColumn(
+                'plan_desc',
+                Table::TYPE_TEXT,
+                255,
+                [
+                    'nullable' => false,
+                    'comment' => 'Razorpay Plan Description'
+                ]
+            )
+             ->addColumn(
                 'plan_type',
                 Table::TYPE_TEXT,
                 30,
@@ -84,6 +93,55 @@ class UpgradeSchema implements  UpgradeSchemaInterface
                     'nullable' => false,
                     'default' => 1,
                     'comment' => 'Razorpay Plan Product Plan interval'
+                ]
+            )
+            ->addColumn(
+                'plan_bill_cycle',
+                Table::TYPE_TEXT,
+                255,
+                [
+                    'nullable' => false,
+                    'comment' => 'Razorpay Billing Cycle'
+                ]
+            )
+            ->addColumn(
+                'plan_trial',
+                Table::TYPE_DECIMAL,
+                null,
+                [
+                    'nullable' => false,
+                    'default' => 0,
+                    'comment' => 'Razorpay Plan Trial'
+                ]
+            )
+            ->addColumn(
+                'plan_bill_amount',
+                Table::TYPE_DECIMAL,
+                null,
+                [
+                    'nullable' => false,
+                    'default' => 0,
+                    'comment' => 'Razorpay Bill amount'
+                ]
+            )
+            ->addColumn(
+                'plan_addons',
+                Table::TYPE_DECIMAL,
+                null,
+                [
+                    'nullable' => false,
+                    'default' => 0,
+                    'comment' => 'Razorpay Plan Addons'
+                ]
+            )
+            ->addColumn(
+                'plan_status',
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'nullable' => false,
+                    'default' => 1,
+                    'comment' => 'Razorpay Plan Status'
                 ]
             )
             ->addColumn(
