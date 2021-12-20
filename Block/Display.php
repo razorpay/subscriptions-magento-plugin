@@ -150,6 +150,19 @@ class Display extends Template
     {
         return $this->getChildHtml('pager');
     }
+
+    /**
+     * For a given subscrib, returns its url
+     * @param Subscrib $subscrib
+     * @return string
+     */
+    public function editSubscribUrl(
+        Subscrib $subscrib
+    ) {
+        
+        return $this->urlInterface->getUrl() ."razorpaysubscription/subscrib/edit/id/{$subscrib->getSubscriptionId()}";
+        
+    }
 	
 }
 

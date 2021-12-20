@@ -27,6 +27,7 @@
                 <th scope="col" class="col product">Product</th>
                 <th scope="col" class="col status">Status</th>
                 <th scope="col" class="col nextcharged">Next Charged At</th>
+                <th scope="col" class="col nextcharged">Action</th>
             </tr>
             </thead>
             <tbody>
@@ -51,6 +52,11 @@
                     </td>
                     <td data-th="<?= $block->escapeHtml(__('Next Charged At')) ?>" class="col nextcharged">
                         <?php echo $order->getNextChargeAt() ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Edit')) ?>" class="col edit">
+                        <?php if($order->getStatus()=='active'): ?>
+                            <a href="<?php echo $block->editSubscribUrl($order); ?>">Edit</a>
+                        <?php endif ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
