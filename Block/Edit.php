@@ -66,9 +66,8 @@ class Edit extends Template
     }
 
     /**
-     * Lazy loads the requested subscrib
-     * @return Subscrib
-     * @throws LocalizedException
+     * fetch current plan
+     * @return array
      */
     public function getCurrentPlan()
     {
@@ -88,9 +87,8 @@ class Edit extends Template
     }
 
     /**
-     * Lazy loads the requested subscrib
-     * @return Subscrib
-     * @throws LocalizedException
+     * fetch all plans
+     * @return array
      */
     public function getPlans($productId)
     {
