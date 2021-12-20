@@ -2,31 +2,45 @@
 
 namespace Razorpay\Subscription\Helper;
 
+use Magento\Checkout\Model\Cart;
+use Magento\Framework\App\Helper\AbstractHelper;
 use Psr\Log\LoggerInterface;
 use Magento\Catalog\Model\Product;
 use Razorpay\Api\Api;
 use Razorpay\Api\Errors\Error;
+use Razorpay\Subscription\Model\SubscriptionConfig;
 
-class Subscription
+class Subscription extends AbstractHelper
 {
     /**
      * @var Product
      */
-    private $_product;
+    private $product;
     /**
      * @var \Magento\Framework\App\ObjectManager
      */
-    private $_objectManagement;
+    private $objectManagement;
     /**
      * @var LoggerInterface
      */
-    private $_logger;
+    protected $logger;
+    /**
+     * @var SubscriptionConfig
+     */
+    private $subscriptionConfig;
+    /**
+     * @var Cart
+     */
+    private $cart;
 
-    public function __construct(Product $product, LoggerInterface $logger)
+
+    public function __construct(Product $product, LoggerInterface $logger, Cart  $cart, SubscriptionConfig $subscriptionConfig)
     {
-        $this->_product = $product;
-        $this->_logger = $logger;
-        $this->_objectManagement = \Magento\Framework\App\ObjectManager::getInstance();
+        $this->product = $product;
+        $this->logger = $logger;
+        $this->subscriptionConfig = $subscriptionConfig;
+        $this->cart = $cart;
+        $this->objectManagement = \Magento\Framework\App\ObjectManager::getInstance();
     }
 
     /**
@@ -41,7 +55,7 @@ class Subscription
         try {
             /* @var \Magento\Quote\Model\Quote $quote */
             list("planId" => $planId, "id" => $id) = $this->createOrGetPlanId($quote, $rzp);
-            $this->_logger->info("-------------------------Creating Subscription---------------------------");
+            $this->logger->info("-------------------------Creating Subscription---------------------------");
 
             if ($quote->getIsActive()) {
                 list("product" => $product, "productId" => $productId) = $this->getProductDetailsFromQuote($quote);
@@ -74,11 +88,11 @@ class Subscription
                     array_push($items, $item);
                     $subscriptionData["addons"] = $items;
                 }
-                $this->_logger->info("Subscription creation data", $subscriptionData);
+                $this->logger->info("Subscription creation data", $subscriptionData);
                 $subscriptionResponse = $rzp->subscription->create($subscriptionData);
-                $this->_logger->info("Subscription response object ", json_decode(json_encode($subscriptionResponse), true));
+                $this->logger->info("Subscription response object ", json_decode(json_encode($subscriptionResponse), true));
 
-                $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
+                $subscription = $this->objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
                 $subscription->setPlanEntityId($id)
                     ->setSubscriptionId($subscriptionResponse->id)
                     ->setRazorpayCustomerId($subscriptionResponse->customer_id)
@@ -99,10 +113,10 @@ class Subscription
                 return $subscriptionResponse;
             }
         } catch (\Exception $e) {
-            $this->_logger->critical("Exception: {$e->getMessage()}");
+            $this->logger->critical("Exception: {$e->getMessage()}");
             throw new \Exception($e->getMessage());
         } catch (Error $e) {
-            $this->_logger->critical("Exception: {$e->getMessage()}");
+            $this->logger->critical("Exception: {$e->getMessage()}");
             throw new \Exception($e->getMessage());
         }
     }
@@ -119,15 +133,15 @@ class Subscription
     public function createOrGetPlanId($quote, $rzp)
     {
         try {
-            $this->_logger->info("-------------------------Plan creation/fetch start---------------------------");
+            $this->logger->info("-------------------------Plan creation/fetch start---------------------------");
             $planType = $product = $planName = $productId = "";
             if ($quote->getIsActive()) {
                 list("planType" => $planType, "productId" => $productId, "product" => $product, "planName" => $planName) = $this->getProductDetailsFromQuote($quote);
 
-                $this->_logger->info("Fetching plan id for the following: Product id: $productId  product name: {$product->getName()}  Plan type: $planType ");
+                $this->logger->info("Fetching plan id for the following: Product id: $productId  product name: {$product->getName()}  Plan type: $planType ");
 
                 //Fetching plan id if existing
-                $planCollection = $this->_objectManagement->get('Razorpay\Subscription\Model\Plans')
+                $planCollection = $this->objectManagement->get('Razorpay\Subscription\Model\Plans')
                     ->getCollection()
                     ->addFieldToSelect('plan_id', "planId")
                     ->addFieldToSelect("entity_id", "id")
@@ -152,13 +166,13 @@ class Subscription
                             "source" => "magento-subscription"
                         ]
                     ];
-                    $this->_logger->info("Creating new plan for the product $planName of the type $planType", $planData);
+                    $this->logger->info("Creating new plan for the product $planName of the type $planType", $planData);
                     // Calling razorpay plan api
                     $planResponse = $rzp->plan->create($planData);
 
-                    $this->_logger->info("Razorpay plan creation response ", json_decode(json_encode($planResponse), true));
+                    $this->logger->info("Razorpay plan creation response ", json_decode(json_encode($planResponse), true));
 
-                    $plan = $this->_objectManagement->create('Razorpay\Subscription\Model\Plans');
+                    $plan = $this->objectManagement->create('Razorpay\Subscription\Model\Plans');
                     $plan->setPlanName($planName)
                         ->setPlanType($planType)
                         ->setMagentoProductId($productId)
@@ -175,10 +189,10 @@ class Subscription
             }
 
         } catch (\Exception $e) {
-            $this->_logger->critical("Exception: {$e->getMessage()}");
+            $this->logger->critical("Exception: {$e->getMessage()}");
             throw new \Exception($e->getMessage());
         } catch (Error $e) {
-            $this->_logger->critical("Exception: {$e->getMessage()}");
+            $this->logger->critical("Exception: {$e->getMessage()}");
             throw new \Exception($e->getMessage());
 
         }
@@ -209,7 +223,7 @@ class Subscription
         foreach ($quote->getItems() as $item) {
             $planType = $this->getAdditionalItemOption($item);
             $productId = $item->getProduct()->getId();
-            $product = $this->_product->load($item->getProduct()->getId());
+            $product = $this->product->load($item->getProduct()->getId());
             $planName = $product->getName() . "_$planType";
         }
         return [
@@ -236,7 +250,7 @@ class Subscription
                 'name' => $quote->getBillingAddress()->getFirstname() . " " . $quote->getBillingAddress()->getLastname(),
                 'contact' => $quote->getBillingAddress()->getTelephone()
             ];
-            $this->_logger->info("Creating or fetching customer info ", $args);
+            $this->logger->info("Creating or fetching customer info ", $args);
 
             //
             // This line of code tells api that if a customer is already created,
@@ -246,14 +260,14 @@ class Subscription
             $args['fail_existing'] = '0';
 
             $customerResponse = $rzp->customer->create($args);
-            $this->_logger->info("Customer response object ", json_decode(json_encode($customerResponse), true));
+            $this->logger->info("Customer response object ", json_decode(json_encode($customerResponse), true));
 
             return $customerResponse->id;
         } catch (\Exception $e) {
-            $this->_logger->info("Exception: {$e->getMessage()}");
+            $this->logger->info("Exception: {$e->getMessage()}");
             throw new \Exception($e->getMessage());
         } catch (Error $e) {
-            $this->_logger->critical("Exception: {$e->getMessage()}");
+            $this->logger->critical("Exception: {$e->getMessage()}");
             throw new \Exception($e->getMessage());
         }
     }
@@ -270,10 +284,10 @@ class Subscription
 
             $response = $api->request->request("GET", "preferences");
         } catch (Error $e) {
-            $this->_logger->critical("preferrence: " . $e->getMessage());
+            $this->logger->critical("preferrence: " . $e->getMessage());
             throw new \Exception($e->getMessage());
         } catch (\Exception $e) {
-            $this->_logger->info("Exception: {$e->getMessage()}");
+            $this->logger->info("Exception: {$e->getMessage()}");
             throw new \Exception($e->getMessage());
         }
 
@@ -297,34 +311,40 @@ class Subscription
     public function validateIsASubscriptionProduct($cartItems, $validateTo)
     {
         try {
-            $this->_logger->info("-----------------Validating cart started-----------------");
+            $this->logger->info("-----------------Validating cart started-----------------");
             foreach ($cartItems as $item) {
                 /* @var \Magento\Quote\Model\Quote\Item $item */
                 foreach ($item->getOptions() as $option) {
                     /* @var \Magento\Quote\Model\Quote\Item\Option $option */
                     $optionData = json_decode($option->getValue(), true);
-                    $this->_logger->info(json_encode($optionData));
+                    $this->logger->info(json_encode($optionData));
                     if (array_key_exists("paymentOption", $optionData) && in_array($validateTo, $optionData)) {
                         return true;
                     }
                 }
             }
 
-            $this->_logger->info("-----------------Validating cart ended-----------------");
+            $this->logger->info("-----------------Validating cart ended-----------------");
             return false;
         } catch (\Exception $e) {
-            $this->_logger->critical("Exception: {$e->getMessage()}");
+            $this->logger->critical("Exception: {$e->getMessage()}");
             return false;
         }
     }
 
+    /**
+     * Cancel subscription
+     * @param $id
+     * @param $rzp
+     * @throws \Exception
+     */
     public function cancelSubscription($id, $rzp, $updateBy)
     {
         //fetch and cancel subscription
         $subscriptionResponse = $rzp->subscription->fetch($id)->cancel(["cancel_at_cycle_end" => 0]);
 
         //update record
-        $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
+        $subscription = $this->objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
         $postUpdate = $subscription->load($subscriptionResponse->id, 'subscription_id');
 
         $postUpdate->setStatus('cancelled');
@@ -344,7 +364,7 @@ class Subscription
         $subscriptionResponse = $rzp->subscription->fetch($id)->pause(["pause_at"=>"now"]);
 
         //update record
-        $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
+        $subscription = $this->objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
         $postUpdate = $subscription->load($subscriptionResponse->id, 'subscription_id');
 
         $postUpdate->setStatus('paused');
@@ -364,7 +384,7 @@ class Subscription
         $subscriptionResponse = $rzp->subscription->fetch($id)->resume(["resume_at"=>"now"]);
 
         //update record
-        $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
+        $subscription = $this->objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
         $postUpdate = $subscription->load($subscriptionResponse->id, 'subscription_id');
 
         $postUpdate->setStatus('active');
@@ -383,7 +403,7 @@ class Subscription
         $subscriptionResponse = $rzp->invoice->all(["subscription_id"=>$subscriptionId]);
 
         //update record
-        $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
+        $subscription = $this->objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
         $postUpdate = $subscription->load($subscriptionId, 'subscription_id');
 
         if($subscriptionResponse->count > $postUpdate->getPaidCount()){
@@ -397,7 +417,7 @@ class Subscription
 
      /**
      * Edit Subscription
-     * @param $subscriptionId 
+     * @param $subscriptionId
      * @return array
      */
     public function editSubscription($subscriptionId, $attributes, $rzp)
@@ -418,10 +438,10 @@ class Subscription
           throw new \Exception( $e->getMessage() );
        }
     }
-    
+
     /**
      * Fetch pending updates
-     * @param $subscriptionId 
+     * @param $subscriptionId
      * @return array
      */
     public function pendingUpdate($subscriptionId, $rzp)
@@ -434,5 +454,39 @@ class Subscription
             $this->_logger->info("Exception: {$e->getMessage()}");
             return [];
          }
+    }
+
+    /**
+     * Checking if subscription is active or not in payment setting
+     * @return bool
+     */
+    public function isSubscriptionActive()
+    {
+        return (bool) (int) $this->subscriptionConfig->getConfigData(SubscriptionConfig::IS_SUBSCRIPTION_ACTIVE);
+    }
+
+    public function getQuotesDetailsForProduct($productId)
+    {
+        $product = $this->product->load($productId);
+        if($product->getRazorpaySubscriptionEnabled() && $this->isSubscriptionActive()) {
+            $cartItems = $this->cart->getQuote()->getAllItems();
+            foreach ($cartItems as $item) {
+                /* @var \Magento\Quote\Model\Quote\Item $item */
+                foreach ($item->getOptions() as $option) {
+                    /* @var \Magento\Quote\Model\Quote\Item\Option $option */
+                    $optionData = json_decode($option->getValue(), true);
+                    $this->logger->info(json_encode($optionData));
+                    if($option->getCode() == "additional_options")
+                    {
+                        foreach ($optionData as $data){
+                            if($data['label'] == "Subscription type"){
+                                return lcfirst($data['value']);
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -16,45 +16,40 @@ use Razorpay\Subscription\Model\SubscriptionPaymentMethod;
 class PaymentMethodActiveObserver implements ObserverInterface
 {
     /**
-     * @var Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
-    private $_logger;
-    /**
-     * @var SubscriptionConfig
-     */
-    private $_subscriptionConfig;
+    private LoggerInterface $logger;
     /**
      * @var ProductRepositoryInterface
      */
-    private $_productRepository;
+    private ProductRepositoryInterface $productRepository;
     /**
      * @var Subscription
      */
-    private $_helper;
+    private Subscription $subscriptionHelper;
     /**
      * @var Cart
      */
-    private $_cart;
+    private Cart $cart;
+
     /**
      * @var ManagerInterface
      */
-    private $_messageManager;
+    private ManagerInterface $messageManager;
 
     public function __construct(
         LoggerInterface $logger,
-        SubscriptionConfig $subscriptionConfig,
+        Subscription $subscriptionHelper,
         ProductRepositoryInterface $productRepository,
-        Subscription $helper,
         Cart  $cart,
         ManagerInterface $messageManager
     )
     {
-        $this->_logger = $logger;
-        $this->_subscriptionConfig = $subscriptionConfig;
-        $this->_productRepository = $productRepository;
-        $this->_helper = $helper;
-        $this->_cart = $cart;
-        $this->_messageManager = $messageManager;
+        $this->logger = $logger;
+        $this->productRepository = $productRepository;
+        $this->subscriptionHelper = $subscriptionHelper;
+        $this->cart = $cart;
+        $this->messageManager = $messageManager;
     }
 
     /**
@@ -65,9 +60,9 @@ class PaymentMethodActiveObserver implements ObserverInterface
     {
         $result = $observer->getEvent()->getResult();
         $code = $observer->getEvent()->getMethodInstance()->getCode();
-        $quote = $this->_cart->getQuote();
+        $quote = $this->cart->getQuote();
 
-        if ( $this->_cart->getQuote()->getItemsCount() > 1) {
+        if ( $this->cart->getQuote()->getItemsCount() > 1) {
             $this->disablePaymentMethod($result, SubscriptionPaymentMethod::METHOD_CODE, $code);
         } else {
             /* @var \Magento\Quote\Model\Quote $quote */
@@ -76,17 +71,17 @@ class PaymentMethodActiveObserver implements ObserverInterface
                     /* @var \Magento\Quote\Model\Quote\Item $item */
                     $productId = $item->getProduct()->getId();
                 }
-                $product = $this->_productRepository->getById($productId);
+                $product = $this->productRepository->getById($productId);
 
-                $isSubscriptionProduct = $this->_helper->validateIsASubscriptionProduct($this->_cart->getQuote()->getAllItems(), "subscription");
+                $isSubscriptionProduct = $this->subscriptionHelper->validateIsASubscriptionProduct($this->cart->getQuote()->getAllItems(), "subscription");
 
-                if ($this->_subscriptionConfig->isSubscriptionActive() && $product->getRazorpaySubscriptionEnabled() && $isSubscriptionProduct) {
+                if ($this->subscriptionHelper->isSubscriptionActive() && $product->getRazorpaySubscriptionEnabled() && $isSubscriptionProduct) {
                     $this->disablePaymentMethod($result, PaymentMethod::METHOD_CODE, $code);
                 } else {
                     $this->disablePaymentMethod($result, SubscriptionPaymentMethod::METHOD_CODE, $code);
                 }
             } else {
-                return $this->_messageManager->addErrorMessage(__(" No items in the cart"));
+                return $this->messageManager->addErrorMessage(__(" No items in the cart"));
             }
         }
     }
@@ -99,7 +94,7 @@ class PaymentMethodActiveObserver implements ObserverInterface
      */
     public function disablePaymentMethod($result, $paymentMethod, $methodCode)
     {
-        $this->_logger->info("-------------disabling  $paymentMethod ---------------------");
+        $this->logger->info("-------------disabling  $paymentMethod ---------------------");
         if( $methodCode == $paymentMethod) {
             $result->setData('is_available', false);
         }

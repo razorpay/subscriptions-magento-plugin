@@ -16,59 +16,54 @@ class RestrictRecurringProductToCartObserver implements ObserverInterface
     /**
      * @var ManagerInterface
      */
-    private $_messageManager;
+    private $messageManager;
 
     /**
      * @var Cart
      */
-    private $_cart;
+    private $cart;
 
     /**
      * @var LoggerInterface
      */
-    private $_logger;
+    private $logger;
 
     /**
      * @var Product
      */
-    private $_product;
+    private $product;
 
-    private $paymentType;
-    /**
-     * @var SubscriptionConfig
-     */
-    private $subscriptionConfig;
     /**
      * @var Subscription
      */
-    private $_helper;
+    private $subscriptionHelper;
+
+    private $paymentType;
 
     public function __construct(
         ManagerInterface $messageManager,
         Cart  $cart,
         Product $product,
         LoggerInterface $logger,
-        SubscriptionConfig $subscriptionConfig,
-        Subscription $helper
+        Subscription $subscriptionHelper
     )
     {
-        $this->_messageManager = $messageManager;
-        $this->_cart = $cart;
-        $this->_logger = $logger;
-        $this->_product = $product;
-        $this->subscriptionConfig = $subscriptionConfig;
-        $this->_helper = $helper;
+        $this->messageManager = $messageManager;
+        $this->cart = $cart;
+        $this->logger = $logger;
+        $this->product = $product;
+        $this->subscriptionHelper = $subscriptionHelper;
     }
 
     public function execute(Observer $observer)
     {
-        $cartItemsCount = $this->_cart->getQuote()->getItemsCount();
-        $allCartItems = $this->_cart->getQuote()->getAllItems();
+        $cartItemsCount = $this->cart->getQuote()->getItemsCount();
+        $allCartItems = $this->cart->getQuote()->getAllItems();
         $productId = $observer->getRequest()->getParam('product');
-        $product = $this->_product->load($productId);
+        $product = $this->product->load($productId);
 
-        if($product->getRazorpaySubscriptionEnabled() && $this->subscriptionConfig->isSubscriptionActive()) {
-            $this->_logger->info("Checking for product type before adding to cart");
+        if($product->getRazorpaySubscriptionEnabled() && $this->subscriptionHelper->isSubscriptionActive()) {
+            $this->logger->info("Checking for product type before adding to cart");
             if ($cartItemsCount >= 1) {
                 $this->paymentType = $observer->getRequest()->getParam('paymentOption');
                 if ($this->paymentType == "subscription") {
@@ -79,10 +74,11 @@ class RestrictRecurringProductToCartObserver implements ObserverInterface
 
                 if (!empty($message)) {
                     $observer->getRequest()->setParam('product', false);
-                    return $this->_messageManager->addErrorMessage(__($message));
+                    return $this->messageManager->addErrorMessage(__($message));
                 }
             }
         }
+        $this->logger->info("validatioin");
     }
 
     /**
@@ -94,7 +90,7 @@ class RestrictRecurringProductToCartObserver implements ObserverInterface
     private function verifyProductInCart($allCartItems, $cartItemsCount, $validateTo): string
     {
         $message = "";
-        if($this->_helper->validateIsASubscriptionProduct($allCartItems, $validateTo)){
+        if($this->subscriptionHelper->validateIsASubscriptionProduct($allCartItems, $validateTo)){
             $message = "You cannot have regular products and subscriptions product in your shopping cart";
         } else if($cartItemsCount >= 1 && $this->paymentType != "oneTime") {
             $message = "You can only have 1 recurring subscription product in your shopping cart at a time.";

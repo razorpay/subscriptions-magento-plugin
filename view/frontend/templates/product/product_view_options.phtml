@@ -1,0 +1,88 @@
+<?php
+/** @var  $block Razorpay\Subscription\Block\Product\AddToCartProductOptionView  */
+$subscriptionHelper = $this->helper(\Razorpay\Subscription\Helper\Subscription::class);
+?>
+
+<?php if ($block->getProduct()->getRazorpaySubscriptionEnabled() && $subscriptionHelper->isSubscriptionActive()): ?>
+    <style>
+    .isHidden {
+        display: none; /* hide radio buttons */
+    }
+
+    .plan-label {
+        display: inline-block;
+        width: 397px;
+        height: 77px;
+    }
+
+    .radio:checked + .plan-label {   /* target next sibling (+) label */
+        background-color: #f0efef;
+        border-radius: 10px;
+    }
+
+</style>
+    <div class="subscription-data" style="display: block;padding-bottom: 50px;">
+
+        <?php if($block->getProduct()->getRazorpaySubscriptionMode() == "withSubscription"): ?>
+            <div class="control" style="margin-top: 30px;">
+
+                <input style="margin-bottom: 20px;"
+                       type="radio" checked
+                       class="radio required-entry validate-one-required-by-name"
+                       name="paymentOption"
+                       data-validate="{'validate-one-required-by-name':true}"
+                       value="oneTime"
+                       ifnot="method.error_message"
+                       ko-checked="element.isSelected"
+                       ko-value="method.carrier_code + '_' + method.method_code"
+                       attr="'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code,'checked': element.rates().length == 1 || element.isSelected"
+                ><?php /* @escapeNotVerified */echo __(" One Time Payment") ?> </input><br>
+                <input type="radio"
+                       class="radio required-entry validate-one-required-by-name"
+                       name="paymentOption"
+                       data-validate="{'validate-one-required-by-name':true}"
+                       value="subscription"
+                       ifnot="method.error_message"
+                       ko-checked="element.isSelected"
+                       ko-value="method.carrier_code + '_' + method.method_code"
+                       attr="'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code,'checked': element.rates().length == 1 || element.isSelected"
+                ><?php /* @escapeNotVerified */echo __("Subscribe to this product") ?></input>
+            </div>
+            <?php echo $this->getLayout()->createBlock("Razorpay\Subscription\Block\Product\AddToCartProductOptionView")->setTemplate("Razorpay_Subscription::product/subscription_options.phtml")->setData("product_id",$block->getProduct()->getId())->toHtml() ?>
+        <?php elseif($block->getProduct()->getRazorpaySubscriptionMode() == "subscriptionOnly"): ?>
+            <?php echo $this->getLayout()->createBlock("Razorpay\Subscription\Block\Product\AddToCartProductOptionView")->setTemplate("Razorpay_Subscription::product/subscription_options.phtml")->setData("product_id",$block->getProduct()->getId())->toHtml() ?>
+        <?php endif; ?>
+
+    </div>
+<?php endif; ?>
+
+<script type="text/javascript">
+
+    require([
+        'jquery',
+        'jquery/ui',
+        'mage/mage',
+        'Magento_Catalog/product/view/validation',
+        'Magento_Catalog/js/catalog-add-to-cart'
+
+    ], function ($) {
+        'use strict';
+
+        $(".subscription-option-wrapper").hide();
+        console.log( $('.price').html);
+        $(document).on('change', 'input[type="radio"]', function () {
+            const paymentOptionType = $("input[name='paymentOption']:checked").val();
+            if (paymentOptionType.trim() == 'oneTime') {
+                $(".subscription-option-wrapper").hide()
+            }
+            if (paymentOptionType.trim() == 'subscription') {
+                $(".subscription-option-wrapper").show()
+            }
+        });
+        $('input[type=radio][name="frequency"]').change(function() {
+            let planName = $("input[name='frequency']:checked").prev().val();
+            let price = $('#frequencyPrice_'+planName).val();
+            $('.price').text(price);
+        })
+    });
+</script>

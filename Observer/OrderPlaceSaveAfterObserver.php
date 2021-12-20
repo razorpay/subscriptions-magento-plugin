@@ -20,9 +20,14 @@ class OrderPlaceSaveAfterObserver implements ObserverInterface
     const STORE = 'store';
 
     /**
-     * @var OrderRepositoryInterface
+     * @var \Magento\Checkout\Model\Session
      */
-    private $orderRepository;
+    private \Magento\Checkout\Model\Session $checkoutSession;
+
+    /**
+     * @var \Razorpay\Magento\Model\PaymentMethod
+     */
+    private \Razorpay\Magento\Model\PaymentMethod $rzpMethod;
 
     /**
      * StatusAssignObserver constructor.
@@ -30,15 +35,10 @@ class OrderPlaceSaveAfterObserver implements ObserverInterface
      * @param OrderRepositoryInterface $orderRepository
      */
     public function __construct(
-        OrderRepositoryInterface $orderRepository,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Razorpay\Magento\Model\Config $config,
         \Razorpay\Magento\Model\PaymentMethod $rzpMethod
     ) {
-        $this->orderRepository = $orderRepository;
         $this->checkoutSession = $checkoutSession;
-        $this->config = $config;
-
         $this->rzpMethod = $rzpMethod;
     }
 
