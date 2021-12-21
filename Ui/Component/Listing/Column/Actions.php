@@ -14,6 +14,7 @@ class Actions extends Column
     private $urlBuilder;
 
     /** Url Path */
+    const SUBSCRIPTION_VIEW_URL_PATH   = 'subscribed/subscription/view';
     const CANCEL_URL_PATH   = 'subscribed/subscription/cancel';
     const PAUSE_URL_PATH    = 'subscribed/subscription/pause';
     const RESUME_URL_PATH   = 'subscribed/subscription/resume';
@@ -41,6 +42,11 @@ class Actions extends Column
             foreach ($dataSource['data']['items'] as & $item) {
                 $name = $this->getData('name');
                 if (isset($item['entity_id'])) {
+                    $item[$name]['view'] = [
+                        'href' => $this->urlBuilder->getUrl(self::SUBSCRIPTION_VIEW_URL_PATH, ['subscription_id' => $item['subscription_id'],'id' => $item['entity_id']]),
+                        'label' => __('View'),
+                        '__disableTmpl' => true,
+                    ];
                     $item[$name]['pause'] = [
                         'href' => $this->urlBuilder->getUrl(self::PAUSE_URL_PATH, ['subscription_id' => $item['subscription_id']]),
                         'label' => __('Pause'),

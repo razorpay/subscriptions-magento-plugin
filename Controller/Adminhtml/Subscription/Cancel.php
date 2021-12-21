@@ -108,6 +108,7 @@ class Cancel extends BaseController
         if ($adminSession->isLoggedIn()) {
             try {
                 $id = $this->getRequest()->getParam('subscription_id');
+                $entity_id = $this->getRequest()->getParam('id');
                 if($id){
                     $updateBy = 'admin';
 
@@ -115,6 +116,9 @@ class Cancel extends BaseController
 
                     $this->messageManager->addSuccess(__('Subscription has been cancelled.'));
                     $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+                    if($entity_id){
+                        return $resultRedirect->setPath('subscribed/subscription/view/subscription_id/'.$id.'/id/'.$entity_id);
+                    }
                     return $resultRedirect->setPath('subscribed/index/index');
                 }
             } catch (\Exception $e) {
