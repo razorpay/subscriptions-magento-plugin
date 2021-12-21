@@ -43,22 +43,22 @@ class Actions extends Column
                 $name = $this->getData('name');
                 if (isset($item['entity_id'])) {
                     $item[$name]['view'] = [
-                        'href' => $this->urlBuilder->getUrl(self::SUBSCRIPTION_VIEW_URL_PATH, ['subscription_id' => $item['subscription_id'],'id' => $item['entity_id']]),
+                        'href' => $this->urlBuilder->getUrl(self::SUBSCRIPTION_VIEW_URL_PATH, ['subscription_id' => strip_tags($item['subscription_id']),'id' => $item['entity_id']]),
                         'label' => __('View'),
                         '__disableTmpl' => true,
                     ];
                     $item[$name]['pause'] = [
-                        'href' => $this->urlBuilder->getUrl(self::PAUSE_URL_PATH, ['subscription_id' => $item['subscription_id']]),
+                        'href' => $this->urlBuilder->getUrl(self::PAUSE_URL_PATH, ['subscription_id' => strip_tags($item['subscription_id'])]),
                         'label' => __('Pause'),
                         '__disableTmpl' => true,
                     ];
                     $item[$name]['resume'] = [
-                        'href' => $this->urlBuilder->getUrl(self::RESUME_URL_PATH, ['subscription_id' => $item['subscription_id']]),
+                        'href' => $this->urlBuilder->getUrl(self::RESUME_URL_PATH, ['subscription_id' => strip_tags($item['subscription_id'])]),
                         'label' => __('Resume'),
                         '__disableTmpl' => true,
                     ];
                     $item[$name]['cancel'] = [
-                        'href' => $this->urlBuilder->getUrl(self::CANCEL_URL_PATH, ['subscription_id' => $item['subscription_id']]),
+                        'href' => $this->urlBuilder->getUrl(self::CANCEL_URL_PATH, ['subscription_id' => strip_tags($item['subscription_id'])]),
                         'label' => __('Cancel'),
                         'confirm' => [
                             'title' => __('Cancel Subscription'),

@@ -39,7 +39,7 @@ class Index extends Action
     {
         $resultPage = $this->pageFactory->create();
         $resultPage->setActiveMenu('Magento_Sales::sales');
-        $resultPage->getConfig()->getTitle()->prepend(__('Subscription List'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Subscriptions'));
 
         return $resultPage;
     }
