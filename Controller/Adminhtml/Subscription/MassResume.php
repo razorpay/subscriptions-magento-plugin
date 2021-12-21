@@ -9,7 +9,7 @@ use Razorpay\Magento\Controller\BaseController;
 use Razorpay\Subscription\Helper\Subscription;
 use Razorpay\Subscription\Model\ResourceModel\Subscrib\CollectionFactory;
 
-class Cancel extends BaseController
+class MassResume extends BaseController
 {
     /**
      * @var Magento\Backend\Helper\Data
@@ -103,20 +103,22 @@ class Cancel extends BaseController
      */
     public function execute()
     {
+        $collection = $this->filter->getCollection($this->collectionFactory->create());
+        $collectionSize = $collection->getSize();
+
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $adminSession = $objectManager->get('Magento\Backend\Model\Auth\Session');
         if ($adminSession->isLoggedIn()) {
             try {
-                $id = $this->getRequest()->getParam('subscription_id');
-                if($id){
-                    $updateBy = 'admin';
-
-                    $this->subscription->cancelSubscription($id, $this->rzp, $updateBy);
-
-                    $this->messageManager->addSuccess(__('Subscription has been cancelled.'));
-                    $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-                    return $resultRedirect->setPath('subscribed/index/index');
+                $updateBy = 'admin';
+                foreach ($collection as $item) {
+                    $id = $item['subscription_id'];
+                    $this->subscription->resumeSubscription($id, $this->rzp, $updateBy);
                 }
+
+                $this->messageManager->addSuccess(__('A total of %1 subscription(s) have been resumed.', $collectionSize));
+                $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+                return $resultRedirect->setPath('subscribed/index/index');
             } catch (\Exception $e) {
                 $this->messageManager->addError(__($e->getMessage()));
                 $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);

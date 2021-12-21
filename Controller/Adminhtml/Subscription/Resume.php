@@ -9,7 +9,7 @@ use Razorpay\Magento\Controller\BaseController;
 use Razorpay\Subscription\Helper\Subscription;
 use Razorpay\Subscription\Model\ResourceModel\Subscrib\CollectionFactory;
 
-class Cancel extends BaseController
+class Resume extends BaseController
 {
     /**
      * @var Magento\Backend\Helper\Data
@@ -111,9 +111,9 @@ class Cancel extends BaseController
                 if($id){
                     $updateBy = 'admin';
 
-                    $this->subscription->cancelSubscription($id, $this->rzp, $updateBy);
+                    $this->subscription->resumeSubscription($id, $this->rzp, $updateBy);
 
-                    $this->messageManager->addSuccess(__('Subscription has been cancelled.'));
+                    $this->messageManager->addSuccess(__('Subscription has been resumed.'));
                     $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
                     return $resultRedirect->setPath('subscribed/index/index');
                 }

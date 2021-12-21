@@ -70,7 +70,9 @@ class ResumeSubscription extends BaseController
             if (!$this->customerSession->isLoggedIn()) {
                 return $this->_redirect('customer/account/login');
             }
-            $this->subscription->resumeSubscription($id, $this->rzp);
+
+            $updateBy = 'customer';
+            $this->subscription->resumeSubscription($id, $this->rzp, $updateBy);
             $this->messageManager->addSuccess(__("Subscription is resumed successfully!"));
             return $this->_redirect('razorpaysubscription/subscrib/view/id/' . $oid);
         } catch (\Exception $e) {

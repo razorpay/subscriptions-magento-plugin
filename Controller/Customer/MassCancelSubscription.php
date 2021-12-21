@@ -70,11 +70,12 @@ class MassCancelSubscription extends BaseController
             if (!$this->customerSession->isLoggedIn()) {
                 return $this->_redirect('customer/account/login');
             }
-            
+
+            $updateBy = 'customer';
             foreach ($orders as $order) {
                $subscriptionData =  $this->getSubscription($order);
                if($subscriptionData['status'] != "created" || $subscriptionData['status'] != "cancelled"){
-                  $this->subscription->cancelSubscription($subscriptionData['subscription_id'], $this->rzp);
+                  $this->subscription->cancelSubscription($subscriptionData['subscription_id'], $this->rzp, $updateBy);
                 }
             }
 
@@ -90,7 +91,7 @@ class MassCancelSubscription extends BaseController
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $subscribCollection = $objectManager->create('Razorpay\Subscription\Model\ResourceModel\Subscrib\Collection');
-        
+
         $subscribCollection->addFieldToFilter('entity_id', $id);
         $singleData = $subscribCollection->getFirstItem();
         return $singleData->getData();

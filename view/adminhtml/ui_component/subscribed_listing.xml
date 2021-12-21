@@ -54,6 +54,24 @@
                     </item>
                 </argument>
             </action>
+            <action name="pause">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">pause</item>
+                        <item name="label" xsi:type="string" translate="true">Pause</item>
+                        <item name="url" xsi:type="url" path="subscribed/subscription/massPause"/>
+                    </item>
+                </argument>
+            </action>
+            <action name="resume">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">resume</item>
+                        <item name="label" xsi:type="string" translate="true">Resume</item>
+                        <item name="url" xsi:type="url" path="subscribed/subscription/massResume"/>
+                    </item>
+                </argument>
+            </action>
         </massaction>
         <filters name="listing_filters">
             <argument name="data" xsi:type="array">
@@ -191,5 +209,12 @@
 
             </settings>
         </column>
+
+        <actionsColumn name="actions" class="Razorpay\Subscription\Ui\Component\Listing\Column\Actions">
+            <settings>
+                <indexField>entity_id</indexField>
+                <label translate="true">Actions</label>
+            </settings>
+        </actionsColumn>
     </columns>
 </listing>
