@@ -394,4 +394,45 @@ class Subscription
         }
         return $subscriptionResponse ;
      }
+
+     /**
+     * Edit Subscription
+     * @param $subscriptionId 
+     * @return array
+     */
+    public function editSubscription($subscriptionId, $attributes, $rzp)
+    {
+        $entity_id = $attributes['entity_id'];
+        unset($attributes['entity_id']);
+       try{
+        $subscriptionResponse = $rzp->subscription->fetch($subscriptionId)->update($attributes);
+
+        //update record
+        $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
+        $postUpdate = $subscription->load($subscriptionId, 'subscription_id');
+        $postUpdate->setPlanEntityId($entity_id);
+        $postUpdate->save();
+
+       }catch(\Exception $e){
+          $this->_logger->info("Exception: {$e->getMessage()}");
+          throw new \Exception( $e->getMessage() );
+       }
+    }
+    
+    /**
+     * Fetch pending updates
+     * @param $subscriptionId 
+     * @return array
+     */
+    public function pendingUpdate($subscriptionId, $rzp)
+    {
+        try{
+            $subscriptionResponse = $rzp->subscription->fetch($subscriptionId)->pendingUpdate();
+            return $subscriptionResponse;
+
+        }catch(\Exception $e){
+            $this->_logger->info("Exception: {$e->getMessage()}");
+            return [];
+         }
+    }
 }
