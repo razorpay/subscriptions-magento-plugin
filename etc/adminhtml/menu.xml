@@ -3,7 +3,7 @@
     <menu>
         <add id="Razorpay_Subscription::rzp_subscriptions" title="Razorpay Subscriptions" module="Razorpay_Subscription" sortOrder="20" resource="Razorpay_Subscription::rzp_subscriptions" />
         
-        <add id="Razorpay_Subscription::plan" title="Manage Plans" module="Razorpay_Subscription" sortOrder="20" parent="Razorpay_Subscription::rzp_subscriptions" action="subscribed/plan" resource="Razorpay_Subscription::plan" />
-        <add id="Razorpay_Subscription::subscriptions" title="Manage Subscriptions" module="Razorpay_Subscription" sortOrder="10" parent="Razorpay_Subscription::rzp_subscriptions" action="subscribed/index/index" resource="Razorpay_Subscription::subscriptions" />
+        <add id="Razorpay_Subscription::plan" title="Manage Plans" module="Razorpay_Subscription" sortOrder="10" parent="Razorpay_Subscription::rzp_subscriptions" action="subscribed/plan" resource="Razorpay_Subscription::plan" />
+        <add id="Razorpay_Subscription::subscriptions" title="Manage Subscriptions" module="Razorpay_Subscription" sortOrder="20" parent="Razorpay_Subscription::rzp_subscriptions" action="subscribed/index/index" resource="Razorpay_Subscription::subscriptions" />
     </menu>
 </config>
