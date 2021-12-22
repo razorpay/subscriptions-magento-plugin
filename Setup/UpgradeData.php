@@ -7,6 +7,7 @@ use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
+use Razorpay\Subscription\Model\SubscriptionProductAttributes;
 
 class UpgradeData implements UpgradeDataInterface
 {
@@ -72,49 +73,20 @@ class UpgradeData implements UpgradeDataInterface
                 'is_filterable_in_grid' => false,
                 'required' => false
             ],
-//            'razorpay_subscription_interval_count' => [
-//                'type' => 'int',
-//                'label' => 'Billing Interval',
-//                'input' => 'text',
-//                'default' => 1,
-//                'sort_order' => 120,
-//                'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
-//                'group' => $groupName,
-//                'note' => 'Used together with frequency to define how often the customer should be charged',
-//                'is_used_in_grid' => false,
-//                'is_visible_in_grid' => false,
-//                'is_filterable_in_grid' => false,
-//                'used_for_promo_rules' => true,
-//                'required' => false
-//            ],
-            'razorpay_subscription_billing_cycles' => [
-                'type' => 'int',
-                'label' => 'Billing Count',
-                'input' => 'text',
-                'default' => 6,
+            'razorpay_subscription_mode' => [
+                'type' => 'varchar',
+                'label' => 'Subscription Mode',
+                'input' => 'select',
                 'sort_order' => 130,
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
                 'group' => $groupName,
-                'note' => 'The number of billing cycles for which the customer should be charged',
+                'source' => SubscriptionProductAttributes::class,
                 'is_used_in_grid' => false,
                 'is_visible_in_grid' => false,
                 'is_filterable_in_grid' => false,
                 'used_for_promo_rules' => true,
                 'required' => false
             ],
-            'razorpay_subscription_trial' => [
-                'type' => 'int',
-                'label' => 'Trial Days',
-                'input' => 'text',
-                'sort_order' => 140,
-                'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
-                'group' => $groupName,
-                'is_used_in_grid' => false,
-                'is_visible_in_grid' => false,
-                'is_filterable_in_grid' => false,
-                'used_for_promo_rules' => true,
-                'required' => false
-            ]
         ];
 
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
