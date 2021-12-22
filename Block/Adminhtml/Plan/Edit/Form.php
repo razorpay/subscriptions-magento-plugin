@@ -128,7 +128,7 @@ class Form extends Generic
         $fieldset->addField(
             'plan_trial',
             'text',
-            ['name' => 'plan_trial', 'label' => __('Start Subscription'), 'title' => __('Start Subscription'), 'required' => true]
+            ['name' => 'plan_trial', 'label' => __('Trial Days'), 'title' => __('Trial Days'), 'value' => 0]
         );
         $fieldset->addField(
             'plan_addons',
