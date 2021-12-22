@@ -144,11 +144,7 @@ class Form extends Generic
             'text',
             ['name' => 'plan_addons', 'label' => __('Add-On Amount (Optional)'), 'title' => __('Add-On Amount (Optional)')]
         );
-        // $fieldset->addField(
-        //     'plan_status',
-        //     'text',
-        //     ['name' => 'plan_status', 'label' => __('Status'), 'title' => __('Status'), 'required' => true]
-        // );
+       
         // Status - Dropdown
         if (!$model->getId()) {
             $model->setStatus('1'); // Enable status when adding a Plan
