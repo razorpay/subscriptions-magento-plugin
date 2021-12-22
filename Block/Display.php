@@ -7,18 +7,12 @@ use \Razorpay\Subscription\Model\ResourceModel\Subscrib\Collection as SubscribCo
 use \Razorpay\Subscription\Model\ResourceModel\Subscrib\CollectionFactory as SubscribCollectionFactory;
 use \Razorpay\Subscription\Model\Subscrib;
 
-
-
 class Display extends Template
 {
-/**
-     * CollectionFactory
-     * @var null|CollectionFactory
-     */
     protected $customerSession;
-
-    protected $_subscribCollectionFactory = null;
+    protected $subscribCollectionFactory = null;
     protected $moduleReader;
+
     protected $_resource;
     private  $urlInterface;
 
@@ -29,16 +23,19 @@ class Display extends Template
 
     /**
      * Constructor
-     *
      * @param Context $context
+     * @param \Magento\Customer\Model\Session $customerSession
      * @param SubscribCollectionFactory $subscribCollectionFactory
+     * @param \Magento\Framework\App\ResourceConnection $Resource
+     * @param \Magento\Framework\Module\Dir\Reader $moduleReader
      * @param array $data
      */
     public function __construct(
-        Context $context,
-        \Magento\Customer\Model\Session $customerSession,
-        SubscribCollectionFactory $subscribCollectionFactory,
+        Context                                   $context,
+        \Magento\Customer\Model\Session           $customerSession,
+        SubscribCollectionFactory                 $subscribCollectionFactory,
         \Magento\Framework\App\ResourceConnection $Resource,
+
         \Magento\Framework\Module\Dir\Reader $moduleReader,
         \Psr\Log\LoggerInterface $logger,
         \Magento\Framework\UrlInterface $urlInterface,
@@ -48,7 +45,8 @@ class Display extends Template
         $this->_subscribCollectionFactory = $subscribCollectionFactory;
         $this->_resource = $Resource;
         parent::__construct($context, $data);
-
+        $this->subscribCollectionFactory = $subscribCollectionFactory;
+        $this->resource = $Resource;
         $this->moduleReader = $moduleReader;
         $this->customerSession = $customerSession;
         $this->logger          = $logger;
@@ -58,30 +56,28 @@ class Display extends Template
     /**
      * @return Subscrib[]
      */
-
     protected function filterOrder()
     {
         $this->razorpay_subscriptions = "main_table";
         $this->catalog_product_entity_table = $this->getTable("catalog_product_entity");
         $this->getSelect()
-            ->join(array('payment' =>$this->catalog_product_entity_table), $this->razorpay_subscriptions . '.product_id= payment.entity_id',
-            
-        );
+            ->join(array('payment' => $this->catalog_product_entity_table), $this->razorpay_subscriptions . '.product_id= payment.entity_id');
+
         $this->catalog_product_entity_varchar_table = $this->getTable("catalog_product_entity");
         $this->getSelect()
-            ->join(array('pid' =>$this->catalog_product_entity_varchar_table), $this->catalog_product_entity_table . '.entity_id= pid.entity_id',
-            
+            ->join(array('pid' => $this->catalog_product_entity_varchar_table), $this->catalog_product_entity_table . '.entity_id= pid.entity_id',
+
         );
-        
     }
-    public function getSubscribs() 
+
+    public function getSubscribs()
     {
         // get param values
         $page = ($this->getRequest()->getParam('p')) ? $this->getRequest()->getParam('p') : 1;
         $pageSize = ($this->getRequest()->getParam('limit')) ? $this->getRequest()->getParam('limit') : 10; // set minimum records
 
         $customerId = $this->customerSession->getCustomer()->getId();
-       
+        $subscribCollection = $this->subscribCollectionFactory->create();
 
         $subscribCollection = $this->_subscribCollectionFactory->create();
    
@@ -111,6 +107,7 @@ class Display extends Template
      * @param Subscrib $subscrib
      * @return string
      */
+
     public function getSubscribUrl(
         Subscrib $subscrib
     ) {
@@ -153,5 +150,19 @@ class Display extends Template
     {
         return $this->getChildHtml('pager');
     }
+
+    /**
+     * For a given subscrib, returns its url
+     * @param Subscrib $subscrib
+     * @return string
+     */
+    public function editSubscribUrl(
+        Subscrib $subscrib
+    ) {
+        
+        return $this->urlInterface->getUrl() ."razorpaysubscription/subscrib/edit/id/{$subscrib->getSubscriptionId()}";
+        
+    }
 	
 }
+
