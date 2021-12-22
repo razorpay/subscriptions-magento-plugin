@@ -34,4 +34,3 @@ class ProductList implements OptionSourceInterface
     }
 }
 
-

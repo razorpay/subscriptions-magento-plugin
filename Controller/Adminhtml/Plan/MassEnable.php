@@ -42,8 +42,6 @@ class MassEnable extends \Magento\Backend\App\Action
         $collection = $this->filter->getCollection($this->collectionFactory->create());
         $collectionSize = $collection->getSize();
         foreach ($collection as $item) {
-           // $item->delete();
-           
             $item->setData('plan_status',1);
             $item->save();
         }

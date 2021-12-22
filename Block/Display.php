@@ -72,7 +72,7 @@ class Display extends Template
             ->join(array('pid' =>$this->catalog_product_entity_varchar_table), $this->catalog_product_entity_table . '.entity_id= pid.entity_id',
             
         );
-        //$this->getSelect()->where("payment_method=".$payment_method);
+        
     }
     public function getSubscribs() 
     {

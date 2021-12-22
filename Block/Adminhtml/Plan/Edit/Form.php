@@ -92,11 +92,7 @@ class Form extends Generic
             'textarea',
             ['name' => 'plan_desc', 'label' => __('Plan Description'), 'title' => __('Plan Description'), 'required' => true]
         );
-        // $fieldset->addField(
-        //     'magento_product_id',
-        //     'text',
-        //     ['name' => 'magento_product_id', 'label' => __('Select Product'), 'title' => __('Select Product'), 'required' => true]
-        // );
+       
          // product List - Dropdown
           $productList = $this->_productList->toOptionArray();
        
@@ -115,12 +111,7 @@ class Form extends Generic
             'text',
             ['name' => 'plan_interval', 'label' => __('Billing Frequency'), 'title' => __('Billing Frequency'), 'required' => true]
         );
-        // $fieldset->addField(
-        //     'plan_type',
-        //     'text',
-        //     ['name' => 'plan_type', 'label' => __('Billing Frequency'), 'title' => __('Billing Frequency'), 'required' => true]
-        // );
-        $fieldset->addField(
+               $fieldset->addField(
             'plan_type', 'select', array(
                 'label'              => 'Interval',
                 'name'               => 'plan_type',
@@ -144,8 +135,7 @@ class Form extends Generic
             'text',
             ['name' => 'plan_addons', 'label' => __('Add-On Amount (Optional)'), 'title' => __('Add-On Amount (Optional)')]
         );
-       
-        // Status - Dropdown
+               // Status - Dropdown
         if (!$model->getId()) {
             $model->setStatus('1'); // Enable status when adding a Plan
         }

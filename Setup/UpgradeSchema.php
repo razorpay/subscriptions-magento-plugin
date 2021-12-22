@@ -253,7 +253,7 @@ class UpgradeSchema implements  UpgradeSchemaInterface
                     'nullable' => false,
                     'comment' => 'Razorpay Subscription status'
                 ]
-            ) 
+            )
             ->addColumn(
                 'cancel_by',
                 Table::TYPE_TEXT,
