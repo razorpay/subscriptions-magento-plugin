@@ -75,4 +75,39 @@
             <argument name="resourceModel" xsi:type="string">Razorpay\Subscription\Model\ResourceModel\Subscrib</argument>
         </arguments>
     </virtualType>
+    <!-- Admin Plan list and edit -->
+    <!-- Create our type PlanGridDataProvider -->
+    <virtualType name="PlanGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">Razorpay\Subscription\Model\Resource\Plans\Collection</argument>
+            <argument name="filterPool" xsi:type="object" shared="false">PlanGridFilterPool</argument> <!-- Define new object for filters -->
+        </arguments>
+    </virtualType>
+ 
+    <!-- Create our type PlanGridFilterPool -->
+    <virtualType name="PlanGridFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+ 
+    <!-- Type for Plan_listing_data_source -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="plan_listing_data_source" xsi:type="string">Razorpay\Subscription\Model\ResourceModel\Grid\Plans\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+ 
+    <!-- Simulate our class Razorpay\Subscription\Model\ResourceModel\Grid\Plans\Collection -->
+    <virtualType name="Razorpay\Subscription\Model\ResourceModel\Grid\Plans\Collection" type="Razorpay\Subscription\Ui\DataProvider\Plan\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">razorpay_plans</argument>
+            <argument name="resourceModel" xsi:type="string">Razorpay\Subscription\Model\ResourceModel\Plans</argument>
+        </arguments>
+    </virtualType>
 </config>
