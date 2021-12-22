@@ -54,9 +54,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
 
         $paymentOption = $this->request->getParam('paymentOption');
         $frequency = $this->request->getParam('frequency');
-        $this->logger->info("here");
-//        $this->logger->info($this->request->getBodyParams());
-//        $this->logger->info($this->request->getPost());
+
         $this->logger->info($paymentOption);
         $this->logger->info($frequency);
         if($paymentOption == "subscription")

@@ -428,7 +428,7 @@ class Subscription extends AbstractHelper
         $subscriptionResponse = $rzp->subscription->fetch($subscriptionId)->update($attributes);
 
         //update record
-        $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
+        $subscription = $this->objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
         $postUpdate = $subscription->load($subscriptionId, 'subscription_id');
         $postUpdate->setPlanEntityId($entity_id);
         $postUpdate->save();
@@ -465,28 +465,4 @@ class Subscription extends AbstractHelper
         return (bool) (int) $this->subscriptionConfig->getConfigData(SubscriptionConfig::IS_SUBSCRIPTION_ACTIVE);
     }
 
-    public function getQuotesDetailsForProduct($productId)
-    {
-        $product = $this->product->load($productId);
-        if($product->getRazorpaySubscriptionEnabled() && $this->isSubscriptionActive()) {
-            $cartItems = $this->cart->getQuote()->getAllItems();
-            foreach ($cartItems as $item) {
-                /* @var \Magento\Quote\Model\Quote\Item $item */
-                foreach ($item->getOptions() as $option) {
-                    /* @var \Magento\Quote\Model\Quote\Item\Option $option */
-                    $optionData = json_decode($option->getValue(), true);
-                    $this->logger->info(json_encode($optionData));
-                    if($option->getCode() == "additional_options")
-                    {
-                        foreach ($optionData as $data){
-                            if($data['label'] == "Subscription type"){
-                                return lcfirst($data['value']);
-                            }
-
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
