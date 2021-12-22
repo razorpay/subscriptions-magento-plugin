@@ -117,10 +117,10 @@
                 <resizeDefaultWidth>25</resizeDefaultWidth>
             </settings>
         </column> -->
-        <column name="subscription_id">
+        <column name="subscription_id" class="Razorpay\Subscription\Ui\Component\Listing\Column\SubscriptionView">
             <settings>
                 <filter>text</filter>
-                <bodyTmpl>ui/grid/cells/text</bodyTmpl>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
                 <label translate="true">Subscription Id</label>
 
             </settings>
