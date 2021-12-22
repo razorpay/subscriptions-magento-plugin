@@ -56,14 +56,6 @@ class PlanActions extends Column
                     'label' => __('Edit'),
                     'hidden' => false,
                 ];
-                // $item[$this->getData('name')]['delete'] = [
-                //     'href' => $this->urlBuilder->getUrl(
-                //         'subscribed/plan/delete',
-                //         ['id' => $item['entity_id']]
-                //     ),
-                //     'label' => __('Delete'),
-                //     'hidden' => false,
-                // ];
             }
         }
  

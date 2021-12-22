@@ -38,7 +38,6 @@ class MassEnable extends \Magento\Backend\App\Action
      */
     public function execute()
     {
-        //$enableStatus= array('plan_status'=>'0');
         $collection = $this->filter->getCollection($this->collectionFactory->create());
         $collectionSize = $collection->getSize();
         foreach ($collection as $item) {

@@ -17,7 +17,7 @@ class Collection extends SearchResult
      */
     protected function _initSelect()
     {
-$this->addFilterToMap('entity_id', 'main_table.entity_id');
+
          $this->getSelect()->joinLeft(
             ['secondTable' => $this->getTable('catalog_product_entity_varchar')],
             'main_table.magento_product_id = secondTable.entity_id',
@@ -30,5 +30,6 @@ $this->addFilterToMap('entity_id', 'main_table.entity_id');
         );
  $this->getSelect()->where("thirdTable.attribute_code='name' and secondTable.entity_id=main_table.magento_product_id");
           parent::_initSelect();
+          $this->addFilterToMap('entity_id', 'main_table.entity_id');
     }
 }
