@@ -22,6 +22,8 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
      */
     private $serializer;
 
+    private $objectManagement;
+
     /**
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\App\RequestInterface $request
@@ -37,6 +39,8 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
         $this->request = $request;
         $this->serializer = $serializer;
         $this->logger = $logger;
+        $this->objectManagement = \Magento\Framework\App\ObjectManager::getInstance();
+
     }
 
     /**
@@ -53,26 +57,42 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
         }
 
         $paymentOption = $this->request->getParam('paymentOption');
-        $frequency = $this->request->getParam('frequency');
+        $planId = $this->request->getParam('plan_id');
 
-        $this->logger->info($paymentOption);
-        $this->logger->info($frequency);
-        if($paymentOption == "subscription")
+        $this->logger->info($planId);
+
+        if($paymentOption == "subscription" )
         {
-            $this->logger->info("adding details of subscription to quotes. Payment Option: $paymentOption, Frequency:$frequency");
+            $planData = $this->objectManagement->get('Razorpay\Subscription\Model\Plans')
+                ->getCollection()
+                ->addFieldToSelect("plan_bill_amount", "price")
+                ->addFieldToSelect("plan_type", "type")
+                ->addFilter('entity_id', $planId)
+                ->addFilter('plan_status', 1)
+                ->getFirstItem()
+                ->getData();
+
+            if(!empty($planData)){
+                $item->setCustomPrice($planData["price"]);
+                $item->setOriginalCustomPrice($planData["price"]);
+                $item->getProduct()->setIsSuperMode(true);
+            }
+
+            $this->logger->info("adding details of subscription to quotes. Payment Option: $paymentOption, Plan id:$planId");
             $additionalOptions[] = [
                 'label' => "Subscription type",
-                'value' => ucfirst($frequency)
+                'value' => ucfirst($planData["type"])
             ];
-        }
 
-        if(count($additionalOptions) > 0)
-        {
-            $item->addOption(array(
-                'product_id' => $item->getProductId(),
-                'code' => 'additional_options',
-                'value' => $this->serializer->serialize($additionalOptions)
-            ));
+
+            if(count($additionalOptions) > 0)
+            {
+                $item->addOption(array(
+                    'product_id' => $item->getProductId(),
+                    'code' => 'additional_options',
+                    'value' => $this->serializer->serialize($additionalOptions)
+                ));
+            }
         }
 
     }

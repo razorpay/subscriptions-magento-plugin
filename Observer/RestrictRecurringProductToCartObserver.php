@@ -78,7 +78,7 @@ class RestrictRecurringProductToCartObserver implements ObserverInterface
                 }
             }
         }
-        $this->logger->info("validatioin");
+        $this->logger->info("validation ended");
     }
 
     /**

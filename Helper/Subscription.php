@@ -208,7 +208,13 @@ class Subscription extends AbstractHelper
         foreach ($item->getOptions() as $option) {
             /* @var \Magento\Quote\Model\Quote\Item\Option $option */
             $optionData = json_decode($option->getValue(), true);
-            return $optionData["frequency"];
+            $planData = $this->objectManagement->get('Razorpay\Subscription\Model\Plans')
+                ->getCollection()
+                ->addFieldToSelect("plan_type", "type")
+                ->addFilter('entity_id', $optionData["plan_id"])
+                ->getFirstItem()
+                ->getData();
+            return $planData["type"];
         }
     }
 
@@ -392,10 +398,10 @@ class Subscription extends AbstractHelper
 
         $postUpdate->save();
     }
-    
+
     /**
      * Fetch all Subscription invoices
-     * @param $subscriptionId 
+     * @param $subscriptionId
      * @return array
      */
     public function fetchSubscriptionInvoice($subscriptionId, $rzp){
@@ -464,5 +470,4 @@ class Subscription extends AbstractHelper
     {
         return (bool) (int) $this->subscriptionConfig->getConfigData(SubscriptionConfig::IS_SUBSCRIPTION_ACTIVE);
     }
-
 }

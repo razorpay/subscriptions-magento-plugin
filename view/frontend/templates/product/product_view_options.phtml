@@ -25,7 +25,7 @@ $subscriptionHelper = $this->helper(\Razorpay\Subscription\Helper\Subscription::
 
         <?php if($block->getProduct()->getRazorpaySubscriptionMode() == "withSubscription"): ?>
             <div class="control" style="margin-top: 30px;">
-
+<!--                <input type="hidden" value="--><?php ///* @escapeNotVerified */echo __($block->getProduct()->) ?><!--" id="productOriginalPrice">-->
                 <input style="margin-bottom: 20px;"
                        type="radio" checked
                        class="radio required-entry validate-one-required-by-name"
@@ -50,6 +50,7 @@ $subscriptionHelper = $this->helper(\Razorpay\Subscription\Helper\Subscription::
             </div>
             <?php echo $this->getLayout()->createBlock("Razorpay\Subscription\Block\Product\AddToCartProductOptionView")->setTemplate("Razorpay_Subscription::product/subscription_options.phtml")->setData("product_id",$block->getProduct()->getId())->toHtml() ?>
         <?php elseif($block->getProduct()->getRazorpaySubscriptionMode() == "subscriptionOnly"): ?>
+            <input type="hidden" value="subscription" name="paymentOption">
             <?php echo $this->getLayout()->createBlock("Razorpay\Subscription\Block\Product\AddToCartProductOptionView")->setTemplate("Razorpay_Subscription::product/subscription_options.phtml")->setData("product_id",$block->getProduct()->getId())->toHtml() ?>
         <?php endif; ?>
 
@@ -68,21 +69,29 @@ $subscriptionHelper = $this->helper(\Razorpay\Subscription\Helper\Subscription::
     ], function ($) {
         'use strict';
 
-        $(".subscription-option-wrapper").hide();
-        console.log( $('.price').html);
+        <?php if($block->getProduct()->getRazorpaySubscriptionMode() == "withSubscription"): ?>
+            $(".subscription-option-wrapper").hide();
+        <?php endif; ?>
+
         $(document).on('change', 'input[type="radio"]', function () {
             const paymentOptionType = $("input[name='paymentOption']:checked").val();
             if (paymentOptionType.trim() == 'oneTime') {
-                $(".subscription-option-wrapper").hide()
+                $(".subscription-option-wrapper").hide();
+                // $('.price').text($('#productOriginalPrice').val());
+                $("input[name='plan_id']:checked").prop('checked', false);
+
             }
             if (paymentOptionType.trim() == 'subscription') {
-                $(".subscription-option-wrapper").show()
+                $(".subscription-option-wrapper").show();
             }
         });
-        $('input[type=radio][name="frequency"]').change(function() {
-            let planName = $("input[name='frequency']:checked").prev().val();
-            let price = $('#frequencyPrice_'+planName).val();
+
+        $('input[type=radio][name="plan_id"]').change(function() {
+            let planType = $("input[name='plan_id']:checked").prev().val();
+            let price = $('#frequencyPrice_'+planType).val();
             $('.price').text(price);
         })
     });
+
+
 </script>

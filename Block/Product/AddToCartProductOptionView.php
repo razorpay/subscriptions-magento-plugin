@@ -20,6 +20,7 @@ class AddToCartProductOptionView  extends AbstractProduct
             ->getCollection()
             ->addFieldToSelect('plan_name', "planName")
             ->addFieldToSelect("plan_desc", "desc")
+            ->addFieldToSelect("entity_id", "id")
             ->addFieldToSelect("plan_type", "type")
             ->addFieldToSelect("plan_bill_amount", "price")
             ->addFilter('magento_product_id', $productId)

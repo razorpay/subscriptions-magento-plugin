@@ -9,16 +9,16 @@ $subscriptionOptions = $block->getProductSubscriptionOptions($block->getData('pr
 
 $currencySymbol = $block->getCurrencySymbol();
 ?>
+
 <div class="subscription-option-wrapper" style="padding-top: 15px; width: 494px;height: 191px;background: #FFFFFF;">
     <span style="padding: 25px;">Subscription Options</span>
 
     <div class="subscription-options-list">
         <?php foreach($subscriptionOptions as $option): ?>
-
             <div class ="subscription-option" style="margin-left: 23px; margin-bottom: 15px;margin-top: 15px;width: 399px;height: 80px; border: 1px solid #C4CBD7;box-sizing: border-box;border-radius: 10px;">
-                <input type="hidden" value="<?php /* @escapeNotVerified */echo __($currencySymbol.number_format((float)$option["price"], 2, '.', '')) ?>" id="frequencyPrice_<?php /* @escapeNotVerified */echo __($option["planName"])?>">
-                <input type="hidden" value="<?php /* @escapeNotVerified */echo __($option["planName"]) ?>" id="planName">
-                <input id="<?php /* @escapeNotVerified */echo __($option["planName"]."_".$option["type"]) ?>"  class="radio isHidden" name="frequency" value= "<?php /* @escapeNotVerified */echo __($option["type"])?>"  type="radio">
+                <input type="hidden" value="<?php /* @escapeNotVerified */echo __($currencySymbol.number_format((float)$option["price"], 2, '.', '')) ?>" id="frequencyPrice_<?php /* @escapeNotVerified */echo __($option["type"])?>">
+                <input type="hidden" value="<?php /* @escapeNotVerified */echo __($option["type"]) ?>" name="planType">
+                <input id="<?php /* @escapeNotVerified */echo __($option["planName"]."_".$option["type"]) ?>"  class="radio isHidden" name="plan_id" value= "<?php /* @escapeNotVerified */echo __($option["id"])?>"  type="radio">
                 <label for="<?php /* @escapeNotVerified */echo __($option["planName"]."_".$option["type"]) ?>" class="plan-label">
                     <div class="select-box-des">
                         <span class="plan-amount" style="position: absolute;width: 70px;height: 61px;font-style: normal;font-weight: bold;font-size: 25px;padding: 18px 44px 0px 20px;align-items: center;border-right: 1px solid #BBB;" >
@@ -36,6 +36,7 @@ $currencySymbol = $block->getCurrencySymbol();
                 </label>
             </div>
         <?php endforeach;?>
+
     </div>
 </div>
 
