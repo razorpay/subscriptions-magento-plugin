@@ -155,7 +155,7 @@ $invoices = $block->getSubscriptionInvoice();
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (($subscriptioninfo['next_charge_at'] != $subscriptioninfo['end_at']) && ($subscriptioninfo['status'] !="cancelled") && ($subscriptioninfo['status'] !="created")) : ?>  
+                <?php if (($subscriptioninfo['next_charge_at'] != $subscriptioninfo['end_at']) && ($subscriptioninfo['status'] !="cancelled") && ($subscriptioninfo['status'] !="created") && ($subscriptioninfo['remaining_count'] !=0)): ?>  
                         <tr>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Date')) ?>" class="col date"><?= !empty($invoices['items'][0]['billing_end']) ? date('M d, Y', $invoices['items'][0]['billing_end']): '--'?></td>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Invoice Id')) ?>" class="col invoice">--</td>
@@ -164,7 +164,7 @@ $invoices = $block->getSubscriptionInvoice();
                                 </td>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Add-Ons')) ?>" class="col addon">--</td>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Status')) ?>" class="col status"><?= 'Next Due' ?></td>
-                                <td data-th="<?= $block->escapeHtmlAttr(__('Total amount')) ?>" class="col total"><?= $block->getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoices['items'][0]['amount_paid']/100 ?></td>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Total amount')) ?>" class="col total"><?= $block->getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoices['items'][0]['line_items'][0]['net_amount']/100 ?></td>
                             </tr>
                     <?php endif ?>
                     <?php foreach ($invoices['items'] as $invoice) : ?>
