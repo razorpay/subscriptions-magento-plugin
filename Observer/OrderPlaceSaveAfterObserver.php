@@ -22,12 +22,12 @@ class OrderPlaceSaveAfterObserver implements ObserverInterface
     /**
      * @var \Magento\Checkout\Model\Session
      */
-    private \Magento\Checkout\Model\Session $checkoutSession;
+    private $checkoutSession;
 
     /**
      * @var \Razorpay\Magento\Model\PaymentMethod
      */
-    private \Razorpay\Magento\Model\PaymentMethod $rzpMethod;
+    private $rzpMethod;
 
     /**
      * StatusAssignObserver constructor.

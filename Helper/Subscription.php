@@ -54,7 +54,7 @@ class Subscription extends AbstractHelper
     {
         try {
             /* @var \Magento\Quote\Model\Quote $quote */
-            list("planId" => $planId, "id" => $id) = $this->createOrGetPlanId($quote, $rzp);
+            list("planId" => $planId, "id" => $id) = $this->fetchPlanId($quote, $rzp);
             $this->logger->info("-------------------------Creating Subscription---------------------------");
 
             if ($quote->getIsActive()) {
@@ -198,6 +198,45 @@ class Subscription extends AbstractHelper
         }
     }
 
+    public function fetchPlanId($quote, $rzp)
+    {
+        try {
+            $this->logger->info("-------------------------Plan fetch start---------------------------");
+            $planType = $product = $planName = $productId = "";
+            if ($quote->getIsActive()) {
+                list("planType" => $planType, "productId" => $productId, "product" => $product, "planName" => $planName) = $this->getProductDetailsFromQuote($quote);
+
+                $this->logger->info("Fetching plan id for the following: Product id: $productId  product name: {$product->getName()}  Plan type: $planType ");
+
+                //Fetching plan id if existing
+                $planCollection = $this->objectManagement->get('Razorpay\Subscription\Model\Plans')
+                    ->getCollection()
+                    ->addFieldToSelect('plan_id', "planId")
+                    ->addFieldToSelect("entity_id", "id")
+                    ->addFilter('plan_name', $planName)
+                    ->addFilter('magento_product_id', $productId)
+                    ->addFilter('plan_type', $planType)
+                    ->addFilter("plan_interval", 1)
+                    ->getFirstItem()
+                    ->getData();
+
+                return [
+                    "id" => $planCollection['id'],
+                    "planId" => $planCollection['planId']
+                ];
+
+            }
+
+        } catch (\Exception $e) {
+            $this->logger->critical("Exception: {$e->getMessage()}");
+            throw new \Exception($e->getMessage());
+        } catch (Error $e) {
+            $this->logger->critical("Exception: {$e->getMessage()}");
+            throw new \Exception($e->getMessage());
+
+        }
+    }
+
     /**
      * This functions is used to fetch frequency from the item quotes
      * @param $item
@@ -211,10 +250,11 @@ class Subscription extends AbstractHelper
             $planData = $this->objectManagement->get('Razorpay\Subscription\Model\Plans')
                 ->getCollection()
                 ->addFieldToSelect("plan_type", "type")
+                ->addFieldToSelect("plan_name", "plan_name")
                 ->addFilter('entity_id', $optionData["plan_id"])
                 ->getFirstItem()
                 ->getData();
-            return $planData["type"];
+            return $planData;
         }
     }
 
@@ -227,10 +267,11 @@ class Subscription extends AbstractHelper
     {
         /* @var \Magento\Quote\Model\Quote $quote */
         foreach ($quote->getItems() as $item) {
-            $planType = $this->getAdditionalItemOption($item);
+            $plan_info = $this->getAdditionalItemOption($item);
+            $planType = $plan_info['type'];
             $productId = $item->getProduct()->getId();
             $product = $this->product->load($item->getProduct()->getId());
-            $planName = $product->getName() . "_$planType";
+            $planName = $plan_info['plan_name'];
         }
         return [
             "planType" => $planType,
@@ -419,9 +460,9 @@ class Subscription extends AbstractHelper
             $postUpdate->save();
         }
         return $subscriptionResponse ;
-     }
+    }
 
-     /**
+    /**
      * Edit Subscription
      * @param $subscriptionId
      * @return array
@@ -430,19 +471,19 @@ class Subscription extends AbstractHelper
     {
         $entity_id = $attributes['entity_id'];
         unset($attributes['entity_id']);
-       try{
-        $subscriptionResponse = $rzp->subscription->fetch($subscriptionId)->update($attributes);
+        try{
+            $subscriptionResponse = $rzp->subscription->fetch($subscriptionId)->update($attributes);
 
-        //update record
-        $subscription = $this->objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
-        $postUpdate = $subscription->load($subscriptionId, 'subscription_id');
-        $postUpdate->setPlanEntityId($entity_id);
-        $postUpdate->save();
+            //update record
+            $subscription = $this->objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
+            $postUpdate = $subscription->load($subscriptionId, 'subscription_id');
+            $postUpdate->setPlanEntityId($entity_id);
+            $postUpdate->save();
 
-       }catch(\Exception $e){
-          $this->_logger->info("Exception: {$e->getMessage()}");
-          throw new \Exception( $e->getMessage() );
-       }
+        }catch(\Exception $e){
+            $this->_logger->info("Exception: {$e->getMessage()}");
+            throw new \Exception( $e->getMessage() );
+        }
     }
 
     /**
@@ -459,7 +500,7 @@ class Subscription extends AbstractHelper
         }catch(\Exception $e){
             $this->_logger->info("Exception: {$e->getMessage()}");
             return [];
-         }
+        }
     }
 
     /**

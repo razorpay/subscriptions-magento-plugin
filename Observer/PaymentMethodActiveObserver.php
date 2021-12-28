@@ -18,24 +18,24 @@ class PaymentMethodActiveObserver implements ObserverInterface
     /**
      * @var LoggerInterface
      */
-    private LoggerInterface $logger;
+    private $logger;
     /**
      * @var ProductRepositoryInterface
      */
-    private ProductRepositoryInterface $productRepository;
+    private $productRepository;
     /**
      * @var Subscription
      */
-    private Subscription $subscriptionHelper;
+    private $subscriptionHelper;
     /**
      * @var Cart
      */
-    private Cart $cart;
+    private $cart;
 
     /**
      * @var ManagerInterface
      */
-    private ManagerInterface $messageManager;
+    private $messageManager;
 
     public function __construct(
         LoggerInterface $logger,
