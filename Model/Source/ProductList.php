@@ -21,7 +21,8 @@ class ProductList implements OptionSourceInterface
     {
         $options[] = ['label' => '-- Please Select --', 'value' => ''];
         $collection = $this->collectionFactory->create()
-            ->addAttributeToSelect('*');
+            ->addAttributeToSelect('*')
+          ->addAttributeToFilter('type_id', array('in' => array('simple','configurable')));
           
         foreach ($collection as $category) {
             $options[] = [
