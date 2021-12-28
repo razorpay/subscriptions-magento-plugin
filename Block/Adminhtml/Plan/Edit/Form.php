@@ -79,63 +79,109 @@ class Form extends Generic
  
         if ($model->getId()) {
             $fieldset->addField('entity_id', 'hidden', ['name' => 'entity_id']);
-        }
- 
+            $readonly = true;
+        }else { $readonly=false;}
+        
         $fieldset->addField(
             'plan_name',
             'text',
-            ['name' => 'plan_name', 'label' => __('Plan Name'), 'title' => __('Plan Name'), 'required' => true]
+            ['name' => 'plan_name', 'label' => __('Plan Name'), 'title' => __('Plan Name'), 'required' => true,'disabled'=>$readonly]
         );
  
         $fieldset->addField(
             'plan_desc',
             'textarea',
-            ['name' => 'plan_desc', 'label' => __('Plan Description'), 'title' => __('Plan Description'), 'required' => true]
+            ['name' => 'plan_desc', 'label' => __('Plan Description'), 'title' => __('Plan Description'), 'required' => true,'disabled'=>$readonly]
         );
-       
-         // product List - Dropdown
+              // product List - Dropdown
           $productList = $this->_productList->toOptionArray();
        
          $fieldset->addField(
              'magento_product_id',
              'select',
-             ['name' => 'magento_product_id', 'label' => __('Select Product'), 'title' => __('Select Product'), 'required' => true, 'values' => $productList]
+             ['name' => 'magento_product_id', 'label' => __('Select Product'), 'title' => __('Select Product'), 'required' => true, 'values' => $productList,'disabled'=>$readonly]
          );
         $fieldset->addField(
             'plan_bill_amount',
             'text',
-            ['name' => 'plan_bill_amount', 'label' => __('Billing Amount'), 'title' => __('Billing Amount'), 'required' => true]
+            ['name' => 'plan_bill_amount', 'label' => __('Billing Amount'), 'title' => __('Billing Amount'), 'required' => true,'disabled'=>$readonly]
         );
         $fieldset->addField(
             'plan_interval',
             'text',
-            ['name' => 'plan_interval', 'label' => __('Billing Frequency'), 'title' => __('Billing Frequency'), 'required' => true]
+            ['name' => 'plan_interval', 'label' => __('Billing Frequency'), 'title' => __('Billing Frequency'), 'required' => true,'disabled'=>$readonly]
         );
-               $fieldset->addField(
+        
+        $fieldset->addField(
             'plan_type', 'select', array(
                 'label'              => 'Interval',
                 'name'               => 'plan_type',
-                'values'=> array('daily'=>'Daily', 'weekly'=>'Weekly','monthly'=>'Monthly','yearly'=>'Yearly'),
-                'required'=>true
+                'class' => 'required-entry',
+                'onchange' => 'checkSelectedItem(this.value)',
+                //'values'=> array('daily'=>'Daily', 'weekly'=>'Weekly','monthly'=>'Monthly','yearly'=>'Yearly'),
+                'values'    => array(
+                    array(
+                        'value'     => '',
+                        'label'     => 'Please Select',      
+                   ),
+                   array(
+                    'value'     => 'daily',
+                    'label'     => 'Daily',      
+               ),
+                    array(
+                         'value'     => 'weekly',
+                         'label'     => 'Weekly',      
+                    ),
+                    array(
+                        'value'     => 'monthly',
+                        'label'     => 'Monthly',         
+                    ),
+                    array(
+                        'value'     => 'yearly',
+                        'label'     => 'Yearly',         
+                    )
+                    ),
+                'required'=>true,
+                'disabled'=>$readonly
             )
-        );
+        )->setAfterElementHtml("
+        <script type=\"text/javascript\">
+           function checkSelectedItem(selectElement){ 
+            plan_interval = document.getElementById('plan_plan_interval').value;
+            plan_type = document.getElementById('plan_plan_interval').value;
+            if(selectElement =='daily')
+            {
+            if((plan_interval==='') || (plan_interval <='7')){
+            alert('For daily plans, the minimum Billing Frequency is 7.');
+                }
+            }
+           
+           }
+           
+        </script>"); 
+
+   
+
         $fieldset->addField(
             'plan_bill_cycle',
             'text',
-            ['name' => 'plan_bill_cycle', 'label' => __('No. of Billing Cycles'), 'title' => __('No. of Billing Cycles'), 'required' => true]
+            ['name' => 'plan_bill_cycle', 'label' => __('No. of Billing Cycles'), 'title' => __('No. of Billing Cycles'), 'required' => true,'disabled'=>$readonly]
         );
-
+        if (!$model->getId()) {
+            $model->setData('plan_trial', '0');
+        }
         $fieldset->addField(
             'plan_trial',
             'text',
-            ['name' => 'plan_trial', 'label' => __('Trial Days'), 'title' => __('Trial Days'), 'value' => 0]
+            ['name' => 'plan_trial', 'label' => __('Trial Days'), 'title' => __('Trial Days'),'note' => 'Default is 0. The subscription starts immediately after the authorization payment','disabled'=>$readonly]
         );
         $fieldset->addField(
             'plan_addons',
             'text',
-            ['name' => 'plan_addons', 'label' => __('Add-On Amount (Optional)'), 'title' => __('Add-On Amount (Optional)')]
+            ['name' => 'plan_addons', 'label' => __('Add-On Amount (Optional)'), 'title' => __('Add-On Amount (Optional)'),'disabled'=>$readonly]
         );
-               // Status - Dropdown
+       
+        // Status - Dropdown
         if (!$model->getId()) {
             $model->setStatus('1'); // Enable status when adding a Plan
         }
