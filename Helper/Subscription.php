@@ -92,7 +92,7 @@ class Subscription extends AbstractHelper
                 $this->logger->info("Subscription response object ", json_decode(json_encode($subscriptionResponse), true));
 
                 $subscription = $this->objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
-                $subscription->setPlanEntityId($planData['plan_id'])
+                $subscription->setPlanEntityId($planData['entity_id'])
                     ->setSubscriptionId($subscriptionResponse->id)
                     ->setRazorpayCustomerId($subscriptionResponse->customer_id)
                     ->setmagentoUserId($quote->getCustomerId())
