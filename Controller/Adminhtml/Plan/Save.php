@@ -1,9 +1,11 @@
 <?php
 namespace Razorpay\Subscription\Controller\Adminhtml\Plan;
-use Razorpay\Subscription\Helper\Subscription;
  
 use Magento\Backend\App\Action;
- 
+// require in case of zip installation without composer
+require_once __DIR__ . "../../../../../Razorpay/Razorpay.php";
+use Razorpay\Api\Api;
+use Razorpay\Magento\Model\Config;
 class Save extends Action
 {
     /**
@@ -15,14 +17,19 @@ class Save extends Action
      * @param Action\Context $context
      * @param \Razorpay\Subscription\Model\Plans $model
      */
+    protected $_storeManager;
     public function __construct(
         Action\Context $context,
-        \Razorpay\Subscription\Helper\Subscription $subscription, 
-        \Razorpay\Subscription\Model\Plans $model
+        \Razorpay\Subscription\Model\Plans $model,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
+        
     ) {
         parent::__construct($context);
         $this->_model = $model;
-        $this->subscription    = $subscription;
+        $this->_storeManager = $storeManager;
+      
+
+      
     }
  
     /**
@@ -40,6 +47,16 @@ class Save extends Action
      */
     public function execute()
     {
+        $objectManager =   \Magento\Framework\App\ObjectManager::getInstance();
+        $connection = $objectManager->get('Magento\Framework\App\ResourceConnection')->getConnection('\Magento\Framework\App\ResourceConnection::DEFAULT_CONNECTION'); 
+        $key_id = $connection->fetchAll("SELECT * FROM core_config_data WHERE `path` LIKE 'payment/razorpay/key_id'");
+        $key_secret = $connection->fetchAll("SELECT * FROM core_config_data WHERE `path` LIKE 'payment/razorpay/key_secret'");
+        
+            $rzpId = $key_id[0]['value'];
+            $rzpSecret = $key_secret[0]['value'];
+            $rzp = new Api($rzpId, $rzpSecret);
+           
+      
         $data = $this->getRequest()->getPostValue();
         /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
@@ -48,12 +65,34 @@ class Save extends Action
             $model = $this->_model;
  
             $id = $this->getRequest()->getParam('id');
+            $plan_bill_amount = $this->getRequest()->getParam('plan_bill_amount');
+
+                    $planData = [
+                        "period" => $this->getRequest()->getParam('plan_type'),
+                        "interval" => $this->getRequest()->getParam('plan_interval'),//(int) $product->getRazorpaySubscriptionIntervalCount(),
+                        "item" => [
+                            "name" => $this->getRequest()->getParam('plan_name'),
+                            "amount" => (int)(number_format($plan_bill_amount* 100, 0, ".", "")),
+                            "currency" => $this->_storeManager->getStore()->getCurrentCurrency()->getCode(),
+                            "description" => $this->getRequest()->getParam('plan_desc')
+                        ],
+                        "notes" => [
+                            "source" => "magento"
+                        ]
+                    ];
+            
+
+            
+            $createplan= $rzp->plan->create($planData);
+                $plan_id = array('plan_id'=>$createplan->id);
+           
+          
             if ($id) {
                 $model->load($id);
             }
- 
-            $model->setData($data);
- 
+            
+            $model->setData(array_merge($plan_id,$data));
+           
             $this->_eventManager->dispatch(
                 'subscribed_plan_prepare_save',
                 ['plans' => $model, 'request' => $this->getRequest()]
