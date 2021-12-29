@@ -291,7 +291,7 @@ class SubscriptionWebhook
         }
 
         // Process only if its from magento source
-        if ($webHookSource == "magento") {
+        if ($webHookSource == "magento-subscription") {
 
             switch ($data['event']) {
                 case 'subscription.paused':
