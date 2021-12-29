@@ -85,13 +85,13 @@ class Form extends Generic
         $fieldset->addField(
             'plan_name',
             'text',
-            ['name' => 'plan_name', 'label' => __('Plan Name'), 'title' => __('Plan Name'), 'required' => true,'disabled'=>$readonly, 'maxlength' => 20]
+            ['name' => 'plan_name', 'label' => __('Plan Name'), 'title' => __('Plan Name'), 'required' => true,'disabled'=>$readonly]
         );
  
         $fieldset->addField(
             'plan_desc',
             'textarea',
-            ['name' => 'plan_desc', 'label' => __('Plan Description'), 'title' => __('Plan Description'), 'required' => true,'disabled'=>$readonly, 'maxlength' => 20]
+            ['name' => 'plan_desc', 'label' => __('Plan Description'), 'title' => __('Plan Description'), 'required' => true,'disabled'=>$readonly]
         );
               // product List - Dropdown
           $productList = $this->_productList->toOptionArray();
