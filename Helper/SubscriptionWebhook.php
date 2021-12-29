@@ -283,7 +283,7 @@ class SubscriptionWebhook
 
          $rzpSubscriptionId = $data['payload']['subscription']['entity']['id'];
          $quoteId = $data['payload']['subscription']['entity']['notes']['magento_quote_id'];
-         $webHookSource = $data['payload']['subscription']['entity']['source'];
+         $webHookSource = $data['payload']['subscription']['entity']['notes']['source'];
          
         if (empty($quoteId)) {
             $this->_logger->info("Razorpay Subscription Webhook: Quote ID not set for Razorpay subscription id(:$rzpSubscriptionId)");
@@ -291,7 +291,7 @@ class SubscriptionWebhook
         }
 
         // Process only if its from magento source
-        if ($webHookSource == "magento-subscription") {
+        if ($webHookSource == "magento") {
 
             switch ($data['event']) {
                 case 'subscription.paused':
