@@ -165,4 +165,3 @@ class Display extends Template
     }
 	
 }
-

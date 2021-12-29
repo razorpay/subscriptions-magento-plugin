@@ -9,7 +9,7 @@ use Razorpay\Magento\Controller\BaseController;
 use Razorpay\Subscription\Helper\Subscription;
 use Razorpay\Subscription\Model\ResourceModel\Subscrib\CollectionFactory;
 
-class MassCancel extends BaseController
+class MassResume extends BaseController
 {
     /**
      * @var Magento\Backend\Helper\Data
@@ -113,10 +113,10 @@ class MassCancel extends BaseController
                 $updateBy = 'admin';
                 foreach ($collection as $item) {
                     $id = $item['subscription_id'];
-                    $this->subscription->cancelSubscription($id, $this->rzp, $updateBy);
+                    $this->subscription->resumeSubscription($id, $this->rzp, $updateBy);
                 }
 
-                $this->messageManager->addSuccess(__('A total of %1 subscription(s) have been canceled.', $collectionSize));
+                $this->messageManager->addSuccess(__('A total of %1 subscription(s) have been resumed.', $collectionSize));
                 $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
                 return $resultRedirect->setPath('subscribed/index/index');
             } catch (\Exception $e) {

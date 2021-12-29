@@ -9,7 +9,7 @@ use Razorpay\Magento\Controller\BaseController;
 use Razorpay\Subscription\Helper\Subscription;
 use Razorpay\Subscription\Model\ResourceModel\Subscrib\CollectionFactory;
 
-class MassCancel extends BaseController
+class Pause extends BaseController
 {
     /**
      * @var Magento\Backend\Helper\Data
@@ -103,22 +103,24 @@ class MassCancel extends BaseController
      */
     public function execute()
     {
-        $collection = $this->filter->getCollection($this->collectionFactory->create());
-        $collectionSize = $collection->getSize();
-
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $adminSession = $objectManager->get('Magento\Backend\Model\Auth\Session');
         if ($adminSession->isLoggedIn()) {
             try {
-                $updateBy = 'admin';
-                foreach ($collection as $item) {
-                    $id = $item['subscription_id'];
-                    $this->subscription->cancelSubscription($id, $this->rzp, $updateBy);
-                }
+                $id = $this->getRequest()->getParam('subscription_id');
+                $entity_id = $this->getRequest()->getParam('id');
+                if($id){
+                    $updateBy = 'admin';
 
-                $this->messageManager->addSuccess(__('A total of %1 subscription(s) have been canceled.', $collectionSize));
-                $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-                return $resultRedirect->setPath('subscribed/index/index');
+                    $this->subscription->pauseSubscription($id, $this->rzp, $updateBy);
+
+                    $this->messageManager->addSuccess(__('Subscription has been paused.'));
+                    $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+                    if($entity_id){
+                        return $resultRedirect->setPath('subscribed/subscription/view/subscription_id/'.$id.'/id/'.$entity_id);
+                    }
+                    return $resultRedirect->setPath('subscribed/index/index');
+                }
             } catch (\Exception $e) {
                 $this->messageManager->addError(__($e->getMessage()));
                 $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);

@@ -7,6 +7,7 @@ $invoices = $block->getSubscriptionInvoice();
 
 <div class="block block-dashboard-info">
     <div class="block-title"><strong>Order # <?php echo $subscriptioninfo['entity_id']; ?></strong>
+
         <?php if ($subscriptioninfo['status'] != 'cancelled' && $subscriptioninfo['status'] != 'created'): ?>
             <a href="<?php echo $block->getUrl('razorpaysubscription/customer/cancelSubscription/'); ?>s_id/<?php echo $subscriptioninfo['subscription_id']; ?>/oid/<?php echo $subscriptioninfo['entity_id']; ?>"
                class="action primary"
@@ -23,6 +24,7 @@ $invoices = $block->getSubscriptionInvoice();
                class="action primary"
                style="float:right;"  >Resume</a>
           <?php endif ?>     
+
         <?php endif ?>
 <!--        <a href="--><?php //echo $block->getUrl(''); ?><!--s_id/--><?php //echo $subscriptioninfo['subscription_id']; ?><!--/oid/--><?php //echo $subscriptioninfo['entity_id']; ?><!--"-->
 <!--           class="action primary" style="float:right;">Upgrade</a>-->
@@ -35,12 +37,14 @@ $invoices = $block->getSubscriptionInvoice();
             <span class="delimiter"></span>
             <div class="box-content">
                 <strong class="account">
+
                     Customer Id :
                 </strong> <?php echo $subscriptioninfo['razorpay_customer_id']; ?>
                 <span class="delimiter"></span>
             </div>
             <div class="box-content">
                 <strong class="account">
+
                     Product Name :
                 </strong> <?php echo $subscriptioninfo['value']; ?>
                 <span class="delimiter"></span>
@@ -56,6 +60,7 @@ $invoices = $block->getSubscriptionInvoice();
                     Total Count :
                 </strong> <?php echo $subscriptioninfo['total_count']; ?>
             </div>
+
             <div class="box-content">
                 <strong class="account">
                     Qty :
@@ -150,7 +155,7 @@ $invoices = $block->getSubscriptionInvoice();
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (($subscriptioninfo['next_charge_at'] != $subscriptioninfo['end_at']) && ($subscriptioninfo['status'] !="cancelled") && ($subscriptioninfo['status'] !="created")) : ?>  
+                <?php if (($subscriptioninfo['next_charge_at'] != $subscriptioninfo['end_at']) && ($subscriptioninfo['status'] !="cancelled") && ($subscriptioninfo['status'] !="created") && ($subscriptioninfo['remaining_count'] !=0)): ?>  
                         <tr>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Date')) ?>" class="col date"><?= !empty($invoices['items'][0]['billing_end']) ? date('M d, Y', $invoices['items'][0]['billing_end']): '--'?></td>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Invoice Id')) ?>" class="col invoice">--</td>
@@ -159,7 +164,7 @@ $invoices = $block->getSubscriptionInvoice();
                                 </td>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Add-Ons')) ?>" class="col addon">--</td>
                                 <td data-th="<?= $block->escapeHtmlAttr(__('Status')) ?>" class="col status"><?= 'Next Due' ?></td>
-                                <td data-th="<?= $block->escapeHtmlAttr(__('Total amount')) ?>" class="col total"><?= $block->getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoices['items'][0]['amount_paid']/100 ?></td>
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Total amount')) ?>" class="col total"><?= $block->getCurrencySymbol($subscriptioninfo['store_currency_code']).$invoices['items'][0]['line_items'][0]['net_amount']/100 ?></td>
                             </tr>
                     <?php endif ?>
                     <?php foreach ($invoices['items'] as $invoice) : ?>
@@ -182,4 +187,5 @@ $invoices = $block->getSubscriptionInvoice();
             </table>
         </div>
     <?php endif ?>
+
 </div>

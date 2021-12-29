@@ -39,11 +39,6 @@ class SubscriptionConfig extends AbstractHelper
         $this->config = $config;
     }
 
-    public function isSubscriptionActive()
-    {
-        return (bool) (int) $this->getConfigData(self::IS_SUBSCRIPTION_ACTIVE);
-    }
-
     /**
      * Retrieve information from payment configuration
      *

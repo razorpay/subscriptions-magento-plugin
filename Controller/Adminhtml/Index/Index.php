@@ -1,4 +1,5 @@
 <?php
+
 namespace Razorpay\Subscription\Controller\Adminhtml\Index;
 
 use Magento\Backend\App\Action;
@@ -23,12 +24,9 @@ class Index extends Action
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\View\Result\PageFactory $rawFactory
      */
-    public function __construct(
-        Context $context,
-        PageFactory $rawFactory
-    ) {
+    public function __construct(Context $context, PageFactory $rawFactory)
+    {
         $this->pageFactory = $rawFactory;
-
         parent::__construct($context);
     }
 
@@ -41,8 +39,7 @@ class Index extends Action
     {
         $resultPage = $this->pageFactory->create();
         $resultPage->setActiveMenu('Magento_Sales::sales');
-        //Magento_Sales::sales_transactions
-        $resultPage->getConfig()->getTitle()->prepend(__('Subscription List'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Subscriptions'));
 
         return $resultPage;
     }

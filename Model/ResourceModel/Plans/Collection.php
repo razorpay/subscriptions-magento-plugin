@@ -1,4 +1,5 @@
 <?php
+
 namespace Razorpay\Subscription\Model\ResourceModel\Plans;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;

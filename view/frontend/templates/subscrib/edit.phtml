@@ -1,0 +1,82 @@
+<?php /** @var Razorpay\Subscription\Block\Edit $block */ ?>
+<?php 
+  $currentPlan = $block->getCurrentPlan(); 
+  $plans = $block->getPlans($currentPlan['magento_product_id']); 
+  $pending = $block->pendingUpdate();
+?>
+
+<?php if(!empty($pending)) :?>
+<div class="message info">
+    <span><?= $block->escapeHtml(__("You cant edit subscription again.")) ?></span>
+ </div>
+<?php endif ?> 
+<form class="form-address-edit" action="<?= $block->escapeUrl($block->getSaveUrl()) ?>"  method="post" id="form-validate" enctype="multipart/form-data">
+    <fieldset class="fieldset">
+        <div class="field plan">
+            <label class="label" for="plans_id">
+                <span>Plans</span>
+            </label>
+            <div class="control">
+                <select class="plan_id" name="plan_id" title="plans" <?= !empty($pending) ? "disabled" : "" ?>>
+                    <option value="">Please select a plan.</option>
+                    <?php if ($plans && count($plans)) :?>
+                      <?php foreach($plans as $row) :?>
+                        <option value="<?= $currentPlan['plan_id']==$row['plan_id'] ? "" : $row['plan_id'] ?>" <?= $currentPlan['plan_id']==$row['plan_id'] ? "selected disabled" : "" ?> ><?= $row['plan_name'] ?></option>
+                      <?php endforeach ?>  
+                    <?php endif ?>    
+                </select>
+                <input name="id" value="<?= $currentPlan['entity_id'] ?>" style="display:none;"/>
+                <input name="remaining_count" value="<?= $currentPlan['remaining_count'] ?>" style="display:none;"/>
+            </div>
+        </div>
+        <div class="field plan">
+            <label class="label" for="plans_id">
+                <span>Qty</span>
+            </label>
+            <div class="control">
+                <input type="number" name="quantity" value="1" class="input-text qty" <?= !empty($pending) ? "disabled" : "" ?>/>
+            </div>
+        </div>
+        <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit"
+                    class="action save primary"
+                    data-action="save-address"
+                    <?= !empty($pending) ? "disabled" : "" ?>
+                    >
+                <span>Save</span>
+            </button>
+        </div>
+    </div>
+    </fieldset>
+    
+</form> 
+<script>
+    require([
+        "jquery",
+        "mage/validation"
+    ],
+     function($){
+        var selectAll = $('#select-all')
+        var actionSelect = $('.action-select')
+        var dataform = $('#action-form')
+        $("#plan_id-error").css("color","red");
+        $(".form-address-edit").validate(
+        {
+            rules: 
+            {
+                plan_id: 
+                {
+                    required: true
+                }
+            },
+            messages: {
+                plan_id : ""
+            },
+            highlight: function () {
+              $(".plan_id").addClass('mage-error')
+            },
+        });
+        
+     })
+</script>

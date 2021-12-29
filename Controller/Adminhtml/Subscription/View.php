@@ -1,6 +1,6 @@
 <?php
 
-namespace Razorpay\Subscription\Controller\Subscrib;
+namespace Razorpay\Subscription\Controller\Adminhtml\Subscription;
 
 use \Magento\Framework\App\Action\Action;
 use \Magento\Framework\View\Result\PageFactory;
@@ -17,12 +17,12 @@ class View extends Action
      * Core registry
      * @var Registry
      */
-    protected $_coreRegistry;
+    protected $coreRegistry;
 
     /**
      * @var PageFactory
      */
-    protected $_resultPageFactory;
+    protected $resultPageFactory;
 
     /**
      * @param Context $context
@@ -40,8 +40,8 @@ class View extends Action
         parent::__construct(
             $context
         );
-        $this->_coreRegistry = $coreRegistry;
-        $this->_resultPageFactory = $resultPageFactory;
+        $this->coreRegistry = $coreRegistry;
+        $this->resultPageFactory = $resultPageFactory;
     }
 
     /**
@@ -51,9 +51,9 @@ class View extends Action
      */
     public function execute()
     {
-        $this->_coreRegistry->register(self::REGISTRY_KEY_POST_ID, (int) $this->_request->getParam('id'));
-
-        $resultPage = $this->_resultPageFactory->create();
+        $this->coreRegistry->register(self::REGISTRY_KEY_POST_ID, $this->_request->getParam('id'));
+        $resultPage = $this->resultPageFactory->create();
+        $resultPage->getConfig()->getTitle()->prepend(__('Subscription View'));
         return $resultPage;
     }
 }
