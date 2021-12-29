@@ -67,53 +67,63 @@ class Save extends Action
             $id = $this->getRequest()->getParam('id');
             $plan_bill_amount = $this->getRequest()->getParam('plan_bill_amount');
 
-                    $planData = [
-                        "period" => $this->getRequest()->getParam('plan_type'),
-                        "interval" => $this->getRequest()->getParam('plan_interval'),//(int) $product->getRazorpaySubscriptionIntervalCount(),
-                        "item" => [
-                            "name" => $this->getRequest()->getParam('plan_name'),
-                            "amount" => (int)(number_format($plan_bill_amount* 100, 0, ".", "")),
-                            "currency" => $this->_storeManager->getStore()->getCurrentCurrency()->getCode(),
-                            "description" => $this->getRequest()->getParam('plan_desc')
-                        ],
-                        "notes" => [
-                            "source" => "magento"
-                        ]
-                    ];
-            
+            $checkPlanData = $objectManager->get('Razorpay\Subscription\Model\Plans')
+                ->getCollection()
+                ->addFieldToFilter('magento_product_id', $this->getRequest()->getParam('magento_product_id'))
+                ->addFieldToFilter('plan_type', $this->getRequest()->getParam('plan_type'))
+                ->addFieldToFilter('plan_interval', $this->getRequest()->getParam('plan_interval'))
+                ->addFieldToFilter('plan_bill_cycle', $this->getRequest()->getParam('plan_bill_cycle'))
+                ->addFieldToFilter('plan_bill_amount', $this->getRequest()->getParam('plan_bill_amount'))
+                ->addFieldToFilter('plan_trial', $this->getRequest()->getParam('plan_trial'))
+                ->getData();
 
-            
-            $createplan= $rzp->plan->create($planData);
-                $plan_id = array('plan_id'=>$createplan->id);
-           
-          
-            if ($id) {
-                $model->load($id);
-            }
-            
-            $model->setData(array_merge($plan_id,$data));
-           
-            $this->_eventManager->dispatch(
-                'subscribed_plan_prepare_save',
-                ['plans' => $model, 'request' => $this->getRequest()]
-            );
- 
-            try {
-                $model->save();
-                $this->messageManager->addSuccess(__('Plan saved'));
-                $this->_getSession()->setFormData(false);
-                if ($this->getRequest()->getParam('back')) {
-                    return $resultRedirect->setPath('*/*/edit', ['id' => $model->getId(), '_current' => true]);
+            if ($checkPlanData) {
+                $this->messageManager->addError(__('Plan already exists'));
+            } else {
+                $planData = [
+                    "period" => $this->getRequest()->getParam('plan_type'),
+                    "interval" => $this->getRequest()->getParam('plan_interval'),//(int) $product->getRazorpaySubscriptionIntervalCount(),
+                    "item" => [
+                        "name" => $this->getRequest()->getParam('plan_name'),
+                        "amount" => (int)(number_format($plan_bill_amount * 100, 0, ".", "")),
+                        "currency" => $this->_storeManager->getStore()->getCurrentCurrency()->getCode(),
+                        "description" => $this->getRequest()->getParam('plan_desc')
+                    ],
+                    "notes" => [
+                        "source" => "magento"
+                    ]
+                ];
+
+                $createplan = $rzp->plan->create($planData);
+                $plan_id = array('plan_id' => $createplan->id);
+
+                if ($id) {
+                    $model->load($id);
                 }
-                return $resultRedirect->setPath('*/*/');
-            } catch (\Magento\Framework\Exception\LocalizedException $e) {
-                $this->messageManager->addError($e->getMessage());
-            } catch (\RuntimeException $e) {
-                $this->messageManager->addError($e->getMessage());
-            } catch (\Exception $e) {
-                $this->messageManager->addException($e, __('Something went wrong while saving the plan'));
+
+                $model->setData(array_merge($plan_id, $data));
+
+                $this->_eventManager->dispatch(
+                    'subscribed_plan_prepare_save',
+                    ['plans' => $model, 'request' => $this->getRequest()]
+                );
+
+                try {
+                    $model->save();
+                    $this->messageManager->addSuccess(__('Plan saved'));
+                    $this->_getSession()->setFormData(false);
+                    if ($this->getRequest()->getParam('back')) {
+                        return $resultRedirect->setPath('*/*/edit', ['id' => $model->getId(), '_current' => true]);
+                    }
+                    return $resultRedirect->setPath('*/*/');
+                } catch (\Magento\Framework\Exception\LocalizedException $e) {
+                    $this->messageManager->addError($e->getMessage());
+                } catch (\RuntimeException $e) {
+                    $this->messageManager->addError($e->getMessage());
+                } catch (\Exception $e) {
+                    $this->messageManager->addException($e, __('Something went wrong while saving the plan'));
+                }
             }
- 
             $this->_getSession()->setFormData($data);
             return $resultRedirect->setPath('*/*/edit', ['entity_id' => $this->getRequest()->getParam('id')]);
         }
