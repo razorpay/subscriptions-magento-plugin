@@ -104,12 +104,12 @@ class Form extends Generic
         $fieldset->addField(
             'plan_bill_amount',
             'text',
-            ['name' => 'plan_bill_amount', 'label' => __('Billing Amount'), 'title' => __('Billing Amount'), 'required' => true,'disabled'=>$readonly]
+            ['name' => 'plan_bill_amount', 'label' => __('Billing Amount'), 'title' => __('Billing Amount'), 'required' => true,'disabled'=>$readonly,'class'=> 'required-entry validate-number']
         );
         $fieldset->addField(
             'plan_interval',
             'text',
-            ['name' => 'plan_interval', 'label' => __('Billing Frequency'), 'title' => __('Billing Frequency'), 'required' => true,'disabled'=>$readonly]
+            ['name' => 'plan_interval', 'label' => __('Billing Frequency'), 'title' => __('Billing Frequency'), 'required' => true,'disabled'=>$readonly,'class'=> 'required-entry validate-digits']
         );
         
         $fieldset->addField(
@@ -118,7 +118,7 @@ class Form extends Generic
                 'name'               => 'plan_type',
                 'class' => 'required-entry',
                 'onchange' => 'checkSelectedItem(this.value)',
-                //'values'=> array('daily'=>'Daily', 'weekly'=>'Weekly','monthly'=>'Monthly','yearly'=>'Yearly'),
+              
                 'values'    => array(
                     array(
                         'value'     => '',
@@ -165,7 +165,7 @@ class Form extends Generic
         $fieldset->addField(
             'plan_bill_cycle',
             'text',
-            ['name' => 'plan_bill_cycle', 'label' => __('No. of Billing Cycles'), 'title' => __('No. of Billing Cycles'), 'required' => true,'disabled'=>$readonly]
+            ['name' => 'plan_bill_cycle', 'label' => __('No. of Billing Cycles'), 'title' => __('No. of Billing Cycles'), 'required' => true,'disabled'=>$readonly,'class'=> 'required-entry validate-digits']
         );
         if (!$model->getId()) {
             $model->setData('plan_trial', '0');
@@ -173,12 +173,12 @@ class Form extends Generic
         $fieldset->addField(
             'plan_trial',
             'text',
-            ['name' => 'plan_trial', 'label' => __('Trial Days'), 'title' => __('Trial Days'),'note' => 'Default is 0. The subscription starts immediately after the authorization payment','disabled'=>$readonly]
+            ['name' => 'plan_trial', 'label' => __('Trial Days'), 'title' => __('Trial Days'),'note' => 'Default is 0. The subscription starts immediately after the authorization payment','disabled'=>$readonly,'class'=> 'required-entry validate-digits']
         );
         $fieldset->addField(
             'plan_addons',
             'text',
-            ['name' => 'plan_addons', 'label' => __('Add-On Amount (Optional)'), 'title' => __('Add-On Amount (Optional)'),'disabled'=>$readonly]
+            ['name' => 'plan_addons', 'label' => __('Add-On Amount (Optional)'), 'title' => __('Add-On Amount (Optional)'),'disabled'=>$readonly,'class'=> 'required-entry validate-number']
         );
        
         // Status - Dropdown
