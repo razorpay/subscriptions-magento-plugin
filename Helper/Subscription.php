@@ -355,15 +355,12 @@ class Subscription extends AbstractHelper
         unset($attributes['entity_id']);
         try{
             $subscriptionResponse = $rzp->subscription->fetch($subscriptionId)->update($attributes);
-
-            //update record
             $subscription = $this->objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
             $postUpdate = $subscription->load($subscriptionId, 'subscription_id');
             $postUpdate->setPlanEntityId($entity_id);
             $postUpdate->save();
 
-        }catch(\Exception $e){
-            $this->_logger->info("Exception: {$e->getMessage()}");
+        }catch(\Error $e){
             throw new \Exception( $e->getMessage() );
         }
     }
@@ -378,9 +375,7 @@ class Subscription extends AbstractHelper
         try{
             $subscriptionResponse = $rzp->subscription->fetch($subscriptionId)->pendingUpdate();
             return $subscriptionResponse;
-
-        }catch(\Exception $e){
-            $this->_logger->info("Exception: {$e->getMessage()}");
+         }catch(Error $e){
             return [];
         }
     }

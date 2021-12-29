@@ -12,7 +12,8 @@ class Display extends Template
     protected $customerSession;
     protected $subscribCollectionFactory = null;
     protected $moduleReader;
-    protected $resource;
+
+    protected $_resource;
     private  $urlInterface;
 
     /**
@@ -34,12 +35,15 @@ class Display extends Template
         \Magento\Customer\Model\Session           $customerSession,
         SubscribCollectionFactory                 $subscribCollectionFactory,
         \Magento\Framework\App\ResourceConnection $Resource,
-        \Magento\Framework\Module\Dir\Reader      $moduleReader,
+
+        \Magento\Framework\Module\Dir\Reader $moduleReader,
         \Psr\Log\LoggerInterface $logger,
-        \Magento\Framework\UrlInterface           $urlInterface,
-        array                                     $data = []
-    )
-    {
+        \Magento\Framework\UrlInterface $urlInterface,
+        array $data = []
+       
+    ) {
+        $this->_subscribCollectionFactory = $subscribCollectionFactory;
+        $this->_resource = $Resource;
         parent::__construct($context, $data);
         $this->subscribCollectionFactory = $subscribCollectionFactory;
         $this->resource = $Resource;
@@ -75,21 +79,27 @@ class Display extends Template
         $customerId = $this->customerSession->getCustomer()->getId();
         $subscribCollection = $this->subscribCollectionFactory->create();
 
-        $second_table_name = $this->resource->getTableName('catalog_product_entity_varchar');
-        $third_table_name = $this->resource->getTableName('eav_attribute');
-
+        $subscribCollection = $this->_subscribCollectionFactory->create();
+   
+        $second_table_name = $this->_resource->getTableName('catalog_product_entity_varchar');
+        $third_table_name = $this->_resource->getTableName('eav_attribute');
+      
         $subscribCollection->getSelect()->joinLeft(array('second' => $second_table_name),
-            'main_table.product_id = second.entity_id',
-            array('second.value'));
-
+                                               'main_table.product_id = second.entity_id',
+                                               array('second.value'));
+                                               
         $subscribCollection->getSelect()->joinLeft(array('third' => $third_table_name),
-            'third.attribute_id = second.attribute_id',
-            array('third.attribute_id as attribute_id'));
-
+                                                'third.attribute_id = second.attribute_id',
+                                                array('third.attribute_id as attribute_id'));
+        
         $subscribCollection->getSelect()->where("third.attribute_code='name' and second.entity_id=main_table.product_id");
-        $subscribCollection->getSelect()->where("main_table.magento_user_id=" . $customerId);
+        $subscribCollection->getSelect()->where("main_table.magento_user_id=".$customerId);
+        
+        $subscribCollection->setPageSize($pageSize);
+        $subscribCollection->setCurPage($page);   
 
-        return $subscribCollection->getItems();
+        return $subscribCollection;
+  
     }
 
     /**
@@ -97,10 +107,13 @@ class Display extends Template
      * @param Subscrib $subscrib
      * @return string
      */
-    public function getSubscribUrl(Subscrib $subscrib)
-    {
-        return $this->urlInterface->getUrl() ."razorpaysubscription/subscrib/view/id/{$subscrib->getId()}";
 
+    public function getSubscribUrl(
+        Subscrib $subscrib
+    ) {
+        
+        return $this->urlInterface->getUrl() ."razorpaysubscription/subscrib/view/id/{$subscrib->getId()}";
+        
     }
 
     /**
@@ -117,7 +130,7 @@ class Display extends Template
                 \Magento\Theme\Block\Html\Pager::class,
                 'razorpaysubscription.customer.index'
             )->setCollection(
-                $this->getSubscribs()
+                $this->getSubscribs() 
             );
             $this->setChild('pager', $pager);
             $this->getSubscribs()->load();
@@ -146,9 +159,9 @@ class Display extends Template
     public function editSubscribUrl(
         Subscrib $subscrib
     ) {
-
+        
         return $this->urlInterface->getUrl() ."razorpaysubscription/subscrib/edit/id/{$subscrib->getSubscriptionId()}";
-
+        
     }
-
+	
 }
