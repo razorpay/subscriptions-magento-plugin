@@ -38,7 +38,7 @@ class Index extends Action
     public function execute(): Page
     {
         $resultPage = $this->pageFactory->create();
-        $resultPage->setActiveMenu('Magento_Sales::sales');
+        $resultPage->setActiveMenu('Razorpay_Subscription::rzp_subscriptions');
         $resultPage->getConfig()->getTitle()->prepend(__('Subscriptions'));
 
         return $resultPage;
