@@ -89,7 +89,7 @@ class FormPost extends BaseController
         unset($postValues['form_key']); 
  
         $plan = $this->fetchPlan($postValues['plan_id']);
-      
+
         try {
             if (!$this->customerSession->isLoggedIn()) {
                 return $this->_redirect('customer/account/login');

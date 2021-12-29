@@ -1,0 +1,43 @@
+<?php
+
+/** @var  $block Razorpay\Subscription\Block\Product\AddToCartProductOptionView  */
+
+
+$subscriptionHelper = $this->helper(\Razorpay\Subscription\Helper\Subscription::class);
+
+$subscriptionOptions = $block->getProductSubscriptionOptions($block->getData('product_id'));
+
+$currencySymbol = $block->getCurrencySymbol();
+?>
+
+<div class="subscription-option-wrapper" style="padding-top: 15px; width: 494px;height: 191px;background: #FFFFFF;">
+    <span style="padding: 25px;">Subscription Options</span>
+
+    <div class="subscription-options-list">
+        <?php foreach($subscriptionOptions as $option): ?>
+            <div class ="subscription-option" style="margin-left: 23px; margin-bottom: 15px;margin-top: 15px;width: 399px;height: 80px; border: 1px solid #C4CBD7;box-sizing: border-box;border-radius: 10px;">
+                <input type="hidden" value="<?php /* @escapeNotVerified */echo __($currencySymbol.number_format((float)$option["price"], 2, '.', '')) ?>" id="frequencyPrice_<?php /* @escapeNotVerified */echo __($option["type"])?>">
+                <input type="hidden" value="<?php /* @escapeNotVerified */echo __($option["type"]) ?>" name="planType">
+                <input id="<?php /* @escapeNotVerified */echo __($option["planName"]."_".$option["type"]) ?>"  class="radio isHidden" name="plan_id" value= "<?php /* @escapeNotVerified */echo __($option["id"])?>"  type="radio">
+                <label for="<?php /* @escapeNotVerified */echo __($option["planName"]."_".$option["type"]) ?>" class="plan-label">
+                    <div class="select-box-des">
+                        <span class="plan-amount" style="position: absolute;width: 70px;height: 61px;font-style: normal;font-weight: bold;font-size: 25px;padding: 18px 44px 0px 20px;align-items: center;border-right: 1px solid #BBB;" >
+                             <?php /* @escapeNotVerified */echo __($currencySymbol.number_format((float)$option["price"], 2, '.', '')) ?>
+                        </span>
+                        <div>
+                                <span class="select-box-des-child" style="position: absolute;height: 35px;font-weight: bold;font-size: 18px;line-height: 21px;margin: 6px 0px 13px 145px;text-align: left;">
+                                    <?php /* @escapeNotVerified */echo __($option["planName"]) ?>
+                                </span>
+                                <span class="select-box-des-child" style="position: absolute;height: 35px;font-size: 14px;line-height: 21px;margin: 27px 0px 14px 145px;text-align: left;">
+                                     <?php /* @escapeNotVerified */echo __($option["desc"]) ?>
+                                </span>
+                        </div>
+                    </div>
+                </label>
+            </div>
+        <?php endforeach;?>
+
+    </div>
+</div>
+
+
