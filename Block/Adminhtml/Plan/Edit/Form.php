@@ -160,9 +160,7 @@ class Form extends Generic
            
         </script>"); 
 
-   
-
-        $fieldset->addField(
+          $fieldset->addField(
             'plan_bill_cycle',
             'text',
             ['name' => 'plan_bill_cycle', 'label' => __('No. of Billing Cycles'), 'title' => __('No. of Billing Cycles'), 'required' => true,'disabled'=>$readonly,'class'=> 'required-entry validate-digits']
