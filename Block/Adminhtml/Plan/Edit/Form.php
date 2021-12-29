@@ -118,8 +118,7 @@ class Form extends Generic
                 'name'               => 'plan_type',
                 'class' => 'required-entry',
                 'onchange' => 'checkSelectedItem(this.value)',
-              
-                'values'    => array(
+                            'values'    => array(
                     array(
                         'value'     => '',
                         'label'     => 'Please Select',      
@@ -160,7 +159,9 @@ class Form extends Generic
            
         </script>"); 
 
-          $fieldset->addField(
+   
+
+        $fieldset->addField(
             'plan_bill_cycle',
             'text',
             ['name' => 'plan_bill_cycle', 'label' => __('No. of Billing Cycles'), 'title' => __('No. of Billing Cycles'), 'required' => true,'disabled'=>$readonly,'class'=> 'required-entry validate-digits']
@@ -171,12 +172,12 @@ class Form extends Generic
         $fieldset->addField(
             'plan_trial',
             'text',
-            ['name' => 'plan_trial', 'label' => __('Trial Days'), 'title' => __('Trial Days'),'note' => 'Default is 0. The subscription starts immediately after the authorization payment','disabled'=>$readonly,'class'=> 'required-entry validate-digits']
+            ['name' => 'plan_trial', 'label' => __('Trial Days'), 'title' => __('Trial Days'),'note' => 'Default is 0. The subscription starts immediately after the authorization payment','disabled'=>$readonly,'class'=> 'validate-digits']
         );
         $fieldset->addField(
             'plan_addons',
             'text',
-            ['name' => 'plan_addons', 'label' => __('Add-On Amount (Optional)'), 'title' => __('Add-On Amount (Optional)'),'disabled'=>$readonly,'class'=> 'required-entry validate-number']
+            ['name' => 'plan_addons', 'label' => __('Add-On Amount (Optional)'), 'title' => __('Add-On Amount (Optional)'),'disabled'=>$readonly,'class'=> 'validate-number']
         );
        
         // Status - Dropdown
