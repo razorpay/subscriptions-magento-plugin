@@ -159,9 +159,7 @@ class Form extends Generic
            
         </script>"); 
 
-   
-
-        $fieldset->addField(
+           $fieldset->addField(
             'plan_bill_cycle',
             'text',
             ['name' => 'plan_bill_cycle', 'label' => __('No. of Billing Cycles'), 'title' => __('No. of Billing Cycles'), 'required' => true,'disabled'=>$readonly,'class'=> 'required-entry validate-digits']
@@ -179,8 +177,7 @@ class Form extends Generic
             'text',
             ['name' => 'plan_addons', 'label' => __('Add-On Amount (Optional)'), 'title' => __('Add-On Amount (Optional)'),'disabled'=>$readonly,'class'=> 'validate-number']
         );
-       
-        // Status - Dropdown
+               // Status - Dropdown
         if (!$model->getId()) {
             $model->setStatus('1'); // Enable status when adding a Plan
         }
