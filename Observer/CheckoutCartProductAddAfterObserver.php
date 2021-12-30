@@ -8,51 +8,42 @@ use Magento\Framework\Event\ObserverInterface;
 class CheckoutCartProductAddAfterObserver implements ObserverInterface
 {
     /**
-     * @var \Magento\Framework\View\LayoutInterface
-     */
-    protected $_layout;
-    /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $_storeManager;
-
-    /**
      * @var \Magento\Framework\App\Request\Http
      */
-    protected $_request;
+    protected $request;
 
     /**
      * @var \Psr\Log\LoggerInterface
      */
-    private $_logger;
+    private $logger;
 
     /**
      * @var \Magento\Framework\Serialize\SerializerInterface
      */
-    private $_serializer;
+    private $serializer;
+
+    private $objectManagement;
 
     /**
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\View\LayoutInterface $layout
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
+     * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\View\LayoutInterface $layout,
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\Serialize\SerializerInterface $serializer,
         \Psr\Log\LoggerInterface $logger
     )
     {
-        $this->_layout = $layout;
-        $this->_storeManager = $storeManager;
-        $this->_request = $request;
-        $this->_serializer = $serializer;
-        $this->_logger = $logger;
+        $this->request = $request;
+        $this->serializer = $serializer;
+        $this->logger = $logger;
+        $this->objectManagement = \Magento\Framework\App\ObjectManager::getInstance();
+
     }
 
     /**
-     * Add order information into GA block to render on checkout success pages
-     *
      * @param EventObserver $observer
      * @return void
      */
@@ -62,27 +53,46 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
         $item = $observer->getQuoteItem();
         $additionalOptions = array();
         if ($additionalOption = $item->getOptionByCode('additional_options')){
-            $additionalOptions = $this->_serializer->unserialize($additionalOption->getValue());
+            $additionalOptions = $this->serializer->unserialize($additionalOption->getValue());
         }
 
-        $paymentOption = $this->_request->getParam('paymentOption');
-        $frequency = $this->_request->getParam('frequency');
-        if($paymentOption == "subscription")
+        $paymentOption = $this->request->getParam('paymentOption');
+        $planId = $this->request->getParam('plan_id');
+
+        $this->logger->info($planId);
+
+        if($paymentOption == "subscription" )
         {
-            $this->_logger->info("adding details of subscription to quotes. Payment Option: $paymentOption, Frequency:$frequency");
+            $planData = $this->objectManagement->get('Razorpay\Subscription\Model\Plans')
+                ->getCollection()
+                ->addFieldToSelect("plan_bill_amount", "price")
+                ->addFieldToSelect("plan_type", "type")
+                ->addFilter('entity_id', $planId)
+                ->addFilter('plan_status', 1)
+                ->getFirstItem()
+                ->getData();
+
+            if(!empty($planData)){
+                $item->setCustomPrice($planData["price"]);
+                $item->setOriginalCustomPrice($planData["price"]);
+                $item->getProduct()->setIsSuperMode(true);
+            }
+
+            $this->logger->info("adding details of subscription to quotes. Payment Option: $paymentOption, Plan id:$planId");
             $additionalOptions[] = [
                 'label' => "Subscription type",
-                'value' => ucfirst($frequency)
+                'value' => ucfirst($planData["type"])
             ];
-        }
 
-        if(count($additionalOptions) > 0)
-        {
-            $item->addOption(array(
-                'product_id' => $item->getProductId(),
-                'code' => 'additional_options',
-                'value' => $this->_serializer->serialize($additionalOptions)
-            ));
+
+            if(count($additionalOptions) > 0)
+            {
+                $item->addOption(array(
+                    'product_id' => $item->getProductId(),
+                    'code' => 'additional_options',
+                    'value' => $this->serializer->serialize($additionalOptions)
+                ));
+            }
         }
 
     }

@@ -241,8 +241,9 @@ define(
                     callback_url: url.build("razorpaysubscription/subscription/subscriptionorder"),
                     cancel_url  : url.build('checkout/cart'),
                     _: {
-                        integration: 'magento',
+                        integration: 'magento-subscription',
                         integration_version: data.module_version,
+                        integration_razorpay_magento_version: data.magento_pg_version,
                         integration_parent_version: data.maze_version,
                     }
                 }
@@ -330,8 +331,9 @@ define(
                     },
                     callback_url: url.build("razorpaysubscription/subscription/subscriptionorder"),
                     _: {
-                        integration: 'magento',
+                        integration: 'magento-subscription',
                         integration_version: data.module_version,
+                        integration_razorpay_magento_version: data.magento_pg_version,
                         integration_parent_version: data.maze_version,
                     }
                 };

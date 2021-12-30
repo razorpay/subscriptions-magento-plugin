@@ -51,7 +51,8 @@ class View extends Action
      */
     public function execute()
     {
-        $this->_coreRegistry->register(self::REGISTRY_KEY_POST_ID, (int)$this->_request->getParam('id'));
+        $this->_coreRegistry->register(self::REGISTRY_KEY_POST_ID, (int) $this->_request->getParam('id'));
+
         $resultPage = $this->_resultPageFactory->create();
         return $resultPage;
     }
