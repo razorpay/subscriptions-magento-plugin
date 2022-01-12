@@ -27,6 +27,10 @@ class SubscriptionWebhookEvents implements OptionSourceInterface
                 'label' => __('subscription.paused')
             ],
             [
+                'value' => "subscription.resumed",
+                'label' => __('subscription.resumed')
+            ],
+            [
                 'value' => "subscription.cancelled",
                 'label' => __('subscription.cancelled')
             ],
