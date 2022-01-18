@@ -95,7 +95,7 @@ class SubscriptionWebhook
                     $orderLinkCollection->setWebhookFirstNotifiedAt(time())
                         ->setWebhookCount($orderLink['webhook_count'] + 1)
                         ->save();
-                    exit;
+                   return;
                 }
 
                 $webhookWaitTime = $this->_config->getConfigData(Config::WEBHOOK_WAIT_TIME) ?? 300;
@@ -108,7 +108,7 @@ class SubscriptionWebhook
                         ->save();
                     header('Status: 409 Conflict, too early for processing', true, 409);
 
-                    exit;
+                    return;
                 }
 
                 // checking if payment id is null hen processing same quote for order else creating new order
