@@ -8,6 +8,7 @@ use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\CollectionFactor
 use Razorpay\Api\Api;
 use Razorpay\Magento\Model\Config;
 
+
 /**
  * Class SubscriptionPaymentMethod
  * @package Razorpay\Magento\Model
@@ -205,13 +206,13 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
             //validate RzpOrderamount with quote/order amount before signature
             $orderAmount = (int) (number_format($order->getGrandTotal() * 100, 0, ".", ""));
 
-            if((empty($request) === true) and (isset($_POST['razorpay_signature']) === true))
+            if((empty($request) === true) and (isset($request['razorpay_signature']) === true))
             {
                 //set request data based on redirect flow
                 $request['paymentMethod']['additional_data'] = [
-                    'rzp_payment_id' => $_POST['razorpay_payment_id'],
-                    'rzp_order_id' => $_POST['razorpay_order_id'],
-                    'rzp_signature' => $_POST['razorpay_signature']
+                    'rzp_payment_id' => $request['razorpay_payment_id'],
+                    'rzp_order_id' => $request['razorpay_order_id'],
+                    'rzp_signature' => $request['razorpay_signature']
                 ];
             }
 
