@@ -1,6 +1,6 @@
 <?php
 namespace Razorpay\Subscription\Controller\Adminhtml\Plan;
- 
+
 use Magento\Backend\App\Action;
 // require in case of zip installation without composer
 require_once __DIR__ . "../../../../../Razorpay/Razorpay.php";
@@ -12,7 +12,7 @@ class Save extends Action
      * @var \Razorpay\Subscription\Model\Plans
      */
     protected $_model;
- 
+
     /**
      * @param Action\Context $context
      * @param \Razorpay\Subscription\Model\Plans $model
@@ -22,16 +22,16 @@ class Save extends Action
         Action\Context $context,
         \Razorpay\Subscription\Model\Plans $model,
         \Magento\Store\Model\StoreManagerInterface $storeManager
-        
+
     ) {
         parent::__construct($context);
         $this->_model = $model;
         $this->_storeManager = $storeManager;
-      
 
-      
+
+
     }
- 
+
     /**
      * {@inheritdoc}
      */
@@ -39,7 +39,7 @@ class Save extends Action
     {
         return $this->_authorization->isAllowed('Razorpay_Subscription::plan_save');
     }
- 
+
     /**
      * Save action
      *
@@ -47,23 +47,24 @@ class Save extends Action
      */
     public function execute()
     {
+//        print_r($this->getRequest()->getPostValue());die;
         $objectManager =   \Magento\Framework\App\ObjectManager::getInstance();
-        $connection = $objectManager->get('Magento\Framework\App\ResourceConnection')->getConnection('\Magento\Framework\App\ResourceConnection::DEFAULT_CONNECTION'); 
+        $connection = $objectManager->get('Magento\Framework\App\ResourceConnection')->getConnection('\Magento\Framework\App\ResourceConnection::DEFAULT_CONNECTION');
         $key_id = $connection->fetchAll("SELECT * FROM core_config_data WHERE `path` LIKE 'payment/razorpay/key_id'");
         $key_secret = $connection->fetchAll("SELECT * FROM core_config_data WHERE `path` LIKE 'payment/razorpay/key_secret'");
-        
+
             $rzpId = $key_id[0]['value'];
             $rzpSecret = $key_secret[0]['value'];
             $rzp = new Api($rzpId, $rzpSecret);
-           
-      
+
+
         $data = $this->getRequest()->getPostValue();
         /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         if ($data) {
             /** @var \Razorpay\Subscription\Model\Plans $model */
             $model = $this->_model;
- 
+
             $id = $this->getRequest()->getParam('id');
             $plan_bill_amount = $this->getRequest()->getParam('plan_bill_amount');
 

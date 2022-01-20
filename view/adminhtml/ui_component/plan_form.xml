@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">plan_form.plan_form_data_source</item>
+            <item name="deps" xsi:type="string">plan_form.plan_form_data_source</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+        <item name="childrenFromMeta" xsi:type="boolean">true</item>
+
+    </argument>
+    <settings>
+        <reloadItem>plan-details.attribute_set_id:value</reloadItem>
+        <buttons>
+            <button name="save" class="Razorpay\Subscription\Block\Adminhtml\Plan\Button\Save"/>
+            <button name="back" class="Razorpay\Subscription\Block\Adminhtml\Plan\Button\Back"/>
+        </buttons>
+        <deps>
+            <dep>plan_form.plan_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="plan_form_data_source">
+
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Razorpay\Subscription\Ui\DataProvider\Plan\PlanDataProvider</argument>
+            <argument name="name" xsi:type="string">plan_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+<!--                <item name="submit_url" path="subscribed/*/save" xsi:type="url" />-->
+            </item>
+        </argument>
+    </dataSource>
+    <fieldset name="plan_details">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Plan Details</item>
+            </item>
+        </argument>
+
+        <!-- This field represents form id and is hidden -->
+        <field name="entity_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">false</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">plan</item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="plan_name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string">Plan Name</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">plan</item>
+                    <item name="readonly" xsi:type="boolean">true</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="value" xsi:type="string">${ $.provider}:data.plan_name</item>
+                    </item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="plan_desc">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="formElement" xsi:type="string">textarea</item>
+                    <item name="cols" xsi:type="number">15</item>
+                    <item name="rows" xsi:type="number">3</item>
+                    <item name="label" translate="true" xsi:type="string">Plan Description</item>
+                    <item name="dataType" translate="true" xsi:type="string">text</item>
+                    <item name="source" xsi:type="string">plan</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="value" xsi:type="string">${ $.provider}:data.plan_desc</item>
+                    </item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="magento_product_id" formElement="select" component="Razorpay_Subscription/js/components/product-list">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filterOptions" xsi:type="boolean">true</item>
+                    <item name="multiple" xsi:type="boolean">false</item>
+                    <item name="showCheckbox" xsi:type="boolean">true</item>
+                    <item name="disableLabel" xsi:type="boolean">true</item>
+                    <item name="source" xsi:type="string">plan</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="value" xsi:type="string">${ $.provider}:data.magento_product_id</item>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <required>true</required>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <elementTmpl>ui/grid/filters/elements/ui-select</elementTmpl>
+                <label translate="true">Select Product</label>
+                <dataScope>data.label</dataScope>
+                <componentType>field</componentType>
+                <listens>
+                    <link name="${ $.namespace }.${ $.namespace }:responseData">setParsed</link>
+                </listens>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Razorpay\Subscription\Model\Source\Plan\ProductList"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <field name="plan_bill_amount">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string">Billing Amount</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">plan</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="value" xsi:type="string">${ $.provider}:data.plan_bill_amount</item>
+                    </item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <container name="billing_frequency_group">
+            <argument name="data" xsi:type="array">
+                <item name="type" xsi:type="string">frequency_group</item>
+                <item name="config" xsi:type="array">
+                    <item name="additionalClasses" xsi:type="string">admin__control-grouped-date</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/form/components/group</item>
+                    <item name="source" xsi:type="string">plan</item>
+                </item>
+            </argument>
+            <field name="plan_interval">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="additionalClasses" xsi:type="string">admin__field-plan_interval</item>
+                        <item name="visible" xsi:type="boolean">true</item>
+                        <item name="dataType" xsi:type="string">text</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="label" xsi:type="string" translate="true">Billing Frequency</item>
+                        <item name="source" xsi:type="string">plan</item>
+                        <item name="addbefore" xsi:type="string">Every</item>
+                        <item name="imports" xsi:type="array">
+                            <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                            <item name="value" xsi:type="string">${ $.provider}:data.plan_interval</item>
+                        </item>
+                        <item name="notice" xsi:type="string" translate="true">Customer will be charged for the product based on frequency selected for the interval, e.g., Customer will be charged every Month if you select interval as Monthly and frequency as 1</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+
+            <field name="plan_type" >
+                <argument name="data" xsi:type="array">
+                    <item name="options" xsi:type="object">Razorpay\Subscription\Model\Source\Plan\PlanInterval</item>
+                    <item name="config" xsi:type="array">
+                        <item name="dataType" xsi:type="string">text</item>
+                        <item name="formElement" xsi:type="string">select</item>
+                        <item name="source" xsi:type="string">plan</item>
+                        <item name="imports" xsi:type="array">
+                            <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                            <item name="value" xsi:type="string">${ $.provider}:data.plan_type</item>
+                        </item>
+                        <item name="component" xsi:type="string">Razorpay_Subscription/js/components/frequency-interval-validation</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+        </container>
+
+        <field name="plan_bill_cycle">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string">Billing Cycles</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">plan</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="value" xsi:type="string">${ $.provider}:data.plan_bill_cycle</item>
+                    </item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="plan_trial">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string">Trail Days</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="default" xsi:type="string">0</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">plan</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="value" xsi:type="string">${ $.provider}:data.plan_trial</item>
+                    </item>
+                    <item name="notice" xsi:type="string" translate="true">Default is 0. The subscription starts immediately after the authorization payment</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="plan_addons">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string">Add-On Amount (Optional)</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">plan</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="value" xsi:type="string">${ $.provider}:data.plan_addons</item>
+                    </item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">false</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="plan_status" formElement="select">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="imports" xsi:type="array">
+                        <item name="value" xsi:type="string">${ $.provider}:data.plan_status</item>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <required>false</required>
+                <dataType>int</dataType>
+                <label translate="true">Status</label>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Razorpay\Subscription\Model\Source\Plan\Status"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+    </fieldset>
+</form>
