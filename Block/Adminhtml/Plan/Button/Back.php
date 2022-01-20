@@ -30,10 +30,10 @@ class Back extends Generic
      */
     private function getBackUrl()
     {
-        if ($this->context->getRequestParam('customerId')) {
+        if ($this->context->getRequestParam('id')) {
             return $this->getUrl(
-                'customer/index/edit',
-                ['id' => $this->context->getRequestParam('customerId')]
+                'subscribed/plan/index',
+                ['id' => $this->context->getRequestParam('id')]
             );
         }
         return $this->getUrl('*/*/');
