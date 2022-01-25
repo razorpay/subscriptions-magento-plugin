@@ -45,8 +45,9 @@ class Subscription extends AbstractHelper
 
     /**
      * This function is used to create subscription for the user
-     * @param $quote
-     * @param $rzp
+     *
+     * @param  $quote
+     * @param  $rzp
      * @return mixed
      * @throws \Exception
      */
@@ -96,7 +97,7 @@ class Subscription extends AbstractHelper
                     ->setSubscriptionId($subscriptionResponse->id)
                     ->setRazorpayCustomerId($subscriptionResponse->customer_id)
                     ->setmagentoUserId($quote->getCustomerId())
-                    ->setProductId( $planData['magento_product_id'])
+                    ->setProductId($planData['magento_product_id'])
                     ->setQuoteId($quote->getId())
                     ->setStatus($subscriptionResponse->status)
                     ->setTotalCount($subscriptionResponse->total_count)
@@ -151,7 +152,8 @@ class Subscription extends AbstractHelper
 
     /**
      * This function gets the product details from quotes
-     * @param $quote
+     *
+     * @param  $quote
      * @return array
      */
     public function getPlanIdFromQuote($quote)
@@ -165,8 +167,9 @@ class Subscription extends AbstractHelper
 
     /**
      * This functions creates customers in razorpay
-     * @param $quote
-     * @param $rzp
+     *
+     * @param  $quote
+     * @param  $rzp
      * @return mixed
      * @throws \Exception
      */
@@ -203,7 +206,8 @@ class Subscription extends AbstractHelper
 
     /**
      * This function get the merchant preferences from razorpay dashboard
-     * @param $apiKey
+     *
+     * @param  $apiKey
      * @return array
      */
     public function getMerchantPreferences($apiKey)
@@ -233,8 +237,8 @@ class Subscription extends AbstractHelper
     }
 
     /**
-     * @param $cartItems
-     * @param $validateTo
+     * @param  $cartItems
+     * @param  $validateTo
      * @return bool
      */
     public function validateIsASubscriptionProduct($cartItems, $validateTo)
@@ -263,8 +267,9 @@ class Subscription extends AbstractHelper
 
     /**
      * Cancel subscription
-     * @param $id
-     * @param $rzp
+     *
+     * @param  $id
+     * @param  $rzp
      * @throws \Exception
      */
     public function cancelSubscription($id, $rzp, $updateBy)
@@ -284,7 +289,8 @@ class Subscription extends AbstractHelper
 
     /**
      * Pause Subscription
-     * @param $id
+     *
+     * @param  $id
      * @return array
      */
     public function pauseSubscription($id, $rzp, $updateBy)
@@ -304,7 +310,8 @@ class Subscription extends AbstractHelper
 
     /**
      * Resume Subscription
-     * @param $id
+     *
+     * @param  $id
      * @return array
      */
     public function resumeSubscription($id, $rzp, $updateBy)
@@ -324,10 +331,12 @@ class Subscription extends AbstractHelper
 
     /**
      * Fetch all Subscription invoices
-     * @param $subscriptionId
+     *
+     * @param  $subscriptionId
      * @return array
      */
-    public function fetchSubscriptionInvoice($subscriptionId, $rzp){
+    public function fetchSubscriptionInvoice($subscriptionId, $rzp)
+    {
 
         $subscriptionResponse = $rzp->invoice->all(["subscription_id"=>$subscriptionId]);
 
@@ -335,7 +344,7 @@ class Subscription extends AbstractHelper
         $subscription = $this->objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
         $postUpdate = $subscription->load($subscriptionId, 'subscription_id');
 
-        if($subscriptionResponse->count > $postUpdate->getPaidCount()){
+        if($subscriptionResponse->count > $postUpdate->getPaidCount()) {
             $postUpdate->setRemainingCount($postUpdate->getTotalCount() - $subscriptionResponse->count);
             $postUpdate->setPaidCount($subscriptionResponse->count);
             $postUpdate->setNextChargeAt($subscriptionResponse->items[0]['billing_end']);
@@ -346,7 +355,8 @@ class Subscription extends AbstractHelper
 
     /**
      * Edit Subscription
-     * @param $subscriptionId
+     *
+     * @param  $subscriptionId
      * @return array
      */
     public function editSubscription($subscriptionId, $attributes, $rzp)
@@ -361,13 +371,14 @@ class Subscription extends AbstractHelper
             $postUpdate->save();
 
         }catch(\Error $e){
-            throw new \Exception( $e->getMessage() );
+            throw new \Exception($e->getMessage());
         }
     }
 
     /**
      * Fetch pending updates
-     * @param $subscriptionId
+     *
+     * @param  $subscriptionId
      * @return array
      */
     public function pendingUpdate($subscriptionId, $rzp)
@@ -375,13 +386,14 @@ class Subscription extends AbstractHelper
         try{
             $subscriptionResponse = $rzp->subscription->fetch($subscriptionId)->pendingUpdate();
             return $subscriptionResponse;
-         }catch(Error $e){
+        }catch(Error $e){
             return [];
         }
     }
 
     /**
      * Checking if subscription is active or not in payment setting
+     *
      * @return bool
      */
     public function isSubscriptionActive()

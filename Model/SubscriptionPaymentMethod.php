@@ -11,7 +11,8 @@ use Razorpay\Magento\Model\Config;
 
 /**
  * Class SubscriptionPaymentMethod
- * @package Razorpay\Magento\Model
+ *
+ * @package                                          Razorpay\Magento\Model
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
@@ -95,22 +96,22 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
     protected $orderRepository;
 
     /**
-     * @param \Magento\Framework\Model\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
-     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
-     * @param \Magento\Payment\Helper\Data $paymentData
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Payment\Model\Method\Logger $logger
-     * @param \Razorpay\Magento\Model\Config $config
-     * @param \Magento\Framework\App\RequestInterface $request
-     * @param TransactionCollectionFactory $salesTransactionCollectionFactory
-     * @param \Magento\Framework\App\ProductMetadataInterface $productMetaData
-     * @param \Magento\Directory\Model\RegionFactory $regionFactory
-     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
-     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
-     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
-     * @param array $data
+     * @param                                          \Magento\Framework\Model\Context                        $context
+     * @param                                          \Magento\Framework\Registry                             $registry
+     * @param                                          \Magento\Framework\Api\ExtensionAttributesFactory       $extensionFactory
+     * @param                                          \Magento\Framework\Api\AttributeValueFactory            $customAttributeFactory
+     * @param                                          \Magento\Payment\Helper\Data                            $paymentData
+     * @param                                          \Magento\Framework\App\Config\ScopeConfigInterface      $scopeConfig
+     * @param                                          \Magento\Payment\Model\Method\Logger                    $logger
+     * @param                                          \Razorpay\Magento\Model\Config                          $config
+     * @param                                          \Magento\Framework\App\RequestInterface                 $request
+     * @param                                          TransactionCollectionFactory                            $salesTransactionCollectionFactory
+     * @param                                          \Magento\Framework\App\ProductMetadataInterface         $productMetaData
+     * @param                                          \Magento\Directory\Model\RegionFactory                  $regionFactory
+     * @param                                          \Magento\Framework\Model\ResourceModel\AbstractResource $resource
+     * @param                                          \Magento\Sales\Api\OrderRepositoryInterface             $orderRepository
+     * @param                                          \Magento\Framework\Data\Collection\AbstractDb           $resourceCollection
+     * @param                                          array                                                   $data
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -186,8 +187,8 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
     /**
      * Authorizes specified amount
      *
-     * @param InfoInterface $payment
-     * @param string $amount
+     * @param  InfoInterface $payment
+     * @param  string        $amount
      * @return $this
      * @throws LocalizedException
      */
@@ -195,7 +196,9 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
     {
         try
         {
-            /** @var \Magento\Sales\Model\Order\Payment $payment */
+            /**
+ * @var \Magento\Sales\Model\Order\Payment $payment 
+*/
             $order = $payment->getOrder();
             $orderId = $order->getIncrementId();
 
@@ -206,8 +209,7 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
             //validate RzpOrderamount with quote/order amount before signature
             $orderAmount = (int) (number_format($order->getGrandTotal() * 100, 0, ".", ""));
 
-            if((empty($request) === true) and (isset($request['razorpay_signature']) === true))
-            {
+            if((empty($request) === true) and (isset($request['razorpay_signature']) === true)) {
                 //set request data based on redirect flow
                 $request['paymentMethod']['additional_data'] = [
                     'rzp_payment_id' => $request['razorpay_payment_id'],
@@ -216,8 +218,7 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
                 ];
             }
 
-            if(empty($request['payload']['payment']['entity']['id']) === false)
-            {
+            if(empty($request['payload']['payment']['entity']['id']) === false) {
                 $payment_id = $request['payload']['payment']['entity']['id'];
                 $rzp_order_id = $request['payload']['subscription']['entity']['id'];
 
@@ -231,18 +232,19 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
                 $payment_id = $request['paymentMethod']['additional_data']['rzp_payment_id'];
 
                 $rzp_order_id = $this->order->getOrderId();
-                if ($orderAmount !== $this->order->getRazorpayOrderAmount())
-                {
+                if ($orderAmount !== $this->order->getRazorpayOrderAmount()) {
                     $rzpOrderAmount = $order->getOrderCurrency()->formatTxt(number_format($this->order->getRazorpayOrderAmount() / 100, 2, ".", ""));
 
                     throw new LocalizedException(__("Cart order amount = %1 doesn't match with amount paid = %2", $order->getOrderCurrency()->formatTxt($order->getGrandTotal()), $rzpOrderAmount));
                 }
 
-                $this->validateSignature([
+                $this->validateSignature(
+                    [
                     'razorpay_payment_id' => $payment_id,
                     'razorpay_subscription_id' => $rzp_order_id,
                     'razorpay_signature' => $request['paymentMethod']['additional_data']['rzp_signature']
-                ]);
+                    ]
+                );
 
             }
 
@@ -268,8 +270,8 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
     /**
      * Capture specified amount with authorization
      *
-     * @param InfoInterface $payment
-     * @param string $amount
+     * @param  InfoInterface $payment
+     * @param  string        $amount
      * @return $this
      */
 
@@ -317,13 +319,11 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
 
         $orderLink = $orderLinkCollection->getData();
 
-        if (empty($orderLink['entity_id']) === false)
-        {
+        if (empty($orderLink['entity_id']) === false) {
             $orderLinkCollection->setRzpPaymentId($paymentId)
                 ->setIncrementOrderId($order->getIncrementId());
 
-            if ($isWebhookCall)
-            {
+            if ($isWebhookCall) {
                 $orderLinkCollection->setByWebhook(true)->save();
             }
             else
@@ -336,8 +336,7 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
         $subscriptionCollection = $_objectManager->get('Razorpay\Subscription\Model\Subscriptions')
             ->getCollection()
             ->addFilter('subscription_id', $rzpSubscriptionId)
-            ->getFirstItem()
-            ;
+            ->getFirstItem();
         $subscriptionData = $subscriptionCollection->getData();
 
         if (!empty($subscriptionData)) {
@@ -353,17 +352,16 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
                 $productId = $item->getProduct()->getId();
             }
 
-            if ($isWebhookCall)
-            {
+            if ($isWebhookCall) {
                 $subscriptionOrderMapping->setByWebhook(true);
             }
             else
             {
                 $subscriptionOrderMapping->setByFrontend(true);
                 $productObject  = $_objectManager->get('Magento\Catalog\Model\Product')->load($productId);
-                if($productObject){
+                if($productObject) {
                     /* @var Magento\Catalog\Model\Product $productObject */
-                    if($productObject->getRazorpaySubscriptionTrial()){
+                    if($productObject->getRazorpaySubscriptionTrial()) {
                         $subscriptionOrderMapping->setIsTrialOrder(true);
                     }
                 }
@@ -400,7 +398,8 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
 
     /**
      * [validateWebhookSignature Used in case of webhook request for payment auth]
-     * @param  array  $post
+     *
+     * @param  array $post
      * @return [type]
      */
     public  function validateWebhookSignature(array $post)
@@ -432,7 +431,7 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
     /**
      * Retrieve information from payment configuration
      *
-     * @param string $field
+     * @param string                                     $field
      * @param int|string|null|\Magento\Store\Model\Store $storeId
      *
      * @return mixed

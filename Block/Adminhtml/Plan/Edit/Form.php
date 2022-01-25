@@ -20,13 +20,13 @@ class Form extends Generic
     protected $_productList;
  
     /**
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\Data\FormFactory $formFactory
-     * @param \Magento\Store\Model\System\Store $systemStore
+     * @param \Magento\Backend\Block\Template\Context         $context
+     * @param \Magento\Framework\Registry                     $registry
+     * @param \Magento\Framework\Data\FormFactory             $formFactory
+     * @param \Magento\Store\Model\System\Store               $systemStore
      * @param \Razorpay\Subscription\Model\Source\Plan\Status $status
      * @param \Razorpay\Subscription\Model\Source\ProductList $productList
-     * @param array $data
+     * @param array                                           $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -62,10 +62,14 @@ class Form extends Generic
      */
     protected function _prepareForm()
     {
-        /** @var \Razorpay\Subscription\Model\Plans $model */
+        /**
+ * @var \Razorpay\Subscription\Model\Plans $model 
+*/
         $model = $this->_coreRegistry->registry('subscribed_plan');
  
-        /** @var \Magento\Framework\Data\Form $form */
+        /**
+ * @var \Magento\Framework\Data\Form $form 
+*/
         $form = $this->_formFactory->create(
             ['data' => ['id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post']]
         );
@@ -80,7 +84,8 @@ class Form extends Generic
         if ($model->getId()) {
             $fieldset->addField('entity_id', 'hidden', ['name' => 'entity_id']);
             $readonly = true;
-        }else { $readonly=false;}
+        }else { $readonly=false;
+        }
         
         $fieldset->addField(
             'plan_name',
@@ -96,11 +101,11 @@ class Form extends Generic
               // product List - Dropdown
           $productList = $this->_productList->toOptionArray();
        
-         $fieldset->addField(
-             'magento_product_id',
-             'select',
-             ['name' => 'magento_product_id', 'label' => __('Select Product'), 'title' => __('Select Product'), 'required' => true, 'values' => $productList,'disabled'=>$readonly]
-         );
+        $fieldset->addField(
+            'magento_product_id',
+            'select',
+            ['name' => 'magento_product_id', 'label' => __('Select Product'), 'title' => __('Select Product'), 'required' => true, 'values' => $productList,'disabled'=>$readonly]
+        );
         $fieldset->addField(
             'plan_bill_amount',
             'text',
@@ -122,28 +127,29 @@ class Form extends Generic
                     array(
                         'value'     => '',
                         'label'     => 'Please Select',      
-                   ),
+                            ),
                    array(
                     'value'     => 'daily',
                     'label'     => 'Daily',      
-               ),
+                            ),
                     array(
                          'value'     => 'weekly',
                          'label'     => 'Weekly',      
-                    ),
+                            ),
                     array(
                         'value'     => 'monthly',
                         'label'     => 'Monthly',         
-                    ),
+                            ),
                     array(
                         'value'     => 'yearly',
                         'label'     => 'Yearly',         
-                    )
+                            )
                     ),
                 'required'=>true,
                 'disabled'=>$readonly
             )
-        )->setAfterElementHtml("
+        )->setAfterElementHtml(
+            "
         <script type=\"text/javascript\">
            function checkSelectedItem(selectElement){ 
             plan_interval = document.getElementById('plan_plan_interval').value;
@@ -157,9 +163,10 @@ class Form extends Generic
            
            }
            
-        </script>"); 
+        </script>"
+        ); 
 
-           $fieldset->addField(
+        $fieldset->addField(
             'plan_bill_cycle',
             'text',
             ['name' => 'plan_bill_cycle', 'label' => __('No. of Billing Cycles'), 'title' => __('No. of Billing Cycles'), 'required' => true,'disabled'=>$readonly,'class'=> 'required-entry validate-digits']
