@@ -15,7 +15,7 @@ class Index extends Action
     protected $resultPageFactory;
  
     /**
-     * @param Context $context
+     * @param Context     $context
      * @param PageFactory $resultPageFactory
      */
     public function __construct(
@@ -33,7 +33,9 @@ class Index extends Action
      */
     public function execute()
     {
-        /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
+        /**
+ * @var \Magento\Backend\Model\View\Result\Page $resultPage 
+*/
         $resultPage = $this->resultPageFactory->create();
         $resultPage->setActiveMenu('Razorpay_Subscription::rzp_subscriptions');
         $resultPage->addBreadcrumb(__('Plans'), __('Plans'));

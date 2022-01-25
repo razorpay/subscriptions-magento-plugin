@@ -13,10 +13,10 @@ class Form extends Generic
  
     /**
      * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\Data\FormFactory $formFactory
-     * @param \Magento\Store\Model\System\Store $systemStore
-     * @param array $data
+     * @param \Magento\Framework\Registry             $registry
+     * @param \Magento\Framework\Data\FormFactory     $formFactory
+     * @param \Magento\Store\Model\System\Store       $systemStore
+     * @param array                                   $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -48,10 +48,14 @@ class Form extends Generic
      */
     protected function _prepareForm()
     {
-        /** @var \Maxime\Jobs\Model\Department $model */
+        /**
+ * @var \Maxime\Jobs\Model\Department $model 
+*/
         $model = $this->_coreRegistry->registry('subscribed_subscription');
  
-        /** @var \Magento\Framework\Data\Form $form */
+        /**
+ * @var \Magento\Framework\Data\Form $form 
+*/
         $form = $this->_formFactory->create(
             ['data' => ['id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post']]
         );

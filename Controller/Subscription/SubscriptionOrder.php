@@ -48,20 +48,20 @@ class SubscriptionOrder extends BaseController
      */
     protected $checkoutSession;
      /**
-    * @var Request
-     */
+      * @var Request
+      */
     protected $request;
 
    
     /**
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Magento\Razorpay\Model\Config\Payment $razorpayConfig
-     * @param \Magento\Framework\App\CacheInterface $cache
+     * @param \Magento\Framework\App\Action\Context       $context
+     * @param \Magento\Customer\Model\Session             $customerSession
+     * @param \Magento\Checkout\Model\Session             $checkoutSession
+     * @param \Magento\Razorpay\Model\Config\Payment      $razorpayConfig
+     * @param \Magento\Framework\App\CacheInterface       $cache
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
-     * @param \Psr\Log\LoggerInterface $logger
-     *  @param Request $request
+     * @param \Psr\Log\LoggerInterface                    $logger
+     * @param Request                                     $request
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -102,24 +102,21 @@ class SubscriptionOrder extends BaseController
         try{
             $receiptId = $this->getQuote()->getId();
 
-            if(empty($post['error']) === false)
-            {
+            if(empty($post['error']) === false) {
                 $this->messageManager->addError(__('Payment Failed'));
                 return $this->_redirect('checkout/cart');
             }
 
-            if (isset($post['order_check']))
-            {
-                if (empty($this->cache->load("quote_processing_".$receiptId)) === false)
-                {
+            if (isset($post['order_check'])) {
+                if (empty($this->cache->load("quote_processing_".$receiptId)) === false) {
                     $responseContent = [
                         'success'   => true,
                         'order_id'  => false,
                         'parameters' => []
                     ];
 
-                    # fetch the related sales order and verify the payment ID with rzp payment id
-                    # To avoid duplicate order entry for same quote
+                    // fetch the related sales order and verify the payment ID with rzp payment id
+                    // To avoid duplicate order entry for same quote
                     $collection = $this->_objectManager->get('Magento\Sales\Model\Order')
                         ->getCollection()
                         ->addFieldToSelect('entity_id')
@@ -128,10 +125,11 @@ class SubscriptionOrder extends BaseController
 
                     $salesOrder = $collection->getData();
 
-                    if (empty($salesOrder['entity_id']) === false)
-                    {
-                        $this->logger->info("Razorpay inside order already processed with webhook quoteID:" . $receiptId
-                            ." and OrderID:".$salesOrder['entity_id']);
+                    if (empty($salesOrder['entity_id']) === false) {
+                        $this->logger->info(
+                            "Razorpay inside order already processed with webhook quoteID:" . $receiptId
+                            ." and OrderID:".$salesOrder['entity_id']
+                        );
 
                         $this->checkoutSession
                             ->setLastQuoteId($this->getQuote()->getId())
@@ -151,8 +149,7 @@ class SubscriptionOrder extends BaseController
                 }
                 else
                 {
-                    if(empty($receiptId) === false)
-                    {
+                    if(empty($receiptId) === false) {
                         //set the chache to stop webhook processing
                         $this->cache->save("started", "quote_Front_processing_$receiptId", ["razorpay"], 30);
 
@@ -165,8 +162,10 @@ class SubscriptionOrder extends BaseController
                     }
                     else
                     {
-                        $this->logger->info("Razorpay order already processed with quoteID:" . $this->checkoutSession
-                                ->getLastQuoteId());
+                        $this->logger->info(
+                            "Razorpay order already processed with quoteID:" . $this->checkoutSession
+                                ->getLastQuoteId()
+                        );
 
                         $responseContent = [
                             'success'    => true,
@@ -184,8 +183,7 @@ class SubscriptionOrder extends BaseController
                 return $response;
             }
 
-            if(isset($post['razorpay_payment_id']))
-            {
+            if(isset($post['razorpay_payment_id'])) {
                 $this->getQuote()->getPayment()->setMethod(PaymentMethod::METHOD_CODE);
 
                 try

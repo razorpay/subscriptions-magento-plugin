@@ -23,10 +23,10 @@ class Edit extends Action
     protected $_model;
  
     /**
-     * @param Action\Context $context
+     * @param Action\Context                             $context
      * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
-     * @param \Magento\Framework\Registry $registry
-     * @param \Maxime\Jobs\Model\Department $model
+     * @param \Magento\Framework\Registry                $registry
+     * @param \Maxime\Jobs\Model\Department              $model
      */
     public function __construct(
         Action\Context $context,
@@ -56,7 +56,9 @@ class Edit extends Action
     protected function _initAction()
     {
         // load layout, set active menu and breadcrumbs
-        /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
+        /**
+ * @var \Magento\Backend\Model\View\Result\Page $resultPage 
+*/
         $resultPage = $this->_resultPageFactory->create();
         $resultPage->setActiveMenu('Magento_Sales::sales')
             ->addBreadcrumb(__('Subscription'), __('Subscription'))
@@ -67,7 +69,7 @@ class Edit extends Action
     /**
      * Edit Department
      *
-     * @return \Magento\Backend\Model\View\Result\Page|\Magento\Backend\Model\View\Result\Redirect
+     * @return                                  \Magento\Backend\Model\View\Result\Page|\Magento\Backend\Model\View\Result\Redirect
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function execute()
@@ -79,7 +81,9 @@ class Edit extends Action
             $model->load($id);
             if (!$model->getId()) {
                 $this->messageManager->addError(__('This subscription not exists.'));
-                /** \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+                /**
+ * \Magento\Backend\Model\View\Result\Redirect $resultRedirect 
+*/
                 $resultRedirect = $this->resultRedirectFactory->create();
  
                 return $resultRedirect->setPath('*/*/');
@@ -93,7 +97,9 @@ class Edit extends Action
  
         $this->_coreRegistry->register('subscribed_subscription', $model);
  
-        /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
+        /**
+ * @var \Magento\Backend\Model\View\Result\Page $resultPage 
+*/
         $resultPage = $this->_initAction();
         $resultPage->addBreadcrumb(
             $id ? __('Edit Subscription') : __('New Subscription'),

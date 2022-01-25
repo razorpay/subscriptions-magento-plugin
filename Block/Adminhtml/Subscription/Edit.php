@@ -14,8 +14,8 @@ class Edit extends Container
  
     /**
      * @param \Magento\Backend\Block\Widget\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param array $data
+     * @param \Magento\Framework\Registry           $registry
+     * @param array                                 $data
      */
     public function __construct(
         \Magento\Backend\Block\Widget\Context $context,
@@ -77,7 +77,7 @@ class Edit extends Container
     /**
      * Check permission for passed action
      *
-     * @param string $resourceId
+     * @param  string $resourceId
      * @return bool
      */
     protected function _isAllowedAction($resourceId)

@@ -13,7 +13,9 @@ class Actions extends Column
      */
     private $urlBuilder;
 
-    /** Url Path */
+    /**
+ * Url Path 
+*/
     const SUBSCRIPTION_VIEW_URL_PATH   = 'subscribed/subscription/view';
     const CANCEL_URL_PATH   = 'subscribed/subscription/cancel';
     const PAUSE_URL_PATH    = 'subscribed/subscription/pause';
@@ -24,8 +26,8 @@ class Actions extends Column
         UiComponentFactory $uiComponentFactory,
         array $components = array(),
         UrlInterface $urlBuilder,
-        array $data = array())
-    {
+        array $data = array()
+    ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
         $this->urlBuilder = $urlBuilder;
     }
@@ -33,7 +35,7 @@ class Actions extends Column
     /**
      * Prepare Data Source
      *
-     * @param array $dataSource
+     * @param  array $dataSource
      * @return void
      */
     public function prepareDataSource(array $dataSource)

@@ -64,8 +64,8 @@ class MassResume extends BaseController
     protected $checkoutSession;
 
     /**
-     * @param Context $context
-     * @param Filter $filter
+     * @param Context           $context
+     * @param Filter            $filter
      * @param CollectionFactory $collectionFactory
      */
     public function __construct(
@@ -78,8 +78,7 @@ class MassResume extends BaseController
         \Magento\Backend\Helper\Data                $backendHelper,
         \Razorpay\Subscription\Helper\Subscription  $subscription,
         \Magento\Framework\Message\ManagerInterface $messageManager
-    )
-    {
+    ) {
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         parent::__construct(
