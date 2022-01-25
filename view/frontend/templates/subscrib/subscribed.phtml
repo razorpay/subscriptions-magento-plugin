@@ -1,5 +1,5 @@
 <?php /**
-       * @var Razorpay\Subscription\Block\Display $block 
+       * @var Razorpay\Subscription\Block\Display $block
        */ ?>
 
 
@@ -35,7 +35,10 @@
             <tbody>
 
             <?php foreach ($block->getSubscribs() as $order) : ?>
-               <tr>
+                <?php /**
+                       * @var Razorpay\Subscription\Model\Subscrib
+                       */ ?>
+                <tr>
                     <td>
                        <lable><input type="checkbox" name="orders[]" class="checkbox_select" value="<?php echo $order->getId() ?>"></lable>
                     </td>
