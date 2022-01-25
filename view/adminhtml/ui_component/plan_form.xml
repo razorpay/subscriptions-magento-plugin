@@ -63,7 +63,7 @@
                     <item name="source" xsi:type="string">plan</item>
                     <item name="readonly" xsi:type="boolean">true</item>
                     <item name="imports" xsi:type="array">
-                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.readonly</item>
                         <item name="value" xsi:type="string">${ $.provider}:data.plan_name</item>
                     </item>
                     <item name="validation" xsi:type="array">
@@ -83,7 +83,7 @@
                     <item name="dataType" translate="true" xsi:type="string">text</item>
                     <item name="source" xsi:type="string">plan</item>
                     <item name="imports" xsi:type="array">
-                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.readonly</item>
                         <item name="value" xsi:type="string">${ $.provider}:data.plan_desc</item>
                     </item>
                     <item name="validation" xsi:type="array">
@@ -102,7 +102,7 @@
                     <item name="disableLabel" xsi:type="boolean">true</item>
                     <item name="source" xsi:type="string">plan</item>
                     <item name="imports" xsi:type="array">
-                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.readonly</item>
                         <item name="value" xsi:type="string">${ $.provider}:data.magento_product_id</item>
                     </item>
                 </item>
@@ -138,7 +138,7 @@
                     <item name="formElement" xsi:type="string">input</item>
                     <item name="source" xsi:type="string">plan</item>
                     <item name="imports" xsi:type="array">
-                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.readonly</item>
                         <item name="value" xsi:type="string">${ $.provider}:data.plan_bill_amount</item>
                     </item>
                     <item name="validation" xsi:type="array">
@@ -169,7 +169,7 @@
                         <item name="source" xsi:type="string">plan</item>
                         <item name="addbefore" xsi:type="string">Every</item>
                         <item name="imports" xsi:type="array">
-                            <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                            <item name="disabled" xsi:type="string">${ $.provider}:data.readonly</item>
                             <item name="value" xsi:type="string">${ $.provider}:data.plan_interval</item>
                         </item>
                         <item name="notice" xsi:type="string" translate="true">Customer will be charged for the product based on frequency selected for the interval, e.g., Customer will be charged every Month if you select interval as Monthly and frequency as 1</item>
@@ -188,7 +188,7 @@
                         <item name="formElement" xsi:type="string">select</item>
                         <item name="source" xsi:type="string">plan</item>
                         <item name="imports" xsi:type="array">
-                            <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                            <item name="disabled" xsi:type="string">${ $.provider}:data.readonly</item>
                             <item name="value" xsi:type="string">${ $.provider}:data.plan_type</item>
                         </item>
                         <item name="component" xsi:type="string">Razorpay_Subscription/js/components/frequency-interval-validation</item>
@@ -209,7 +209,7 @@
                     <item name="formElement" xsi:type="string">input</item>
                     <item name="source" xsi:type="string">plan</item>
                     <item name="imports" xsi:type="array">
-                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.readonly</item>
                         <item name="value" xsi:type="string">${ $.provider}:data.plan_bill_cycle</item>
                     </item>
                     <item name="validation" xsi:type="array">
@@ -230,7 +230,7 @@
                     <item name="formElement" xsi:type="string">input</item>
                     <item name="source" xsi:type="string">plan</item>
                     <item name="imports" xsi:type="array">
-                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.readonly</item>
                         <item name="value" xsi:type="string">${ $.provider}:data.plan_trial</item>
                     </item>
                     <item name="notice" xsi:type="string" translate="true">Default is 0. The subscription starts immediately after the authorization payment</item>
@@ -250,7 +250,7 @@
                     <item name="formElement" xsi:type="string">input</item>
                     <item name="source" xsi:type="string">plan</item>
                     <item name="imports" xsi:type="array">
-                        <item name="disabled" xsi:type="string">${ $.provider}:data.edit</item>
+                        <item name="disabled" xsi:type="string">${ $.provider}:data.readonly</item>
                         <item name="value" xsi:type="string">${ $.provider}:data.plan_addons</item>
                     </item>
                     <item name="validation" xsi:type="array">
@@ -282,6 +282,5 @@
                 </select>
             </formElements>
         </field>
-
     </fieldset>
 </form>
