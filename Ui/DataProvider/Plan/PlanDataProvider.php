@@ -44,11 +44,9 @@ class PlanDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         $items = $this->collection->getItems();
         foreach ($items as $page) {
             $rec = $page->getData();
-            $rec['edit'] = true;
+            $rec['readonly'] = true;
             $this->loadedData[$page->getId()] = $rec;
         }
-
         return $this->loadedData;
-
     }
 }
