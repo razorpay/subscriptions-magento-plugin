@@ -118,6 +118,10 @@ class Save extends BaseController
                             ->setPlanAddons($this->getRequest()->getParam('plan_addons'))
                             ->setPlanStatus($this->getRequest()->getParam('plan_status'))
                             ->save();
+                        
+                        $product = $objectManager->create('Magento\Catalog\Model\Product')->load($this->getRequest()->getParam('magento_product_id'));
+                        $product->setHasOptions(true);
+                        $product->save();
 
                         $this->logger->info("Plan saved successfully");
                         $this->messageManager->addSuccess(__('Plan saved successfully'));
