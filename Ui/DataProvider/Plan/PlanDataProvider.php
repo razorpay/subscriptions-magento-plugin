@@ -2,19 +2,17 @@
 
 namespace Razorpay\Subscription\Ui\DataProvider\Plan;
 
-use Magento\Framework\App\Request\DataPersistorInterface;
-use Magento\Ui\DataProvider\AbstractDataProvider;
-use Razorpay\Subscription\Model\ResourceModel\Plans;
 use Razorpay\Subscription\Model\ResourceModel\Plans\CollectionFactory;
 
 class PlanDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
 {
     private $loadedData;
+
     /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
-     * @param CollectionFactory $palnCollectionFactory
+     * @param CollectionFactory $planCollectionFactory
      * @param array $meta
      * @param array $data
      */

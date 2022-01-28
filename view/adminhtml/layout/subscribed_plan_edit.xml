@@ -2,10 +2,6 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="editor"/>
     <body>
-<!--        <referenceContainer name="content">-->
-<!--            <block class="Razorpay\Subscription\Block\Adminhtml\Plan\Edit" name="subscribed_plan_edit"/>-->
-<!--        </referenceContainer>-->
-
         <referenceContainer name="content">
             <uiComponent name="plan_form"/>
         </referenceContainer>

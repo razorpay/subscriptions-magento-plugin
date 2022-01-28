@@ -26,8 +26,8 @@ define([
          */
         parseData: function (data) {
             return {
-                value: data.label,
-                label: data.value
+                product_id: data.value,
+                label: data.label
             };
         }
     });
