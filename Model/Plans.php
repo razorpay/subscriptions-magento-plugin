@@ -7,28 +7,28 @@ use Magento\Framework\Model\AbstractModel;
 class Plans extends AbstractModel
 {
     const PLAN_ID = 'entity_id'; // We define the id fieldname
- 
+
     /**
      * Prefix of model events names
      *
      * @var string
      */
     protected $_eventPrefix = 'subscribed';
- 
+
     /**
      * Name of the event object
      *
      * @var string
      */
     protected $_eventObject = 'plan';
- 
+
     /**
      * Name of object id field
      *
      * @var string
      */
     protected $_idFieldName = self::PLAN_ID;
- 
+
     /**
      * Initialize resource model
      *
@@ -50,9 +50,11 @@ class Plans extends AbstractModel
     {
         return 0;
     }
- 
-    public function getAvailableStatuses()
-    {
-        return [$this->getDisableStatus() => __('Disabled'), $this->getEnableStatus() => __('Enabled')];
+
+    public function getAvailableStatuses() {
+        return [
+            $this->getEnableStatus() => __('Enabled'),
+            $this->getDisableStatus() => __('Disabled')
+        ];
     }
 }
