@@ -8,7 +8,7 @@ use Magento\Framework\App\Action\HttpGetActionInterface;
 use Razorpay\Api\Api;
 use Razorpay\Magento\Model\Config;
 
-class Save extends Action //implements HttpGetActionInterface
+class Save extends Action
 {
     /**
      * @param Action\Context $context
