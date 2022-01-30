@@ -2,8 +2,7 @@
 namespace Razorpay\Subscription\Controller\Adminhtml\Plan;
  
 use Magento\Backend\App\Action;
-// require in case of zip installation without composer
-require_once __DIR__ . "../../../../../Razorpay/Razorpay.php";
+
 use Razorpay\Api\Api;
 use Razorpay\Magento\Model\Config;
 class Save extends Action
