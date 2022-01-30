@@ -15,7 +15,7 @@
         <column xsi:type="varchar" name="plan_type" nullable="false" length="30" comment="Razorpay Plan Product Plan type"/>
           <column xsi:type="varchar" name="plan_interval" nullable="false" length="30" default="1" comment="Razorpay Plan Product Plan interval"/>
            <column xsi:type="varchar" name="plan_bill_cycle" nullable="false" length="30" comment="Razorpay Billing Cycle"/>
-        <column xsi:type="int" name="plan_trial" nullable="false" default="0" comment="Razorpay Plan Trial"/>
+        <column xsi:type="decimal" name="plan_trial" nullable="false" scale="2" precision="10" default="0" comment="Razorpay Plan Trial"/>
            <column xsi:type="decimal" name="plan_bill_amount" nullable="false" scale="2" precision="10" default="0" comment="Razorpay Bill amount"/>
            <column xsi:type="decimal" name="plan_addons" nullable="false" scale="2" precision="10" default="0" comment="Razorpay Plan Addons"/>
      <column xsi:type="int" name="plan_status" padding="6" nullable="false"  default="1" comment="Razorpay Plan Status"/>
@@ -41,22 +41,20 @@
         <column xsi:type="int" name="plan_entity_id" nullable="false"  comment="Razorpay Plan table Id"/>
              <column xsi:type="varchar" name="subscription_id" nullable="false" length="255"  comment="Razorpay subscription id"/>
          <column xsi:type="int" name="quote_id" nullable="true"  comment="Magento quote id"/>
-        <column xsi:type="varchar" name="subscription_id" nullable="false" length="255"  comment="Razorpay subscription id"/>
-        <column xsi:type="int" name="quote_id" nullable="true"  comment="Magento quote id"/>
         <column xsi:type="int" name="product_id" nullable="true" comment="Magento product id"/>
-        <column xsi:type="varchar" name="razorpay_customer_id" nullable="false" length="30"  comment="Razorpay Customer id"/>
-        <column xsi:type="int" name="magento_user_id" nullable="true" comment="Magento user id"/>
-        <column xsi:type="varchar" name="status" nullable="false" length="30"  comment="Razorpay Subscription status"/>
-        <column xsi:type="varchar" name="cancel_by" nullable="false" length="30"  comment="Razorpay Subscription cancel by user or admin"/>
-        <column xsi:type="int" name="total_count" nullable="false"  default="0" comment="Total subscription count to be charged"/>
-        <column xsi:type="int" name="paid_count" nullable="false" default="0" comment="Total subscription paid count"/>
+          <column xsi:type="varchar" name="razorpay_customer_id" nullable="false" length="30"  comment="Razorpay Customer id"/>
+           <column xsi:type="int" name="magento_user_id" nullable="true" comment="Magento user id"/>
+         <column xsi:type="varchar" name="status" nullable="false" length="30"  comment="Razorpay Subscription status"/>
+           <column xsi:type="varchar" name="cancel_by" nullable="false" length="30"  comment="Razorpay Subscription cancel by user or admin"/>
+            <column xsi:type="int" name="total_count" nullable="false"  default="0" comment="Total subscription count to be charged"/>
+             <column xsi:type="int" name="paid_count" nullable="false" default="0" comment="Total subscription paid count"/>
          <column xsi:type="int" name="remaining_count" nullable="false" default="0" comment="Subscription remaining to be charged"/>
-        <column xsi:type="int" name="auth_attempts" nullable="false" default="0" comment="The number of times that the charge for the current billing cycle has been attempted on the card."/>
-        <column xsi:type="timestamp" name="start_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP" comment="Subscription start date"/>
-        <column xsi:type="timestamp" name="end_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP" comment="Subscription end date"/>
-        <column xsi:type="timestamp" name="subscription_created_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP" comment="Subscription Created at"/>
-        <column xsi:type="timestamp" name="next_charge_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP" comment="Next charge date"/>
-        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+  <column xsi:type="int" name="auth_attempts" nullable="false" default="0" comment="The number of times that the charge for the current billing cycle has been attempted on the card."/>
+     <column xsi:type="timestamp" name="start_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP" comment="Subscription start date"/>
+ <column xsi:type="timestamp" name="end_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP" comment="Subscription end date"/>
+ <column xsi:type="timestamp" name="subscription_created_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP" comment="Subscription Created at"/>
+  <column xsi:type="timestamp" name="next_charge_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP" comment="Next charge date"/>
+  <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
@@ -65,20 +63,21 @@
             	</index>
                   <index referenceId="plan_entity_id" indexType="btree">
 			<column name="plan_entity_id"/>
-        </index>
-        <index referenceId="subscription_status" indexType="btree">
+            	</index>
+                  <index referenceId="subscription_status" indexType="btree">
 				<column name="subscription_id"/>
             <column name="status"/>
-        </index>
-         <index referenceId="product_id" indexType="btree">
+            	</index>
+                  <index referenceId="product_id" indexType="btree">
 			<column name="subscription_id"/>
             	<column name="product_id"/>
-         </index>
-        <index referenceId="subscription_user" indexType="btree">
+
+            	</index>
+                  <index referenceId="subscription_user" indexType="btree">
 			<column name="subscription_id"/>
             <column name="razorpay_customer_id"/>
             <column name="magento_user_id"/>
-         </index>
+            	</index>
     </table>
      <!-- razorpay_subscriptions_order_mapping_details mapping order and subscription  -->
 
@@ -86,22 +85,23 @@
    <table name="razorpay_subscriptions_order_mapping_details" resource="default" engine="innodb" comment="Subscription Details">
         <column xsi:type="smallint" name="entity_id" padding="6" unsigned="false" nullable="false" identity="true" comment="ID"/>
         <column xsi:type="int" name="subscription_entity_id" nullable="false"  comment="Razorpay subscription table Id"/>
-        <column xsi:type="boolean" name="is_trial_order" nullable="false" default="0"  comment="Is a trial order"/>
+             <column xsi:type="boolean" name="is_trial_order" nullable="false" default="0"  comment="Is a trial order"/>
          <column xsi:type="varchar" name="increment_order_id" nullable="true" length="32" comment="increment order id"/>
-        <column xsi:type="varchar" name="rzp_payment_id" nullable="true" length="25"  comment="Razorpay Payment id"/>
-        <column xsi:type="boolean" name="by_webhook" nullable="false" default="0" comment="Webhook"/>
-        <column xsi:type="boolean" name="by_frontend" nullable="false" default="0" comment="frontend"/>
-        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+               <column xsi:type="varchar" name="rzp_payment_id" nullable="true" length="25"  comment="Razorpay Payment id"/>
+           <column xsi:type="boolean" name="by_webhook" nullable="false" default="0" comment="Webhook"/>
+            <column xsi:type="boolean" name="by_frontend" nullable="false" default="0" comment="frontend"/>
+
+  <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
-        <index referenceId="subscription_entity_id" indexType="btree">
+        	<index referenceId="subscription_entity_id" indexType="btree">
 			<column name="subscription_entity_id"/>
-         </index>
-        <index referenceId="order_details" indexType="btree">
+            	</index>
+<index referenceId="order_details" indexType="btree">
 			<column name="is_trial_order"/>
-		    <column name="increment_order_id"/>
-        	<column name="rzp_payment_id"/>
-	    </index>
+		<column name="increment_order_id"/>
+        		<column name="rzp_payment_id"/>
+	</index>
     </table>
 </schema>
