@@ -15,7 +15,7 @@
         <column xsi:type="varchar" name="plan_type" nullable="false" length="30" comment="Razorpay Plan Product Plan type"/>
           <column xsi:type="varchar" name="plan_interval" nullable="false" length="30" default="1" comment="Razorpay Plan Product Plan interval"/>
            <column xsi:type="varchar" name="plan_bill_cycle" nullable="false" length="30" comment="Razorpay Billing Cycle"/>
-        <column xsi:type="int" name="plan_trial" nullable="false" default="0" comment="Razorpay Plan Trial"/>
+        <column xsi:type="decimal" name="plan_trial" nullable="false" scale="2" precision="10" default="0" comment="Razorpay Plan Trial"/>
            <column xsi:type="decimal" name="plan_bill_amount" nullable="false" scale="2" precision="10" default="0" comment="Razorpay Bill amount"/>
            <column xsi:type="decimal" name="plan_addons" nullable="false" scale="2" precision="10" default="0" comment="Razorpay Plan Addons"/>
      <column xsi:type="int" name="plan_status" padding="6" nullable="false"  default="1" comment="Razorpay Plan Status"/>
