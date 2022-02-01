@@ -1,5 +1,4 @@
 <?php
-
 namespace Razorpay\Subscription\Model;
 
 use Magento\Framework\Model\AbstractModel;
@@ -45,7 +44,7 @@ class Plans extends AbstractModel
     {
         return 1;
     }
- 
+
     public function getDisableStatus()
     {
         return 0;

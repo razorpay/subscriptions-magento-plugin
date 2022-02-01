@@ -1,5 +1,4 @@
 <?php
-
 namespace Razorpay\Subscription\Block\Adminhtml\Plan\Edit\Button;
 
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
