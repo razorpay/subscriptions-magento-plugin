@@ -26,8 +26,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
      **/
     /**
      * @var setup
-     */
-    /**
      * @var context
      */
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
@@ -42,7 +40,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
     /**
      * @createPlanTable create plan table   
      **/
-    
     private function createPlanTable($setup)
     {
         $table = $setup->getConnection()->newTable($setup->getTable(Plans::TABLE_NAME));

@@ -197,8 +197,8 @@ class SubscriptionPaymentMethod extends \Magento\Payment\Model\Method\AbstractMe
         try
         {
             /**
- * @var \Magento\Sales\Model\Order\Payment $payment 
-*/
+            * @var \Magento\Sales\Model\Order\Payment $payment 
+            */
             $order = $payment->getOrder();
             $orderId = $order->getIncrementId();
 
