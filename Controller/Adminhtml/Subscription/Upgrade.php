@@ -40,9 +40,9 @@ class Upgrade extends Action
     {
         $data = $this->getRequest()->getPostValue();
 
-        /**
- * @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect 
-*/
+    /**
+    * @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect 
+    */
         $resultRedirect = $this->resultRedirectFactory->create();
 
         if ($data) {

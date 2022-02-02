@@ -38,8 +38,8 @@ class NewAction extends Action
     public function execute()
     {
         /**
- * @var \Magento\Backend\Model\View\Result\Forward $resultForward 
-*/
+        * @var \Magento\Backend\Model\View\Result\Forward $resultForward 
+        */
         $resultForward = $this->_resultForwardFactory->create();
         return $resultForward->forward('edit');
     }
