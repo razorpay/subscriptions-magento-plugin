@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @UpgradeSchema
+ * Update database for plan and subscription.
+ */
 namespace Razorpay\Subscription\Setup;
 
 use Magento\Framework\DB\Adapter\AdapterInterface;
@@ -11,13 +14,22 @@ use Razorpay\Subscription\Model\ResourceModel\Plans;
 use Razorpay\Subscription\Model\ResourceModel\Subscriptions;
 use Razorpay\Subscription\Model\ResourceModel\SubscriptionsOrderMapping;
 /**
- * @UpgradeSchema to update the current db with subscription 
+ * @UpgradeSchema 
+ * update the current db with subscription 
  **/
+
 class UpgradeSchema implements UpgradeSchemaInterface
 {
     /**
-     * @upgrade database and create table 
+     * @upgrade 
+     * database and create table 
      **/
+    /**
+     * @var setup
+     */
+    /**
+     * @var context
+     */
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
@@ -27,9 +39,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $this->createSubscriptionOrderMappingTable($setup);
         $setup->endSetup();
     }
-/**
- * @createPlanTable create plan table   
- **/
+    /**
+     * @createPlanTable create plan table   
+     **/
+    
     private function createPlanTable($setup)
     {
         $table = $setup->getConnection()->newTable($setup->getTable(Plans::TABLE_NAME));
@@ -180,9 +193,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         $setup->getConnection()->createTable($table);
     }
-/**
- * @createSubscriptionTable - subsription record   
- **/
+    /**
+     * @createSubscriptionTable - subsription record   
+     **/
     private function createSubscriptionTable($setup)
     {
         $table = $setup->getConnection()->newTable($setup->getTable(Subscriptions::TABLE_NAME));
@@ -397,9 +410,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $setup->getConnection()->createTable($table);
     }
       /**
-     * @createSubscriptionOrderMappingTable mapping order and subscription  
-     */
-        public function createSubscriptionOrderMappingTable($setup)
+       * @createSubscriptionOrderMappingTable mapping order and subscription  
+       */
+    public function createSubscriptionOrderMappingTable($setup)
     {
         $table = $setup->getConnection()->newTable($setup->getTable(SubscriptionsOrderMapping::TABLE_NAME));
 
@@ -409,10 +422,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 Table::TYPE_INTEGER,
                 null,
                 [
-                    'identity' => true,
-                    'unsigned' => true,
-                    'primary'  => true,
-                    'nullable' => false
+                'identity' => true,
+                'unsigned' => true,
+                'primary'  => true,
+                'nullable' => false
 
                 ]
             )
@@ -421,8 +434,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 Table::TYPE_INTEGER,
                 null,
                 [
-                    'nullable' => false,
-                    'comment' => 'Razorpay subscription table Id'
+                'nullable' => false,
+                'comment' => 'Razorpay subscription table Id'
                 ]
             )
             ->addColumn(
@@ -430,9 +443,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 Table::TYPE_BOOLEAN,
                 1,
                 [
-                    'nullable' => false,
-                    'default' => 0,
-                    'comment' => 'Is a trial order'
+                'nullable' => false,
+                'default' => 0,
+                'comment' => 'Is a trial order'
                 ]
             )
             ->addColumn(
@@ -440,7 +453,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 Table::TYPE_TEXT,
                 32,
                 [
-                    'nullable' => true
+                'nullable' => true
                 ]
             )
             ->addColumn(
@@ -448,7 +461,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 Table::TYPE_TEXT,
                 25,
                 [
-                    'nullable' => true
+                'nullable' => true
                 ]
             )
             ->addColumn(
@@ -456,8 +469,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 Table::TYPE_BOOLEAN,
                 1,
                 [
-                    'nullable' => false,
-                    'default' => 0
+                'nullable' => false,
+                'default' => 0
                 ]
             )
             ->addColumn(
@@ -465,8 +478,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 Table::TYPE_BOOLEAN,
                 1,
                 [
-                    'nullable' => false,
-                    'default' => 0
+                'nullable' => false,
+                'default' => 0
                 ]
             )
             ->addColumn(
@@ -474,25 +487,25 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
                 null,
                 [
-                    'nullable' => false,
-                    'default' => Table::TIMESTAMP_INIT,
-                    'comment' => 'Created at'
+                'nullable' => false,
+                'default' => Table::TIMESTAMP_INIT,
+                'comment' => 'Created at'
                 ]
             )
             ->addIndex(
                 'subscription_id',
                 ['subscription_entity_id'],
                 [
-                    'type'      => AdapterInterface::INDEX_TYPE_INDEX,
-                    'nullable'  => false,
+                'type'      => AdapterInterface::INDEX_TYPE_INDEX,
+                'nullable'  => false,
                 ]
             )
             ->addIndex(
                 'order_details',
                 ['is_trial_order', 'increment_order_id', 'rzp_payment_id'],
                 [
-                    'type'      => AdapterInterface::INDEX_TYPE_INDEX,
-                    'nullable'  => false,
+                'type'      => AdapterInterface::INDEX_TYPE_INDEX,
+                'nullable'  => false,
                 ]
             );
         $setup->getConnection()->createTable($table);
