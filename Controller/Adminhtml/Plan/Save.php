@@ -1,32 +1,40 @@
 <?php
-
 namespace Razorpay\Subscription\Controller\Adminhtml\Plan;
 
 use Magento\Backend\App\Action;
+use Razorpay\Magento\Controller\BaseController;
 
-use Magento\Framework\App\Action\HttpGetActionInterface;
-use Razorpay\Api\Api;
-use Razorpay\Magento\Model\Config;
-
-class Save extends Action
+class Save extends BaseController
 {
     /**
      * @param Action\Context $context
      * @param \Razorpay\Subscription\Model\Plans $model
      */
-    protected $_storeManager;
+    protected $storeManager;
 
-    private \Psr\Log\LoggerInterface $logger;
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
-        Action\Context                             $context,
+        \Magento\Framework\App\Action\Context      $context,
+        \Magento\Customer\Model\Session            $customerSession,
+        \Magento\Checkout\Model\Session            $checkoutSession,
+        \Razorpay\Magento\Model\Config             $config,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Psr\Log\LoggerInterface                   $logger
     )
     {
-        parent::__construct($context);
-        $this->_storeManager = $storeManager;
+        parent::__construct(
+            $context,
+            $customerSession,
+            $checkoutSession,
+            $config
+        );
+        $this->storeManager = $storeManager;
         $this->logger = $logger;
+        $this->config = $config;
     }
 
     /**
@@ -48,15 +56,6 @@ class Save extends Action
 
         try {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            $connection = $objectManager->get('Magento\Framework\App\ResourceConnection')->getConnection('\Magento\Framework\App\ResourceConnection::DEFAULT_CONNECTION');
-
-            // get config data for razorpay key
-            $key_id = $connection->fetchAll("SELECT * FROM core_config_data WHERE `path` LIKE 'payment/razorpay/key_id'");
-            $key_secret = $connection->fetchAll("SELECT * FROM core_config_data WHERE `path` LIKE 'payment/razorpay/key_secret'");
-
-            $rzpId = $key_id[0]['value'];
-            $rzpSecret = $key_secret[0]['value'];
-            $rzp = new Api($rzpId, $rzpSecret);
 
             $data = $this->getRequest()->getPostValue();
 
@@ -68,7 +67,7 @@ class Save extends Action
                     //edit part for status change
                     $plan = $objectManager->create('Razorpay\Subscription\Model\Plans')->load($id);
                     $plan->setPlanStatus($this->getRequest()->getParam('plan_status'))
-                            ->save();
+                        ->save();
                     $this->logger->info("Plan update successfully");
                     $this->messageManager->addSuccess(__('Plan update successfully'));
                     return $resultRedirect->setPath('*/*/index');
@@ -95,7 +94,7 @@ class Save extends Action
                             "item" => [
                                 "name" => $this->getRequest()->getParam('plan_name'),
                                 "amount" => (int)(number_format($this->getRequest()->getParam('plan_bill_amount') * 100, 0, ".", "")),
-                                "currency" => $this->_storeManager->getStore()->getCurrentCurrency()->getCode(),
+                                "currency" => $this->storeManager->getStore()->getCurrentCurrency()->getCode(),
                                 "description" => $this->getRequest()->getParam('plan_desc')
                             ],
                             "notes" => [
@@ -103,7 +102,7 @@ class Save extends Action
                             ]
                         ];
 
-                        $planResponse = $rzp->plan->create($planData);
+                        $planResponse = $this->rzp->plan->create($planData);
 
                         $plan = $objectManager->create('Razorpay\Subscription\Model\Plans');
                         $plan->setPlanName($this->getRequest()->getParam('plan_name'))
