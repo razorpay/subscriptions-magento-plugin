@@ -13,31 +13,34 @@
         <column xsi:type="varchar" name="plan_name" nullable="false" length="255" comment="Plan name"/>
          <column xsi:type="varchar" name="plan_desc" nullable="false" length="255" comment="Razorpay Plan Description"/>
         <column xsi:type="varchar" name="plan_type" nullable="false" length="30" comment="Razorpay Plan Product Plan type"/>
-        <column xsi:type="varchar" name="plan_interval" nullable="false" length="30" default="1" comment="Razorpay Plan Product Plan interval"/>
-        <column xsi:type="varchar" name="plan_bill_cycle" nullable="false" length="30" comment="Razorpay Billing Cycle"/>
-        <column xsi:type="decimal" name="plan_trial" nullable="false" scale="2" precision="10" default="0" comment="Razorpay Plan Trial"/>
-        <column xsi:type="decimal" name="plan_bill_amount" nullable="false" scale="2" precision="10" default="0" comment="Razorpay Bill amount"/>
-        <column xsi:type="decimal" name="plan_addons" nullable="false" scale="2" precision="10" default="0" comment="Razorpay Plan Addons"/>
-        <column xsi:type="int" name="plan_status" padding="6" nullable="false"  default="1" comment="Razorpay Plan Status"/>
-        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+          <column xsi:type="varchar" name="plan_interval" nullable="false" length="30" default="1" comment="Razorpay Plan Product Plan interval"/>
+           <column xsi:type="varchar" name="plan_bill_cycle" nullable="false" length="30" comment="Razorpay Billing Cycle"/>
+        <column xsi:type="int" name="plan_trial" nullable="false" default="0" comment="Razorpay Plan Trial"/>
+           <column xsi:type="decimal" name="plan_bill_amount" nullable="false" scale="2" precision="10" default="0" comment="Razorpay Bill amount"/>
+           <column xsi:type="decimal" name="plan_addons" nullable="false" scale="2" precision="10" default="0" comment="Razorpay Plan Addons"/>
+     <column xsi:type="int" name="plan_status" padding="6" nullable="false"  default="1" comment="Razorpay Plan Status"/>
+     <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
-        <index referenceId="plan" indexType="btree">
+          <index referenceId="plan" indexType="btree">
 			<column name="plan_id"/>
-    	</index>
+                        	</index>
          <index referenceId="plan_product" indexType="btree">
 			<column name="plan_id"/>
             <column name="plan_type"/>
             <column name="magento_product_id"/>
-            <column name="plan_name"/>
-        </index>
+              <column name="plan_name"/>
+            	</index>
     </table>
 <!-- create Subscription Table -->
 
    <table name="razorpay_subscriptions" resource="default" engine="innodb" comment="Subscription Details">
         <column xsi:type="smallint" name="entity_id" padding="6" unsigned="false" nullable="false" identity="true" comment="ID"/>
         <column xsi:type="int" name="plan_entity_id" nullable="false"  comment="Razorpay Plan table Id"/>
+             <column xsi:type="varchar" name="subscription_id" nullable="false" length="255"  comment="Razorpay subscription id"/>
+         <column xsi:type="int" name="quote_id" nullable="true"  comment="Magento quote id"/>
         <column xsi:type="varchar" name="subscription_id" nullable="false" length="255"  comment="Razorpay subscription id"/>
         <column xsi:type="int" name="quote_id" nullable="true"  comment="Magento quote id"/>
         <column xsi:type="int" name="product_id" nullable="true" comment="Magento product id"/>
@@ -59,8 +62,8 @@
         </constraint>
         <index referenceId="subscription_id" indexType="btree">
 			<column name="subscription_id"/>
-        </index>
-        <index referenceId="plan_entity_id" indexType="btree">
+            	</index>
+                  <index referenceId="plan_entity_id" indexType="btree">
 			<column name="plan_entity_id"/>
         </index>
         <index referenceId="subscription_status" indexType="btree">
