@@ -98,7 +98,7 @@ class Save extends BaseController
                                 "description" => $this->getRequest()->getParam('plan_desc')
                             ],
                             "notes" => [
-                                "source" => "magento"
+                                "source" => "magento-subscription"
                             ]
                         ];
 
