@@ -284,7 +284,8 @@ class SubscriptionWebhook
          $rzpSubscriptionId = $data['payload']['subscription']['entity']['id'];
          $quoteId = $data['payload']['subscription']['entity']['notes']['magento_quote_id'];
          $webHookSource = $data['payload']['subscription']['entity']['notes']['source'];
-         
+         $status = $data['payload']['subscription']['entity']['status'];
+
         if (empty($quoteId)) {
             $this->_logger->info("Razorpay Subscription Webhook: Quote ID not set for Razorpay subscription id(:$rzpSubscriptionId)");
             return;
@@ -292,26 +293,13 @@ class SubscriptionWebhook
 
         // Process only if its from magento source
         if ($webHookSource == "magento-subscription") {
-
-            switch ($data['event']) {
-                case 'subscription.paused':
-                    $status = 'paused';
-                    break;
-                
-                case 'subscription.resumed':
-                    $status = 'active';
-                    break;
-                
-                case 'subscription.cancelled':
-                    $status = 'cancelled';   
-                    break;
-            }
-
             $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
             $postUpdate = $subscription->load($rzpSubscriptionId, 'subscription_id');
             $postUpdate->setStatus($status);
-            $postUpdate->setCancelBy('Razorpay');
-            $postUpdate->save();    
+            if($status == "cancelled"){
+                $postUpdate->setCancelBy('Razorpay');
+            }
+            $postUpdate->save();
 
             $this->_logger->info("Razorpay Subscription Webhook Processed successfully for Razorpay subscriptionId(:$rzpSubscriptionId)");
         }
