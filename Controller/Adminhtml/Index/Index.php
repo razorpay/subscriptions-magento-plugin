@@ -9,6 +9,7 @@ use Magento\Framework\View\Result\PageFactory;
 
 /**
  * Class Index
+ *
  * @package Razorpay\Grid\Controller\Adminhtml\Index
  */
 class Index extends Action
@@ -21,7 +22,7 @@ class Index extends Action
     /**
      * Constructor
      *
-     * @param \Magento\Backend\App\Action\Context $context
+     * @param \Magento\Backend\App\Action\Context        $context
      * @param \Magento\Framework\View\Result\PageFactory $rawFactory
      */
     public function __construct(Context $context, PageFactory $rawFactory)
