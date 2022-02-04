@@ -10,20 +10,28 @@ use Magento\Framework\DB\Ddl\Table;
 use Razorpay\Subscription\Model\ResourceModel\Plans;
 use Razorpay\Subscription\Model\ResourceModel\Subscriptions;
 use Razorpay\Subscription\Model\ResourceModel\SubscriptionsOrderMapping;
-
-class UpgradeSchema implements  UpgradeSchemaInterface
+/**
+ * @UpgradeSchema to update the current db with subscription 
+ **/
+class UpgradeSchema implements UpgradeSchemaInterface
 {
-    public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context){
+    /**
+     * @upgrade database and create table 
+     **/
+    public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
+    {
         $setup->startSetup();
 
         $this->createPlanTable($setup);
         $this->createSubscriptionTable($setup);
         $this->createSubscriptionOrderMappingTable($setup);
-
         $setup->endSetup();
     }
-
-    private function createPlanTable($setup){
+/**
+ * @createPlanTable create plan table   
+ **/
+    private function createPlanTable($setup)
+    {
         $table = $setup->getConnection()->newTable($setup->getTable(Plans::TABLE_NAME));
 
         $table
@@ -76,7 +84,7 @@ class UpgradeSchema implements  UpgradeSchemaInterface
                     'comment' => 'Razorpay Plan Description'
                 ]
             )
-             ->addColumn(
+            ->addColumn(
                 'plan_type',
                 Table::TYPE_TEXT,
                 30,
@@ -164,17 +172,17 @@ class UpgradeSchema implements  UpgradeSchemaInterface
             )
             ->addIndex(
                 'plan_product',
-                ['plan_id', 'plan_type','magento_product_id','plan_name'],
+                ['plan_id', 'plan_type', 'magento_product_id', 'plan_name'],
                 [
                     'type'      => AdapterInterface::INDEX_TYPE_INDEX,
                 ]
-            )
-        ;
+            );
 
         $setup->getConnection()->createTable($table);
-
     }
-
+/**
+ * @createSubscriptionTable - subsription record   
+ **/
     private function createSubscriptionTable($setup)
     {
         $table = $setup->getConnection()->newTable($setup->getTable(Subscriptions::TABLE_NAME));
@@ -366,32 +374,32 @@ class UpgradeSchema implements  UpgradeSchemaInterface
             )
             ->addIndex(
                 'subscription_status',
-                ['subscription_id','status'],
+                ['subscription_id', 'status'],
                 [
                     'type'      => AdapterInterface::INDEX_TYPE_INDEX,
                 ]
             )
             ->addIndex(
                 'product_id',
-                ['subscription_id','product_id'],
+                ['subscription_id', 'product_id'],
                 [
                     'type'      => AdapterInterface::INDEX_TYPE_INDEX,
                 ]
             )
             ->addIndex(
                 'subscription_user',
-                ['subscription_id','razorpay_customer_id','magento_user_id'],
+                ['subscription_id', 'razorpay_customer_id', 'magento_user_id'],
                 [
                     'type'      => AdapterInterface::INDEX_TYPE_INDEX,
                 ]
-            )
-        ;
+            );
 
         $setup->getConnection()->createTable($table);
-
     }
-
-    public function createSubscriptionOrderMappingTable($setup)
+      /**
+     * @createSubscriptionOrderMappingTable mapping order and subscription  
+     */
+        public function createSubscriptionOrderMappingTable($setup)
     {
         $table = $setup->getConnection()->newTable($setup->getTable(SubscriptionsOrderMapping::TABLE_NAME));
 
@@ -481,14 +489,12 @@ class UpgradeSchema implements  UpgradeSchemaInterface
             )
             ->addIndex(
                 'order_details',
-                ['is_trial_order','increment_order_id','rzp_payment_id'],
+                ['is_trial_order', 'increment_order_id', 'rzp_payment_id'],
                 [
                     'type'      => AdapterInterface::INDEX_TYPE_INDEX,
                     'nullable'  => false,
                 ]
-            )
-        ;
+            );
         $setup->getConnection()->createTable($table);
-
     }
 }

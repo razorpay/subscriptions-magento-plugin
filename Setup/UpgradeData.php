@@ -37,8 +37,8 @@ class UpgradeData implements UpgradeDataInterface
         \Magento\Eav\Model\Entity\TypeFactory $eavTypeFactory,
         \Magento\Eav\Model\Entity\Attribute\SetFactory $attributeSetFactory,
         \Magento\Eav\Model\ResourceModel\Entity\Attribute\Group\CollectionFactory $groupCollectionFactory,
-        EavSetupFactory $eavSetupFactory)
-    {
+        EavSetupFactory $eavSetupFactory
+    ) {
         $this->eavSetupFactory = $eavSetupFactory;
         $this->eavTypeFactory = $eavTypeFactory;
         $this->attributeSetFactory = $attributeSetFactory;
@@ -54,7 +54,8 @@ class UpgradeData implements UpgradeDataInterface
     }
 
 
-    public function installEntities($setup){
+    public function installEntities($setup)
+    {
 
 
         $groupName = 'Subscriptions by Razorpay';
@@ -95,7 +96,7 @@ class UpgradeData implements UpgradeDataInterface
             $eavSetup->addAttribute(Product::ENTITY, $attributeCode, $attribute);
         }
 
-        $this->sortGroup($groupName,11);
+        $this->sortGroup($groupName, 11);
     }
 
     private function sortGroup($attributeGroupName, $order)

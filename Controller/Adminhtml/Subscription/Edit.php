@@ -41,15 +41,15 @@ class Edit extends Action
         $this->_model = $model;
         parent::__construct($context);
     }
-
+ 
     /**
      * {@inheritdoc}
      */
     protected function _isAllowed()
     {
-        return $this->_authorization->isAllowed('Razorpay_Subscription::subscription_save');
+        return $this->_authorization->isAllowed('Razorpay_Subscription::subscription_upgrade');
     }
-
+ 
     /**
      * Init actions
      *
@@ -105,7 +105,7 @@ class Edit extends Action
         $resultPage->getConfig()->getTitle()->prepend(__('Subscriptions'));
         $resultPage->getConfig()->getTitle()
             ->prepend($model->getId() ? $model->getName() : __('New Subscription'));
-
+ 
         return $resultPage;
     }
 }
