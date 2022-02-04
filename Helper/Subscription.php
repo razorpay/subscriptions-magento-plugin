@@ -87,6 +87,16 @@ class Subscription extends AbstractHelper
                     array_push($items, $item);
                     $subscriptionData["addons"] = $items;
                 }
+                if($planData["plan_addons"]){
+                    $item["item"] = [
+                        "name" => "Addon amount",
+                        "amount" => (int)(number_format($planData["plan_addons"] * 100, 0, ".", "")),
+                        "currency" => $quote->getQuoteCurrencyCode(),
+                        "description" => "Addon amount"
+                    ];
+                    array_push($items, $item);
+                    $subscriptionData["addons"] = $items;
+                }
                 $this->logger->info("Subscription creation data", $subscriptionData);
                 $subscriptionResponse = $rzp->subscription->create($subscriptionData);
                 $this->logger->info("Subscription response object ", json_decode(json_encode($subscriptionResponse), true));
