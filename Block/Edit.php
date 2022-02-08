@@ -102,6 +102,7 @@ class Edit extends Template
     {
         $planCollection = $this->_planCollectionFactory->create();
         $planCollection->addFieldToFilter('magento_product_id', $productId);
+        $planCollection->addFieldToFilter('plan_status', 1);
         $data = $planCollection->getData();
         return $data; 
 
