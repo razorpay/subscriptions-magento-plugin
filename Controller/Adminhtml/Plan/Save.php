@@ -62,10 +62,11 @@ class Save extends BaseController
             /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
             $resultRedirect = $this->resultRedirectFactory->create();
             if ($data) {
-                $id = $this->getRequest()->getParam('id');
-                if ($id) {
+                if ($data["entity_id"]) {
+
                     //edit part for status change
-                    $plan = $objectManager->create('Razorpay\Subscription\Model\Plans')->load($id);
+                    $plan = $objectManager->create('Razorpay\Subscription\Model\Plans')->load($data["entity_id"]);
+
                     $plan->setPlanStatus($this->getRequest()->getParam('plan_status'))
                         ->save();
                     $this->logger->info("Plan update successfully");
