@@ -56,9 +56,9 @@ class Edit extends Action
     protected function _initAction()
     {
         // load layout, set active menu and breadcrumbs
-        /**
- * @var \Magento\Backend\Model\View\Result\Page $resultPage 
-*/
+      /**
+      * @var \Magento\Backend\Model\View\Result\Page $resultPage 
+      */
         $resultPage = $this->_resultPageFactory->create();
         $resultPage->setActiveMenu('Magento_Sales::sales')
             ->addBreadcrumb(__('Subscription'), __('Subscription'))
@@ -81,9 +81,9 @@ class Edit extends Action
             $model->load($id);
             if (!$model->getId()) {
                 $this->messageManager->addError(__('This subscription not exists.'));
-                /**
- * \Magento\Backend\Model\View\Result\Redirect $resultRedirect 
-*/
+    /**
+    * \Magento\Backend\Model\View\Result\Redirect $resultRedirect 
+    */
                 $resultRedirect = $this->resultRedirectFactory->create();
  
                 return $resultRedirect->setPath('*/*/');

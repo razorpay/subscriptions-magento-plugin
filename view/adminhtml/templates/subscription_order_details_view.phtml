@@ -7,20 +7,5 @@ $subscriptionDetails = $block->fetchSubscriptionOrderDetails();
 
 ?>
 <?php if (!empty($subscriptionDetails)) : ?>
-<!--    <section class="admin__page-section order-view-susbcription-details">-->
-<!--        <div>-->
-<!--            <div class="admin__page-section-title">-->
-<!--                <span class="title">Subscription Details</span>-->
-<!--            </div>-->
-<!--            <div class="admin__page-section-content">-->
-<!--                <strong>Subscription Type:</strong>-->
-<!--                <span class="price">--><?php //echo __(ucfirst($subscriptionDetails["plan_type"])) ?><!--</span>-->
-<!--            </div>-->
-<!--            <div class="admin__page-section-content">-->
-<!--                <strong>Subscription Id:</strong>-->
-<!--                <span class="actions"><a href="--><?php //echo $block->getUrl('razorpaysubscription/customer/cancelSubscription/',['id' => $subscriptionDetails["entity_id"]]); ?><!--">--><?php //echo __($subscriptionDetails["subscription_id"]) ?><!--</a></span>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </section>-->
 <?php endif; ?>
 

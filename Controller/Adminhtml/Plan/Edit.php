@@ -56,9 +56,9 @@ class Edit extends Action
     protected function _initAction()
     {
         // load layout, set active menu and breadcrumbs
-        /**
- * @var \Magento\Backend\Model\View\Result\Page $resultPage 
-*/
+    /**
+    * @var \Magento\Backend\Model\View\Result\Page $resultPage 
+    */
         $resultPage = $this->_resultPageFactory->create();
         $resultPage->setActiveMenu('Razorpay_Subscription::rzp_subscriptions')
             ->addBreadcrumb(__('Plan'), __('Plan'))
@@ -82,9 +82,9 @@ class Edit extends Action
             $model->load($id);
             if (!$model->getId()) {
                 $this->messageManager->addError(__('This plan not exists.'));
-                /**
- * \Magento\Backend\Model\View\Result\Redirect $resultRedirect 
-*/
+    /**
+    * \Magento\Backend\Model\View\Result\Redirect $resultRedirect 
+    */
                 $resultRedirect = $this->resultRedirectFactory->create();
  
                 return $resultRedirect->setPath('*/*/');
@@ -99,8 +99,8 @@ class Edit extends Action
         $this->_coreRegistry->register('subscribed_plan', $model);
  
         /**
- * @var \Magento\Backend\Model\View\Result\Page $resultPage 
-*/
+    * @var \Magento\Backend\Model\View\Result\Page $resultPage 
+    */
         $resultPage = $this->_initAction();
         $resultPage->addBreadcrumb(
             $id ? __('Edit Plan') : __('New Plan'),
