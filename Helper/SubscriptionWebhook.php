@@ -177,7 +177,7 @@ class SubscriptionWebhook
                         ->getFirstItem();
 
                     $orderLink = $orderLinkCollection->getData();
-                    if(!empty($orderLink["entity_id"])){
+                    if(!empty($orderLink["entity_id"])) {
                         $this->_logger->info("Razorpay Subscription Webhook: Sales Order and payment already exist for Razorpay payment_id(:$paymentId) and for subscription_id: (:$rzpSubscriptionId)");
                         return ;
                     }
@@ -209,8 +209,9 @@ class SubscriptionWebhook
                     $customer = $customer->loadByEmail($email);
 
                     //If need to insert new customer as guest
-                    if ((empty($customer->getEntityId()) === true) or
-                        (empty($quote->getBillingAddress()->getCustomerId()) === true)) {
+                    if ((empty($customer->getEntityId()) === true)
+                        or (empty($quote->getBillingAddress()->getCustomerId()) === true)
+                    ) {
                         $newQuote->setCustomerFirstname($firstName);
                         $newQuote->setCustomerLastname($lastName);
                         $newQuote->setCustomerEmail($email);
@@ -227,7 +228,8 @@ class SubscriptionWebhook
                     foreach ($orderData['items'] as $item) {
                         $product = $this->_objectManagement->create('Magento\Catalog\Model\Product')->load($item['product_id']);
                         $product->setPrice($product->getPrice());
-                        $newQuote->addProduct($product, new DataObject($productCustomData)
+                        $newQuote->addProduct(
+                            $product, new DataObject($productCustomData)
                         );
                     }
 
@@ -274,7 +276,8 @@ class SubscriptionWebhook
 
     /**
      * Processing subscription pause/resume/cancel event
-     * @param $data
+     *
+     * @param  $data
      * @return int|void
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -308,8 +311,8 @@ class SubscriptionWebhook
     }
 
     /**
-     * @param $post
-     * @param $quoteId
+     * @param  $post
+     * @param  $quoteId
      * @return mixed
      * @throws \Magento\Framework\Exception\LocalizedException
      */
