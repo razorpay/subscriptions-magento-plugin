@@ -78,7 +78,7 @@ class Subscription extends AbstractHelper
                     $subscriptionData["start_at"] = strtotime("+{$planData['plan_trial']} days");
                 }
                 $items = $item = [];
-                if ($quote->getShippingAddress()->getShippingAmount()) {
+                if ($quote->getShippingAddress()->getShippingAmount() && $quote->getShippingAddress()->getShippingAmount() > 0) {
                     $item["item"] = [
                         "name" => "Shipping charges",
                         "amount" => (int)(number_format($quote->getShippingAddress()->getShippingAmount() * 100, 0, ".", "")),
