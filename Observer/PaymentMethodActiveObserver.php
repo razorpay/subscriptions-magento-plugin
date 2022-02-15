@@ -43,8 +43,7 @@ class PaymentMethodActiveObserver implements ObserverInterface
         ProductRepositoryInterface $productRepository,
         Cart  $cart,
         ManagerInterface $messageManager
-    )
-    {
+    ) {
         $this->logger = $logger;
         $this->productRepository = $productRepository;
         $this->subscriptionHelper = $subscriptionHelper;
@@ -53,7 +52,7 @@ class PaymentMethodActiveObserver implements ObserverInterface
     }
 
     /**
-     * @param Observer $observer
+     * @param  Observer $observer
      * @return void
      */
     public function execute(Observer $observer)
@@ -62,7 +61,7 @@ class PaymentMethodActiveObserver implements ObserverInterface
         $code = $observer->getEvent()->getMethodInstance()->getCode();
         $quote = $this->cart->getQuote();
 
-        if ( $this->cart->getQuote()->getItemsCount() > 1) {
+        if ($this->cart->getQuote()->getItemsCount() > 1) {
             $this->disablePaymentMethod($result, SubscriptionPaymentMethod::METHOD_CODE, $code);
         } else {
             /* @var \Magento\Quote\Model\Quote $quote */
@@ -88,6 +87,7 @@ class PaymentMethodActiveObserver implements ObserverInterface
 
     /**
      * Disabling the payment method
+     *
      * @param $result
      * @param $paymentMethod
      * @param $methodCode
@@ -95,7 +95,7 @@ class PaymentMethodActiveObserver implements ObserverInterface
     public function disablePaymentMethod($result, $paymentMethod, $methodCode)
     {
         $this->logger->info("-------------disabling  $paymentMethod ---------------------");
-        if( $methodCode == $paymentMethod) {
+        if($methodCode == $paymentMethod) {
             $result->setData('is_available', false);
         }
     }

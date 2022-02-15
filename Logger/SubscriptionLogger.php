@@ -11,17 +11,20 @@ class SubscriptionLogger extends \Magento\Framework\Logger\Handler\Base
 {
     /**
      * Logging level
+     *
      * @var int
      */
     protected $loggerType = \Monolog\Logger::INFO;
 
     /**
      * File name
+     *
      * @var string
      */
     public $fileName = '';
     /**
      * File name
+     *
      * @var string
      */
     public $cutomfileName = 'NO_PATH';

@@ -1,0 +1,77 @@
+{
+    "razorpay_plans": {
+        "column": {
+            "entity_id": true,
+            "plan_id": true,
+            "magento_product_id": true,
+            "plan_name": true,
+            "plan_desc": true,
+            "plan_type": true,
+            "plan_interval": true,
+            "plan_bill_cycle": true,
+            "plan_trial": true,
+            "plan_bill_amount": true,
+            "plan_addons": true,
+            "plan_status": true,
+            "created_at": true
+        },
+        "index": {
+            "RAZORPAY_PLANS_PLAN_ID": true,
+            "RAZORPAY_PLANS_PLAN_ID_PLAN_TYPE_MAGENTO_PRODUCT_ID_PLAN_NAME": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "razorpay_subscriptions": {
+        "column": {
+            "entity_id": true,
+            "plan_entity_id": true,
+            "subscription_id": true,
+            "quote_id": true,
+            "product_id": true,
+            "razorpay_customer_id": true,
+            "magento_user_id": true,
+            "status": true,
+            "cancel_by": true,
+            "total_count": true,
+            "paid_count": true,
+            "remaining_count": true,
+            "auth_attempts": true,
+            "start_at": true,
+            "end_at": true,
+            "subscription_created_at": true,
+            "next_charge_at": true,
+            "created_at": true
+        },
+        "index": {
+            "RAZORPAY_SUBSCRIPTIONS_SUBSCRIPTION_ID": true,
+            "RAZORPAY_SUBSCRIPTIONS_PLAN_ENTITY_ID": true,
+            "RAZORPAY_SUBSCRIPTIONS_SUBSCRIPTION_ID_STATUS": true,
+            "RAZORPAY_SUBSCRIPTIONS_SUBSCRIPTION_ID_PRODUCT_ID": true,
+            "IDX_96F3F04D55629911C39E70727FC4BB1D": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "razorpay_subscriptions_order_mapping_details": {
+        "column": {
+            "entity_id": true,
+            "subscription_entity_id": true,
+            "is_trial_order": true,
+            "increment_order_id": true,
+            "rzp_payment_id": true,
+            "by_webhook": true,
+            "by_frontend": true,
+            "created_at": true
+        },
+        "index": {
+            "IDX_B82C28BCD2453662B09BA5EBB1FB634E": true,
+            "IDX_B56C1D6A09E609330E848888F140C440": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}
