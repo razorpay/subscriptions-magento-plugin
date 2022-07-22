@@ -42,7 +42,7 @@ class SubscriptionConfig extends AbstractHelper
     /**
      * Retrieve information from payment configuration
      *
-     * @param string $field
+     * @param string      $field
      * @param null|string $storeId
      *
      * @return mixed
@@ -59,7 +59,7 @@ class SubscriptionConfig extends AbstractHelper
     }
 
     /**
-     * @param int $storeId
+     * @param  int $storeId
      * @return $this
      */
     public function setStoreId($storeId)
@@ -71,8 +71,8 @@ class SubscriptionConfig extends AbstractHelper
     /**
      * Set information from payment configuration
      *
-     * @param string $field
-     * @param string $value
+     * @param string      $field
+     * @param string      $value
      * @param null|string $storeId
      *
      * @return mixed

@@ -8,6 +8,7 @@ use \Razorpay\Subscription\Api\Data\SubscribInterface;
 
 /**
  * Class Subscrib
+ *
  * @package Razorpay\Subscription\Model
  */
 class Subscrib extends AbstractModel implements SubscribInterface, IdentityInterface
@@ -71,6 +72,7 @@ class Subscrib extends AbstractModel implements SubscribInterface, IdentityInter
 
     /**
      * Return identities
+     *
      * @return string[]
      */
     public function getIdentities()
@@ -81,7 +83,7 @@ class Subscrib extends AbstractModel implements SubscribInterface, IdentityInter
     /**
      * Set SubscriptionId
      *
-     * @param string $SubscriptionId
+     * @param  string $SubscriptionId
      * @return $this
      */
     public function setSubscriptionId($SubscriptionId)
@@ -92,7 +94,7 @@ class Subscrib extends AbstractModel implements SubscribInterface, IdentityInter
     /**
      * Set Status
      *
-     * @param string $Status
+     * @param  string $Status
      * @return $this
      */
     public function setStatus($status)
@@ -103,7 +105,7 @@ class Subscrib extends AbstractModel implements SubscribInterface, IdentityInter
     /**
      * Set Value
      *
-     * @param string $value
+     * @param  string $value
      * @return $this
      */
     public function setValue($value)
@@ -114,7 +116,7 @@ class Subscrib extends AbstractModel implements SubscribInterface, IdentityInter
     /**
      * Set Next Charge At
      *
-     * @param string $nextChargeAt
+     * @param  string $nextChargeAt
      * @return $this
      */
     public function setNextChargeAt($nextChargeAt)
@@ -125,7 +127,7 @@ class Subscrib extends AbstractModel implements SubscribInterface, IdentityInter
     /**
      * Set ID
      *
-     * @param int $id
+     * @param  int $id
      * @return $this
      */
     public function setId($id)

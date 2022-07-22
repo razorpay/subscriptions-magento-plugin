@@ -6,6 +6,7 @@ use Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult;
 
 /**
  * Class Collection
+ *
  * @package MageDigest\Grid\Ui\DataProvider\Category\Listing
  */
 class Collection extends SearchResult

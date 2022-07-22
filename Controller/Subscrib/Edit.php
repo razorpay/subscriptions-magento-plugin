@@ -15,6 +15,7 @@ class Edit extends Action
 
     /**
      * Core registry
+     *
      * @var Registry
      */
     protected $_coreRegistry;
@@ -25,8 +26,8 @@ class Edit extends Action
     protected $_resultPageFactory;
 
     /**
-     * @param Context $context
-     * @param Registry $coreRegistry
+     * @param Context     $context
+     * @param Registry    $coreRegistry
      * @param PageFactory $resultPageFactory
      *
      * @codeCoverageIgnore
@@ -47,6 +48,7 @@ class Edit extends Action
 
     /**
      * Saves the blog id to the register and renders the page
+     *
      * @return Page
      * @throws LocalizedException
      */

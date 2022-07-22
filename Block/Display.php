@@ -23,24 +23,23 @@ class Display extends Template
 
     /**
      * Constructor
-     * @param Context $context
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param SubscribCollectionFactory $subscribCollectionFactory
+     *
+     * @param Context                                   $context
+     * @param \Magento\Customer\Model\Session           $customerSession
+     * @param SubscribCollectionFactory                 $subscribCollectionFactory
      * @param \Magento\Framework\App\ResourceConnection $Resource
-     * @param \Magento\Framework\Module\Dir\Reader $moduleReader
-     * @param array $data
+     * @param \Magento\Framework\Module\Dir\Reader      $moduleReader
+     * @param array                                     $data
      */
     public function __construct(
         Context                                   $context,
         \Magento\Customer\Model\Session           $customerSession,
         SubscribCollectionFactory                 $subscribCollectionFactory,
         \Magento\Framework\App\ResourceConnection $Resource,
-
         \Magento\Framework\Module\Dir\Reader $moduleReader,
         \Psr\Log\LoggerInterface $logger,
         \Magento\Framework\UrlInterface $urlInterface,
         array $data = []
-       
     ) {
         $this->_subscribCollectionFactory = $subscribCollectionFactory;
         $this->_resource = $Resource;
@@ -65,9 +64,9 @@ class Display extends Template
 
         $this->catalog_product_entity_varchar_table = $this->getTable("catalog_product_entity");
         $this->getSelect()
-            ->join(array('pid' => $this->catalog_product_entity_varchar_table), $this->catalog_product_entity_table . '.entity_id= pid.entity_id',
-
-        );
+            ->join(
+                array('pid' => $this->catalog_product_entity_varchar_table), $this->catalog_product_entity_table . '.entity_id= pid.entity_id',
+            );
     }
 
     public function getSubscribs()
@@ -84,13 +83,17 @@ class Display extends Template
         $second_table_name = $this->_resource->getTableName('catalog_product_entity_varchar');
         $third_table_name = $this->_resource->getTableName('eav_attribute');
       
-        $subscribCollection->getSelect()->joinLeft(array('second' => $second_table_name),
-                                               'main_table.product_id = second.entity_id',
-                                               array('second.value'));
+        $subscribCollection->getSelect()->joinLeft(
+            array('second' => $second_table_name),
+            'main_table.product_id = second.entity_id',
+            array('second.value')
+        );
                                                
-        $subscribCollection->getSelect()->joinLeft(array('third' => $third_table_name),
-                                                'third.attribute_id = second.attribute_id',
-                                                array('third.attribute_id as attribute_id'));
+        $subscribCollection->getSelect()->joinLeft(
+            array('third' => $third_table_name),
+            'third.attribute_id = second.attribute_id',
+            array('third.attribute_id as attribute_id')
+        );
         
         $subscribCollection->getSelect()->where("third.attribute_code='name' and second.entity_id=main_table.product_id");
         $subscribCollection->getSelect()->where("main_table.magento_user_id=".$customerId);
@@ -104,7 +107,8 @@ class Display extends Template
 
     /**
      * For a given subscrib, returns its url
-     * @param Subscrib $subscrib
+     *
+     * @param  Subscrib $subscrib
      * @return string
      */
 
@@ -124,21 +128,21 @@ class Display extends Template
         $subscribCollection = $this->_subscribCollectionFactory->create();
 
         try{
-        parent::_prepareLayout();
-        if ($this->getSubscribs()) {
-            $pager = $this->getLayout()->createBlock(
-                \Magento\Theme\Block\Html\Pager::class,
-                'razorpaysubscription.customer.index'
-            )->setCollection(
-                $this->getSubscribs() 
-            );
-            $this->setChild('pager', $pager);
-            $this->getSubscribs()->load();
+            parent::_prepareLayout();
+            if ($this->getSubscribs()) {
+                $pager = $this->getLayout()->createBlock(
+                    \Magento\Theme\Block\Html\Pager::class,
+                    'razorpaysubscription.customer.index'
+                )->setCollection(
+                    $this->getSubscribs() 
+                );
+                $this->setChild('pager', $pager);
+                $this->getSubscribs()->load();
+            }
+            return $this;
+        }catch(\Exception $e){
+            $this->logger->info("Exception subscription paging: {$e->getMessage()}");
         }
-        return $this;
-       }catch(\Exception $e){
-        $this->logger->info("Exception subscription paging: {$e->getMessage()}");
-      }
     }
     
     /**
@@ -153,7 +157,8 @@ class Display extends Template
 
     /**
      * For a given subscrib, returns its url
-     * @param Subscrib $subscrib
+     *
+     * @param  Subscrib $subscrib
      * @return string
      */
     public function editSubscribUrl(
@@ -163,5 +168,5 @@ class Display extends Template
         return $this->urlInterface->getUrl() ."razorpaysubscription/subscrib/edit/id/{$subscrib->getSubscriptionId()}";
         
     }
-	
+    
 }
