@@ -21,7 +21,7 @@ class CollectionFactory
      * Factory constructor
      *
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
-     * @param string $instanceName
+     * @param string                                    $instanceName
      */
     public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, $instanceName = '\\Razorpay\\Subscription\\Model\\ResourceModel\\Plans\\Collection')
     {
@@ -32,7 +32,7 @@ class CollectionFactory
     /**
      * Create class instance with specified parameters
      *
-     * @param array $data
+     * @param  array $data
      * @return \Razorpay\Subscription\Model\ResourceModel\Plans\Collection
      */
     public function create(array $data = array())

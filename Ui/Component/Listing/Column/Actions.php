@@ -13,8 +13,11 @@ class Actions extends Column
      */
     private $urlBuilder;
 
-    /** Url Path */
+    /**
+ * Url Path 
+*/
     const SUBSCRIPTION_VIEW_URL_PATH   = 'subscribed/subscription/view';
+    const SUBSCRIPTION_EDIT_URL_PATH   = 'subscribed/subscription/edit';
     const CANCEL_URL_PATH   = 'subscribed/subscription/cancel';
     const PAUSE_URL_PATH    = 'subscribed/subscription/pause';
     const RESUME_URL_PATH   = 'subscribed/subscription/resume';
@@ -24,8 +27,8 @@ class Actions extends Column
         UiComponentFactory $uiComponentFactory,
         array $components = array(),
         UrlInterface $urlBuilder,
-        array $data = array())
-    {
+        array $data = array()
+    ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
         $this->urlBuilder = $urlBuilder;
     }
@@ -33,7 +36,7 @@ class Actions extends Column
     /**
      * Prepare Data Source
      *
-     * @param array $dataSource
+     * @param  array $dataSource
      * @return void
      */
     public function prepareDataSource(array $dataSource)
@@ -47,6 +50,15 @@ class Actions extends Column
                         'label' => __('View'),
                         '__disableTmpl' => true,
                     ];
+
+                    if($item['status'] == 'active'){
+                        $item[$name]['edit'] = [
+                            'href' => $this->urlBuilder->getUrl(self::SUBSCRIPTION_EDIT_URL_PATH, ['subscription_id' => strip_tags($item['subscription_id']),'id' => $item['entity_id']]),
+                            'label' => __('Edit'),
+                            '__disableTmpl' => true,
+                        ];
+                    }
+
                     $item[$name]['pause'] = [
                         'href' => $this->urlBuilder->getUrl(self::PAUSE_URL_PATH, ['subscription_id' => strip_tags($item['subscription_id'])]),
                         'label' => __('Pause'),
