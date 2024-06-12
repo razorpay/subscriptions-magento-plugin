@@ -19,18 +19,21 @@ class View extends Template
 {
     /**
      * Core registry
+     *
      * @var Registry
      */
     protected $_coreRegistry;
 
     /**
      * Subscrib
+     *
      * @var null|Subscrib
      */
     protected $_subscrib = null;
 
     /**
      * SubscribCollectionFactory
+     *
      * @var null|SubscribFactory
      */
     protected $_subscribFactory = null;
@@ -45,13 +48,14 @@ class View extends Template
 
     /**
      * Constructor
-     * @param Context $context
-     * @param Registry $coreRegistry
-     * @param SubscribFactory $subscribFactory
+     *
+     * @param Context                   $context
+     * @param Registry                  $coreRegistry
+     * @param SubscribFactory           $subscribFactory
      * @param SubscribCollectionFactory $subscribCollectionFactory
-     * @param ResourceConnection $Resource
-     * @param Subscription $subscription
-     * @param array $data
+     * @param ResourceConnection        $Resource
+     * @param Subscription              $subscription
+     * @param array                     $data
      */
     public function __construct(
         Context $context,
@@ -72,6 +76,7 @@ class View extends Template
 
     /**
      * Lazy loads the requested subscrib
+     *
      * @return Subscrib
      * @throws LocalizedException
      */
@@ -86,29 +91,41 @@ class View extends Template
         $six_table_name = $this->_resource->getTableName('sales_invoice');
         $seventh_table_name = $this->_resource->getTableName('razorpay_plans');
 
-        $subscribCollection->getSelect()->joinLeft(array('second' => $second_table_name),
+        $subscribCollection->getSelect()->joinLeft(
+            array('second' => $second_table_name),
             'main_table.product_id = second.entity_id',
-            array('second.value'));
+            array('second.value')
+        );
 
-        $subscribCollection->getSelect()->joinLeft(array('third' => $third_table_name),
+        $subscribCollection->getSelect()->joinLeft(
+            array('third' => $third_table_name),
             'third.attribute_id = second.attribute_id',
-            array('third.attribute_id as attribute_id'));
+            array('third.attribute_id as attribute_id')
+        );
 
-        $subscribCollection->getSelect()->joinLeft(array('fourth' => $fourth_table_name),
+        $subscribCollection->getSelect()->joinLeft(
+            array('fourth' => $fourth_table_name),
             'main_table.product_id = fourth.entity_id',
-            array('fourth.sku'));
+            array('fourth.sku')
+        );
 
-        $subscribCollection->getSelect()->joinLeft(array('five' => $fiveth_table_name),
+        $subscribCollection->getSelect()->joinLeft(
+            array('five' => $fiveth_table_name),
             'main_table.subscription_id = five.rzp_order_id',
-            array('five.increment_order_id'));
+            array('five.increment_order_id')
+        );
 
-        $subscribCollection->getSelect()->joinLeft(array('six' => $six_table_name),
+        $subscribCollection->getSelect()->joinLeft(
+            array('six' => $six_table_name),
             'six.transaction_id = five.rzp_payment_id',
-            array('six.subtotal','six.grand_total','six.total_qty','six.store_currency_code','six.base_shipping_amount'));
+            array('six.subtotal','six.grand_total','six.total_qty','six.store_currency_code','six.base_shipping_amount')
+        );
 
-        $subscribCollection->getSelect()->joinLeft(array('seven' => $seventh_table_name),
+        $subscribCollection->getSelect()->joinLeft(
+            array('seven' => $seventh_table_name),
             'main_table.plan_entity_id = seven.entity_id',
-            array('seven.plan_id','seven.plan_type','seven.plan_name'));
+            array('seven.plan_id','seven.plan_type','seven.plan_name')
+        );
 
         $subscribCollection->getSelect()->where("third.attribute_code='name' and second.entity_id=main_table.product_id");
 
@@ -121,6 +138,7 @@ class View extends Template
 
     /**
      * Retrieves the subscrib id from the registry
+     *
      * @return int
      */
     protected function _getSubscribId()
@@ -153,7 +171,7 @@ class View extends Template
 
         $_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $self = $_objectManager->create('Razorpay\Subscription\Model\SubscriptionPaymentMethod');
-        $subscriptionInvoices = $this->_subscription->fetchSubscriptionInvoice($singleData->getSubscriptionId(), $self->rzp) ;
+        $subscriptionInvoices = $this->_subscription->fetchSubscriptionInvoice($singleData->getSubscriptionId(), $self->rzp);
         return $subscriptionInvoices ;
     }
 

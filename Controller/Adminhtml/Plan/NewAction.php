@@ -11,7 +11,7 @@ class NewAction extends Action
     protected $_resultForwardFactory;
  
     /**
-     * @param \Magento\Backend\App\Action\Context $context
+     * @param \Magento\Backend\App\Action\Context               $context
      * @param \Magento\Backend\Model\View\Result\ForwardFactory $resultForwardFactory
      */
     public function __construct(
@@ -37,7 +37,9 @@ class NewAction extends Action
      */
     public function execute()
     {
-        /** @var \Magento\Backend\Model\View\Result\Forward $resultForward */
+        /**
+        * @var \Magento\Backend\Model\View\Result\Forward $resultForward 
+        */
         $resultForward = $this->_resultForwardFactory->create();
         return $resultForward->forward('edit');
     }

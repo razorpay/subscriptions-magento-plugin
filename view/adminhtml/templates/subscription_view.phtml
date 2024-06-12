@@ -1,4 +1,6 @@
-<?php /** @var Razorpay\Subscription\Block\View $block */ ?>
+<?php /**
+       * @var Razorpay\Subscription\Block\View $block 
+       */ ?>
 
 <?php
 $subscriptionInfo = $block->getSubscrib();
@@ -12,19 +14,19 @@ $invoices = $block->getSubscriptionInvoice();
                     <span>Back</span>
                 </button>
                 <?php
-                if ($subscriptionInfo['status'] != 'cancelled' && $subscriptionInfo['status'] != 'created' && $subscriptionInfo['status'] != 'authenticated'):
+                if ($subscriptionInfo['status'] != 'cancelled' && $subscriptionInfo['status'] != 'created' && $subscriptionInfo['status'] != 'authenticated') :
 
-                    if ($subscriptionInfo['status'] != 'paused'): ?>
+                    if ($subscriptionInfo['status'] != 'paused') : ?>
                         <button id="pause" title="Pause" type="button" class="action-default scalable" onclick="location.href = '<?php echo $block->getUrl('subscribed/subscription/pause/'); ?>subscription_id/<?php echo $subscriptionInfo['subscription_id']; ?>/id/<?php echo $subscriptionInfo['entity_id']; ?>'">
                             <span>Pause</span>
                         </button>
                     <?php endif ?>
 
-                    <?php if ($subscriptionInfo['status'] != 'active'): ?>
+                    <?php if ($subscriptionInfo['status'] != 'active') : ?>
                     <button id="resume" title="Resume" type="button" class="action-default scalable" onclick="location.href = '<?php echo $block->getUrl('subscribed/subscription/resume/'); ?>subscription_id/<?php echo $subscriptionInfo['subscription_id']; ?>/id/<?php echo $subscriptionInfo['entity_id']; ?>'">
                         <span>Resume</span>
                     </button>
-                <?php endif ?>
+                    <?php endif ?>
 
                     <button id="cancel" title="Cancel" type="button" class="action-default scalable" onclick="confirm('Are you sure you want to Cancel Subscription?', '<?php echo $block->getUrl('subscribed/subscription/cancel/'); ?>subscription_id/<?php echo $subscriptionInfo['subscription_id']; ?>/id/<?php echo $subscriptionInfo['entity_id']; ?>')">
                         <span>Cancel</span>
@@ -122,41 +124,41 @@ $invoices = $block->getSubscriptionInvoice();
                 <table class="data-grid" id="invoice-table">
                     <thead>
                     <tr>
-                        <th class="data-grid-th"><?= $block->escapeHtml(__('Invoice Id')) ?></th>
-                        <th class="data-grid-th"><?= $block->escapeHtml(__('Recurring Amount')) ?></th>
-                        <th class="data-grid-th"><?= $block->escapeHtml(__('Add-Ons')) ?></th>
-                        <th class="data-grid-th"><?= $block->escapeHtml(__('Total amount')) ?></th>
-                        <th class="data-grid-th"><?= $block->escapeHtml(__('Status')) ?></th>
-                        <th class="data-grid-th"><?= $block->escapeHtml(__('Date')) ?></th>
+                        <th class="data-grid-th"><?php echo $block->escapeHtml(__('Invoice Id')) ?></th>
+                        <th class="data-grid-th"><?php echo $block->escapeHtml(__('Recurring Amount')) ?></th>
+                        <th class="data-grid-th"><?php echo $block->escapeHtml(__('Add-Ons')) ?></th>
+                        <th class="data-grid-th"><?php echo $block->escapeHtml(__('Total amount')) ?></th>
+                        <th class="data-grid-th"><?php echo $block->escapeHtml(__('Status')) ?></th>
+                        <th class="data-grid-th"><?php echo $block->escapeHtml(__('Date')) ?></th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php if (($subscriptionInfo['next_charge_at'] != $subscriptionInfo['end_at']) && ($subscriptionInfo['status'] !="cancelled") && ($subscriptionInfo['status'] !="created")) : ?>
                         <tr>
                             <td>--</td>
-                            <td><?= $invoices['items'][0]['currency_symbol']." ".$invoices['items'][0]['line_items'][0]['net_amount']/100; ?>
-                                <br/><small><?= $invoices['items'][0]['line_items'][0]['quantity'] ."x ".$invoices['items'][0]['currency_symbol'].$invoices['items'][0]['line_items'][0]['unit_amount']/100;  ?> per unit</small>
+                            <td><?php echo $invoices['items'][0]['currency_symbol']." ".$invoices['items'][0]['line_items'][0]['net_amount']/100; ?>
+                                <br/><small><?php echo $invoices['items'][0]['line_items'][0]['quantity'] ."x ".$invoices['items'][0]['currency_symbol'].$invoices['items'][0]['line_items'][0]['unit_amount']/100;  ?> per unit</small>
                             </td>
                             <td>--</td>
-                            <td><?= $invoices['items'][0]['currency_symbol'].$invoices['items'][0]['line_items'][0]['net_amount']/100 ?></td>
-                            <td><?= 'Next Due' ?></td>
-                            <td><?= !empty($invoices['items'][0]['billing_end']) ? date('M d, Y', $invoices['items'][0]['billing_end']): '--'?></td>
+                            <td><?php echo $invoices['items'][0]['currency_symbol'].$invoices['items'][0]['line_items'][0]['net_amount']/100 ?></td>
+                            <td><?php echo 'Next Due' ?></td>
+                            <td><?php echo !empty($invoices['items'][0]['billing_end']) ? date('M d, Y', $invoices['items'][0]['billing_end']): '--'?></td>
                         </tr>
                     <?php endif ?>
                     <?php foreach ($invoices['items'] as $invoice) : ?>
                         <tr>
-                            <td><a href="<?= $invoice['short_url'] ?>" target="_blank"><?php echo $invoice['id'] ?></a></td>
+                            <td><a href="<?php echo $invoice['short_url'] ?>" target="_blank"><?php echo $invoice['id'] ?></a></td>
                             <td><?php echo $invoice['currency_symbol'].$invoice['line_items'][0]['net_amount']/100; ?>
                                 <br/><small><?php echo $invoice['line_items'][0]['quantity'] ."x ".$invoice['currency_symbol'].$invoice['line_items'][0]['unit_amount']/100  ?> per unit</small>
                             </td>
-                            <td><?= isset($invoice['line_items'][1]) ? $invoice['line_items'][1]['name']."<br/>".$invoice['currency_symbol'].$invoice['line_items'][1]['net_amount']/100 : '--'?>
+                            <td><?php echo isset($invoice['line_items'][1]) ? $invoice['line_items'][1]['name']."<br/>".$invoice['currency_symbol'].$invoice['line_items'][1]['net_amount']/100 : '--'?>
                                 <?php if (isset($invoice['line_items'][1])) :?>
                                     <br/> <small><?php echo $invoice['line_items'][1]['quantity'] ."x ".$invoice['currency_symbol'].$invoice['line_items'][1]['unit_amount']/100  ?> per unit</small>
                                 <?php endif ?>
                             </td>
-                            <td><?= $invoice['currency_symbol'].$invoice['amount']/100 ?></td>
-                            <td><?= ucfirst($invoice['status']) ?></td>
-                            <td><?=  !empty($invoice['billing_start']) ? date('M d, Y', $invoice['billing_start']) : '--' ?></td>
+                            <td><?php echo $invoice['currency_symbol'].$invoice['amount']/100 ?></td>
+                            <td><?php echo ucfirst($invoice['status']) ?></td>
+                            <td><?php echo  !empty($invoice['billing_start']) ? date('M d, Y', $invoice['billing_start']) : '--' ?></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
