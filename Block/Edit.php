@@ -17,18 +17,21 @@ class Edit extends Template
 {
     /**
      * Core registry
+     *
      * @var Registry
      */
     protected $_coreRegistry;
 
     /**
      * Subscrib
+     *
      * @var null|Subscrib
      */
     protected $_subscrib = null;
 
     /**
      * SubscribCollectionFactory
+     *
      * @var null|SubscribFactory
      */
     protected $_planCollectionFactory = null;
@@ -43,10 +46,11 @@ class Edit extends Template
     protected $_resource;
     /**
      * Constructor
-     * @param Context $context
-     * @param Registry $coreRegistry
+     *
+     * @param Context         $context
+     * @param Registry        $coreRegistry
      * @param SubscribFactory $SubscribCollectionFactory
-     * @param array $data
+     * @param array           $data
      */
     public function __construct(
         Context $context,
@@ -67,6 +71,7 @@ class Edit extends Template
 
     /**
      * fetch current plan
+     *
      * @return array
      */
     public function getCurrentPlan()
@@ -76,11 +81,13 @@ class Edit extends Template
         $planCollection = $this->_planCollectionFactory->create();
         $second_table_name = $this->_resource->getTableName('razorpay_subscriptions');
 
-        $planCollection->getSelect()->joinLeft(array('second' => $second_table_name),
-                                               'main_table.entity_id = second.plan_entity_id');
+        $planCollection->getSelect()->joinLeft(
+            array('second' => $second_table_name),
+            'main_table.entity_id = second.plan_entity_id'
+        );
         
         $planCollection->addFieldToFilter('main_table.entity_id', $planArr['plan_entity_id']);
-        $planCollection->addFieldToFilter('second.subscription_id',$this->getSubscriptionId());
+        $planCollection->addFieldToFilter('second.subscription_id', $this->getSubscriptionId());
         $singleData= $planCollection->getFirstItem();
         $data = $singleData->getData();
         return $data; 
@@ -88,12 +95,14 @@ class Edit extends Template
 
     /**
      * fetch all plans
+     *
      * @return array
      */
     public function getPlans($productId)
     {
         $planCollection = $this->_planCollectionFactory->create();
         $planCollection->addFieldToFilter('magento_product_id', $productId);
+        $planCollection->addFieldToFilter('plan_status', 1);
         $data = $planCollection->getData();
         return $data; 
 
@@ -101,6 +110,7 @@ class Edit extends Template
 
     /**
      * Retrieves the entity id from the registry
+     *
      * @return int
      */
     public function getSubscriptionId()
@@ -112,6 +122,7 @@ class Edit extends Template
 
     /**
      * Retrieves the subscription Id
+     *
      * @return string
      */
     public function getSubscription()
@@ -140,7 +151,7 @@ class Edit extends Template
     {
         $_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $self = $_objectManager->create('Razorpay\Subscription\Model\SubscriptionPaymentMethod');
-        $subscriptionInvoices = $this->_subscription->pendingUpdate($this->getSubscriptionId(), $self->rzp) ;
+        $subscriptionInvoices = $this->_subscription->pendingUpdate($this->getSubscriptionId(), $self->rzp);
         return $subscriptionInvoices ;   
     }
 }

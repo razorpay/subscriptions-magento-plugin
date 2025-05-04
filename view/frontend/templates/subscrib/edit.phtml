@@ -1,4 +1,6 @@
-<?php /** @var Razorpay\Subscription\Block\Edit $block */ ?>
+<?php /**
+       * @var Razorpay\Subscription\Block\Edit $block 
+       */ ?>
 <?php 
   $currentPlan = $block->getCurrentPlan(); 
   $plans = $block->getPlans($currentPlan['magento_product_id']); 
@@ -7,26 +9,26 @@
 
 <?php if(!empty($pending)) :?>
 <div class="message info">
-    <span><?= $block->escapeHtml(__("You cant edit subscription again.")) ?></span>
+    <span><?php echo $block->escapeHtml(__("You cant edit subscription again.")) ?></span>
  </div>
 <?php endif ?> 
-<form class="form-address-edit" action="<?= $block->escapeUrl($block->getSaveUrl()) ?>"  method="post" id="form-validate" enctype="multipart/form-data">
+<form class="form-address-edit" action="<?php echo $block->escapeUrl($block->getSaveUrl()) ?>"  method="post" id="form-validate" enctype="multipart/form-data">
     <fieldset class="fieldset">
         <div class="field plan">
             <label class="label" for="plans_id">
                 <span>Plans</span>
             </label>
             <div class="control">
-                <select class="plan_id" name="plan_id" title="plans" <?= !empty($pending) ? "disabled" : "" ?>>
+                <select class="plan_id" name="plan_id" title="plans" <?php echo !empty($pending) ? "disabled" : "" ?>>
                     <option value="">Please select a plan.</option>
                     <?php if ($plans && count($plans)) :?>
-                      <?php foreach($plans as $row) :?>
-                        <option value="<?= $currentPlan['plan_id']==$row['plan_id'] ? "" : $row['plan_id'] ?>" <?= $currentPlan['plan_id']==$row['plan_id'] ? "selected disabled" : "" ?> ><?= $row['plan_name'] ?></option>
-                      <?php endforeach ?>  
+                        <?php foreach($plans as $row) :?>
+                        <option value="<?php echo $currentPlan['plan_id']==$row['plan_id'] ? "" : $row['plan_id'] ?>" <?php echo $currentPlan['plan_id']==$row['plan_id'] ? "selected disabled" : "" ?> ><?php echo $row['plan_name'] ?></option>
+                        <?php endforeach ?>  
                     <?php endif ?>    
                 </select>
-                <input name="id" value="<?= $currentPlan['entity_id'] ?>" style="display:none;"/>
-                <input name="remaining_count" value="<?= $currentPlan['remaining_count'] ?>" style="display:none;"/>
+                <input name="id" value="<?php echo $currentPlan['entity_id'] ?>" style="display:none;"/>
+                <input name="remaining_count" value="<?php echo $currentPlan['remaining_count'] ?>" style="display:none;"/>
             </div>
         </div>
         <div class="field plan">
@@ -34,7 +36,7 @@
                 <span>Qty</span>
             </label>
             <div class="control">
-                <input type="number" name="quantity" value="1" class="input-text qty" <?= !empty($pending) ? "disabled" : "" ?>/>
+                <input type="number" name="quantity" value="1" class="input-text qty" <?php echo !empty($pending) ? "disabled" : "" ?>/>
             </div>
         </div>
         <div class="actions-toolbar">
@@ -42,7 +44,7 @@
             <button type="submit"
                     class="action save primary"
                     data-action="save-address"
-                    <?= !empty($pending) ? "disabled" : "" ?>
+                    <?php echo !empty($pending) ? "disabled" : "" ?>
                     >
                 <span>Save</span>
             </button>
