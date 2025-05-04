@@ -6,6 +6,7 @@ use Magento\Framework\Controller\ResultFactory;
 use Razorpay\Magento\Controller\BaseController;
 use Razorpay\Magento\Model\PaymentMethod;
 use Razorpay\Subscription\Helper\Subscription;
+use Magento\Framework\HTTP\PhpEnvironment\Request;
 
 class SubscriptionOrder extends BaseController
 {
@@ -46,15 +47,21 @@ class SubscriptionOrder extends BaseController
      * @var CheckoutSession
      */
     protected $checkoutSession;
+     /**
+      * @var Request
+      */
+    protected $request;
 
+   
     /**
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Magento\Razorpay\Model\Config\Payment $razorpayConfig
-     * @param \Magento\Framework\App\CacheInterface $cache
+     * @param \Magento\Framework\App\Action\Context       $context
+     * @param \Magento\Customer\Model\Session             $customerSession
+     * @param \Magento\Checkout\Model\Session             $checkoutSession
+     * @param \Magento\Razorpay\Model\Config\Payment      $razorpayConfig
+     * @param \Magento\Framework\App\CacheInterface       $cache
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Psr\Log\LoggerInterface                    $logger
+     * @param Request                                     $request
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -66,7 +73,8 @@ class SubscriptionOrder extends BaseController
         \Magento\Framework\App\CacheInterface $cache,
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
         \Razorpay\Subscription\Helper\Subscription $subscription,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
+        Request $request
     ) {
         parent::__construct(
             $context,
@@ -74,7 +82,7 @@ class SubscriptionOrder extends BaseController
             $checkoutSession,
             $config
         );
-
+        $this->request = $request;
         $this->config          = $config;
         $this->cartManagement  = $cartManagement;
         $this->customerSession = $customerSession;
@@ -89,27 +97,26 @@ class SubscriptionOrder extends BaseController
 
     public function execute()
     {
+
+        $post = $this->getRequest()->getPost();
         try{
             $receiptId = $this->getQuote()->getId();
 
-            if(empty($_POST['error']) === false)
-            {
+            if(empty($post['error']) === false) {
                 $this->messageManager->addError(__('Payment Failed'));
                 return $this->_redirect('checkout/cart');
             }
 
-            if (isset($_POST['order_check']))
-            {
-                if (empty($this->cache->load("quote_processing_".$receiptId)) === false)
-                {
+            if (isset($post['order_check'])) {
+                if (empty($this->cache->load("quote_processing_".$receiptId)) === false) {
                     $responseContent = [
                         'success'   => true,
                         'order_id'  => false,
                         'parameters' => []
                     ];
 
-                    # fetch the related sales order and verify the payment ID with rzp payment id
-                    # To avoid duplicate order entry for same quote
+                    // fetch the related sales order and verify the payment ID with rzp payment id
+                    // To avoid duplicate order entry for same quote
                     $collection = $this->_objectManager->get('Magento\Sales\Model\Order')
                         ->getCollection()
                         ->addFieldToSelect('entity_id')
@@ -118,10 +125,11 @@ class SubscriptionOrder extends BaseController
 
                     $salesOrder = $collection->getData();
 
-                    if (empty($salesOrder['entity_id']) === false)
-                    {
-                        $this->logger->info("Razorpay inside order already processed with webhook quoteID:" . $receiptId
-                            ." and OrderID:".$salesOrder['entity_id']);
+                    if (empty($salesOrder['entity_id']) === false) {
+                        $this->logger->info(
+                            "Razorpay inside order already processed with webhook quoteID:" . $receiptId
+                            ." and OrderID:".$salesOrder['entity_id']
+                        );
 
                         $this->checkoutSession
                             ->setLastQuoteId($this->getQuote()->getId())
@@ -141,8 +149,7 @@ class SubscriptionOrder extends BaseController
                 }
                 else
                 {
-                    if(empty($receiptId) === false)
-                    {
+                    if(empty($receiptId) === false) {
                         //set the chache to stop webhook processing
                         $this->cache->save("started", "quote_Front_processing_$receiptId", ["razorpay"], 30);
 
@@ -155,8 +162,10 @@ class SubscriptionOrder extends BaseController
                     }
                     else
                     {
-                        $this->logger->info("Razorpay order already processed with quoteID:" . $this->checkoutSession
-                                ->getLastQuoteId());
+                        $this->logger->info(
+                            "Razorpay order already processed with quoteID:" . $this->checkoutSession
+                                ->getLastQuoteId()
+                        );
 
                         $responseContent = [
                             'success'    => true,
@@ -174,8 +183,7 @@ class SubscriptionOrder extends BaseController
                 return $response;
             }
 
-            if(isset($_POST['razorpay_payment_id']))
-            {
+            if(isset($post['razorpay_payment_id'])) {
                 $this->getQuote()->getPayment()->setMethod(PaymentMethod::METHOD_CODE);
 
                 try
@@ -195,7 +203,7 @@ class SubscriptionOrder extends BaseController
             }
             else
             {
-                if (empty($_POST['email']) === true) {
+                if (empty($post['email']) === true) {
                     $this->logger->info("Email field is required");
 
                     $responseContent = [
@@ -206,7 +214,7 @@ class SubscriptionOrder extends BaseController
                     $code = 200;
                 } else {
                     $paymentAction = $this->config->getPaymentAction();
-                    $this->customerSession->setCustomerEmailAddress($_POST['email']);
+                    $this->customerSession->setCustomerEmailAddress($post['email']);
 
                     $responseContent = [
                         'message' => 'Unable to create your order. Please contact support.',

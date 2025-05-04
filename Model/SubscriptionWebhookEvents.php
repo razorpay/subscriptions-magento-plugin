@@ -17,20 +17,35 @@ class SubscriptionWebhookEvents implements OptionSourceInterface
         foreach ($webhookEvent->toOptionArray() as $value){
             array_push($events, $value);
         }
-        array_push($events,[
-            'value' => "subscription.charged",
-            'label' => __('subscription.charged')
-        ]);
-
-        array_push($events,[
-            'value' => "subscription.paused",
-            'label' => __('subscription.paused')
-        ]);
-
-        array_push($events,[
-            'value' => "subscription.cancelled",
-            'label' => __('subscription.cancelled')
-        ]);
+        $subscriptionEvents = [
+            [
+                'value' => "subscription.charged",
+                'label' => __('subscription.charged')
+            ],
+            [
+                'value' => "subscription.paused",
+                'label' => __('subscription.paused')
+            ],
+            [
+                'value' => "subscription.resumed",
+                'label' => __('subscription.resumed')
+            ],
+            [
+                'value' => "subscription.cancelled",
+                'label' => __('subscription.cancelled')
+            ],
+            [
+                'value' => "subscription.pending",
+                'label' => __('subscription.pending')
+            ],
+            [
+                'value' => "subscription.halted",
+                'label' => __('subscription.halted')
+            ]
+        ];
+        foreach ($subscriptionEvents as $value){
+            array_push($events, $value);
+        }
         return $events;
     }
 }

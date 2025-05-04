@@ -15,6 +15,7 @@ class View extends Action
 
     /**
      * Core registry
+     *
      * @var Registry
      */
     protected $coreRegistry;
@@ -25,8 +26,8 @@ class View extends Action
     protected $resultPageFactory;
 
     /**
-     * @param Context $context
-     * @param Registry $coreRegistry
+     * @param Context     $context
+     * @param Registry    $coreRegistry
      * @param PageFactory $resultPageFactory
      *
      * @codeCoverageIgnore
@@ -46,6 +47,7 @@ class View extends Action
 
     /**
      * Saves the blog id to the register and renders the page
+     *
      * @return Page
      * @throws LocalizedException
      */
