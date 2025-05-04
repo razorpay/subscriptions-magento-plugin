@@ -5,7 +5,7 @@
     "require": {
         "php": "~5.6.0|~7.0|~8.0",
         "razorpay/razorpay": "2.*",
-        "razorpay/magento": "3.*"
+        "razorpay/magento": "4.*"
     },
     "keywords": [
         "razorpay",
