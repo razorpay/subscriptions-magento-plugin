@@ -64,8 +64,8 @@ class Cancel extends BaseController
     protected $checkoutSession;
 
     /**
-     * @param Context $context
-     * @param Filter $filter
+     * @param Context           $context
+     * @param Filter            $filter
      * @param CollectionFactory $collectionFactory
      */
     public function __construct(
@@ -78,8 +78,7 @@ class Cancel extends BaseController
         \Magento\Backend\Helper\Data                $backendHelper,
         \Razorpay\Subscription\Helper\Subscription  $subscription,
         \Magento\Framework\Message\ManagerInterface $messageManager
-    )
-    {
+    ) {
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         parent::__construct(
@@ -109,14 +108,14 @@ class Cancel extends BaseController
             try {
                 $id = $this->getRequest()->getParam('subscription_id');
                 $entity_id = $this->getRequest()->getParam('id');
-                if($id){
+                if($id) {
                     $updateBy = 'admin';
 
                     $this->subscription->cancelSubscription($id, $this->rzp, $updateBy);
 
                     $this->messageManager->addSuccess(__('Subscription has been cancelled.'));
                     $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-                    if($entity_id){
+                    if($entity_id) {
                         return $resultRedirect->setPath('subscribed/subscription/view/subscription_id/'.$id.'/id/'.$entity_id);
                     }
                     return $resultRedirect->setPath('subscribed/index/index');

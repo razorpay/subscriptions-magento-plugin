@@ -50,15 +50,16 @@ class OrderPlaceSaveAfterObserver implements ObserverInterface
 
         $order = $observer->getOrder();
 
-        /** @var Payment $payment */
+        /**
+ * @var Payment $payment 
+*/
         $payment = $order->getPayment();
 
         $paymentMethod = $payment->getMethodInstance();
 
         $code = $paymentMethod->getCode();
 
-        if($code === SubscriptionPaymentMethod::METHOD_CODE)
-        {
+        if($code === SubscriptionPaymentMethod::METHOD_CODE) {
             $this->updateOrderLinkStatus($payment);
 
         }
@@ -102,8 +103,7 @@ class OrderPlaceSaveAfterObserver implements ObserverInterface
 
         $orderLink = $orderLinkCollection->getData();
 
-        if (empty($orderLink['entity_id']) === false)
-        {
+        if (empty($orderLink['entity_id']) === false) {
             $orderLinkCollection->setOrderId($order->getEntityId())
                 ->setOrderPlaced(true)
                 ->save();

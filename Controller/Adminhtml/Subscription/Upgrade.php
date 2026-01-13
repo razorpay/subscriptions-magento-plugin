@@ -12,14 +12,13 @@ class Upgrade extends Action
     protected $_model;
 
     /**
-     * @param Action\Context $context
+     * @param Action\Context                $context
      * @param \Maxime\Jobs\Model\Department $model
      **/
     public function __construct(
         Action\Context                        $context,
         \Razorpay\Subscription\Model\Subscrib $model
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->_model = $model;
     }
@@ -34,17 +33,22 @@ class Upgrade extends Action
 
     /**
      * Save action
+     *
      * @return \Magento\Framework\Controller\ResultInterface
      * */
     public function execute()
     {
         $data = $this->getRequest()->getPostValue();
 
-        /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+        /**
+ * @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect 
+*/
         $resultRedirect = $this->resultRedirectFactory->create();
 
         if ($data) {
-            /** @var \Maxime\Jobs\Model\Department $model */
+            /**
+ * @var \Maxime\Jobs\Model\Department $model 
+*/
             $model = $this->_model;
             $id = $this->getRequest()->getParam('id');
 

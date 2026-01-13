@@ -28,15 +28,14 @@ class MassPauseSubscription extends BaseController
     private $subscription;
 
     /**
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Framework\App\Action\Context  $context
+     * @param \Magento\Customer\Model\Session        $customerSession
+     * @param \Magento\Checkout\Model\Session        $checkoutSession
      * @param \Magento\Razorpay\Model\Config\Payment $razorpayConfig
-     * @param \Magento\Framework\App\CacheInterface $cache
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\App\CacheInterface  $cache
+     * @param \Psr\Log\LoggerInterface               $logger
      */
     public function __construct(
-
         \Magento\Framework\App\Action\Context       $context,
         \Magento\Customer\Model\Session             $customerSession,
         \Magento\Checkout\Model\Session             $checkoutSession,
@@ -45,14 +44,12 @@ class MassPauseSubscription extends BaseController
         \Razorpay\Subscription\Helper\Subscription  $subscription,
         \Psr\Log\LoggerInterface                    $logger,
         \Magento\Framework\Message\ManagerInterface $messageManager
-    )
-    {
+    ) {
         parent::__construct(
             $context,
             $customerSession,
             $checkoutSession,
             $config
-
         );
         $this->messageManager = $messageManager;
         $this->config = $config;
@@ -73,9 +70,9 @@ class MassPauseSubscription extends BaseController
 
             $updateBy = 'customer';
             foreach ($orders as $order) {
-               $subscriptionData =  $this->getSubscription($order);
-               if($subscriptionData['status'] == "active"){
-                  $this->subscription->pauseSubscription($subscriptionData['subscription_id'], $this->rzp, $updateBy);
+                $subscriptionData =  $this->getSubscription($order);
+                if($subscriptionData['status'] == "active") {
+                    $this->subscription->pauseSubscription($subscriptionData['subscription_id'], $this->rzp, $updateBy);
                 }
             }
 
@@ -83,7 +80,7 @@ class MassPauseSubscription extends BaseController
             return $this->_redirect('razorpaysubscription/customer/index/');
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
-           return $this->_redirect('razorpaysubscription/customer/index/');
+            return $this->_redirect('razorpaysubscription/customer/index/');
         }
     }
 

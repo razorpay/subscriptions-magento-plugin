@@ -20,8 +20,8 @@ class MassEnable extends \Magento\Backend\App\Action
  
  
     /**
-     * @param Context $context
-     * @param Filter $filter
+     * @param Context           $context
+     * @param Filter            $filter
      * @param CollectionFactory $collectionFactory
      */
     public function __construct(Context $context, Filter $filter, CollectionFactory $collectionFactory)
@@ -41,13 +41,15 @@ class MassEnable extends \Magento\Backend\App\Action
         $collection = $this->filter->getCollection($this->collectionFactory->create());
         $collectionSize = $collection->getSize();
         foreach ($collection as $item) {
-            $item->setData('plan_status',1);
+            $item->setData('plan_status', 1);
             $item->save();
         }
  
         $this->messageManager->addSuccess(__('A total of %1 record(s) have been Enabled.', $collectionSize));
  
-        /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+        /**
+ * @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect 
+*/
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         return $resultRedirect->setPath('*/*/');
     }

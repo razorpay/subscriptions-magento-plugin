@@ -6,6 +6,7 @@ use \Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 /**
  * Class Subscrib
+ *
  * @package Razorpay\Subscription\Model\ResourceModel
  */
 class Subscrib extends AbstractDb

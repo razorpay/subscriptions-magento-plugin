@@ -106,6 +106,7 @@
                     <item name="resizeEnabled" xsi:type="boolean">false</item>
                     <item name="resizeDefaultWidth" xsi:type="string">55</item>
                     <item name="indexField" xsi:type="string">entity_id</item>
+                       <item name="sorting" xsi:type="string">desc</item>
                 </item>
             </argument>
         </selectionsColumn>

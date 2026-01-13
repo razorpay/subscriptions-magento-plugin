@@ -51,7 +51,7 @@ interface SubscribInterface
     /**
      * Set SubscriptionId
      *
-     * @param string $SubscriptionId
+     * @param  string $SubscriptionId
      * @return $this
      */
     public function setSubscriptionId($SubscriptionId);
@@ -59,7 +59,7 @@ interface SubscribInterface
     /**
      * Set Status
      *
-     * @param string $status
+     * @param  string $status
      * @return $this
      */
     public function setStatus($status);
@@ -67,7 +67,7 @@ interface SubscribInterface
     /**
      * Set Value
      *
-     * @param string $value
+     * @param  string $value
      * @return $this
      */
     public function setValue($value);
@@ -75,7 +75,7 @@ interface SubscribInterface
     /**
      * Set Crated At
      *
-     * @param int $nextChargeAt
+     * @param  int $nextChargeAt
      * @return $this
      */
     public function setNextChargeAt($nextChargeAt);
@@ -83,7 +83,7 @@ interface SubscribInterface
     /**
      * Set ID
      *
-     * @param int $id
+     * @param  int $id
      * @return $this
      */
     public function setId($id);

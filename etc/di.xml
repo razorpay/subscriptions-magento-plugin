@@ -61,6 +61,12 @@
         </arguments>
     </type>
 
+    <type name="Razorpay\Subscription\Controller\Adminhtml\Plan\Save">
+        <arguments>
+            <argument name="logger" xsi:type="object">RazorpaySubscriptionLogger</argument>
+        </arguments>
+    </type>
+
     <!-- Admin subscriptions Grid  -->
      <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
@@ -83,7 +89,7 @@
             <argument name="filterPool" xsi:type="object" shared="false">PlanGridFilterPool</argument> <!-- Define new object for filters -->
         </arguments>
     </virtualType>
- 
+
     <!-- Create our type PlanGridFilterPool -->
     <virtualType name="PlanGridFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
         <arguments>
@@ -93,7 +99,7 @@
             </argument>
         </arguments>
     </virtualType>
- 
+
     <!-- Type for Plan_listing_data_source -->
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
@@ -102,7 +108,7 @@
             </argument>
         </arguments>
     </type>
- 
+
     <!-- Simulate our class Razorpay\Subscription\Model\ResourceModel\Grid\Plans\Collection -->
     <virtualType name="Razorpay\Subscription\Model\ResourceModel\Grid\Plans\Collection" type="Razorpay\Subscription\Ui\DataProvider\Plan\Collection">
         <arguments>
