@@ -58,7 +58,8 @@ class SubscriptionWebhook
 
     /**
      * Processing subscription charge event
-     * @param $data
+     *
+     * @param  $data
      * @return int|void
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -95,7 +96,7 @@ class SubscriptionWebhook
                     $orderLinkCollection->setWebhookFirstNotifiedAt(time())
                         ->setWebhookCount($orderLink['webhook_count'] + 1)
                         ->save();
-                    exit;
+                    return;
                 }
 
                 $webhookWaitTime = $this->_config->getConfigData(Config::WEBHOOK_WAIT_TIME) ?? 300;
@@ -108,7 +109,7 @@ class SubscriptionWebhook
                         ->save();
                     header('Status: 409 Conflict, too early for processing', true, 409);
 
-                    exit;
+                    return;
                 }
 
                 // checking if payment id is null hen processing same quote for order else creating new order
@@ -176,7 +177,7 @@ class SubscriptionWebhook
                         ->getFirstItem();
 
                     $orderLink = $orderLinkCollection->getData();
-                    if(!empty($orderLink["entity_id"])){
+                    if(!empty($orderLink["entity_id"])) {
                         $this->_logger->info("Razorpay Subscription Webhook: Sales Order and payment already exist for Razorpay payment_id(:$paymentId) and for subscription_id: (:$rzpSubscriptionId)");
                         return ;
                     }
@@ -208,8 +209,9 @@ class SubscriptionWebhook
                     $customer = $customer->loadByEmail($email);
 
                     //If need to insert new customer as guest
-                    if ((empty($customer->getEntityId()) === true) or
-                        (empty($quote->getBillingAddress()->getCustomerId()) === true)) {
+                    if ((empty($customer->getEntityId()) === true)
+                        or (empty($quote->getBillingAddress()->getCustomerId()) === true)
+                    ) {
                         $newQuote->setCustomerFirstname($firstName);
                         $newQuote->setCustomerLastname($lastName);
                         $newQuote->setCustomerEmail($email);
@@ -226,7 +228,8 @@ class SubscriptionWebhook
                     foreach ($orderData['items'] as $item) {
                         $product = $this->_objectManagement->create('Magento\Catalog\Model\Product')->load($item['product_id']);
                         $product->setPrice($product->getPrice());
-                        $newQuote->addProduct($product, new DataObject($productCustomData)
+                        $newQuote->addProduct(
+                            $product, new DataObject($productCustomData)
                         );
                     }
 
@@ -273,7 +276,8 @@ class SubscriptionWebhook
 
     /**
      * Processing subscription pause/resume/cancel event
-     * @param $data
+     *
+     * @param  $data
      * @return int|void
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -284,7 +288,8 @@ class SubscriptionWebhook
          $rzpSubscriptionId = $data['payload']['subscription']['entity']['id'];
          $quoteId = $data['payload']['subscription']['entity']['notes']['magento_quote_id'];
          $webHookSource = $data['payload']['subscription']['entity']['notes']['source'];
-         
+         $status = $data['payload']['subscription']['entity']['status'];
+
         if (empty($quoteId)) {
             $this->_logger->info("Razorpay Subscription Webhook: Quote ID not set for Razorpay subscription id(:$rzpSubscriptionId)");
             return;
@@ -292,26 +297,13 @@ class SubscriptionWebhook
 
         // Process only if its from magento source
         if ($webHookSource == "magento-subscription") {
-
-            switch ($data['event']) {
-                case 'subscription.paused':
-                    $status = 'paused';
-                    break;
-                
-                case 'subscription.resumed':
-                    $status = 'active';
-                    break;
-                
-                case 'subscription.cancelled':
-                    $status = 'cancelled';   
-                    break;
-            }
-
             $subscription = $this->_objectManagement->create('Razorpay\Subscription\Model\Subscriptions');
             $postUpdate = $subscription->load($rzpSubscriptionId, 'subscription_id');
             $postUpdate->setStatus($status);
-            $postUpdate->setCancelBy('Razorpay');
-            $postUpdate->save();    
+            if($status == "cancelled"){
+                $postUpdate->setCancelBy('Razorpay');
+            }
+            $postUpdate->save();
 
             $this->_logger->info("Razorpay Subscription Webhook Processed successfully for Razorpay subscriptionId(:$rzpSubscriptionId)");
         }
@@ -319,8 +311,8 @@ class SubscriptionWebhook
     }
 
     /**
-     * @param $post
-     * @param $quoteId
+     * @param  $post
+     * @param  $quoteId
      * @return mixed
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -350,14 +342,16 @@ class SubscriptionWebhook
         $customer = $customer->loadByEmail($email);
 
         //if quote billing address doesn't contains address, set it as customer default billing address
-        if ((empty($quote->getBillingAddress()->getFirstname()) === true) and
-            (empty($customer->getEntityId()) === false)) {
+        if ((empty($quote->getBillingAddress()->getFirstname()) === true)
+            and (empty($customer->getEntityId()) === false)
+        ) {
             $quote->getBillingAddress()->setCustomerAddressId($customer->getDefaultBillingAddress()['id']);
         }
 
         //If need to insert new customer as guest
-        if ((empty($customer->getEntityId()) === true) or
-            (empty($quote->getBillingAddress()->getCustomerId()) === true)) {
+        if ((empty($customer->getEntityId()) === true)
+            or (empty($quote->getBillingAddress()->getCustomerId()) === true)
+        ) {
             $quote->setCustomerFirstname($firstName);
             $quote->setCustomerLastname($lastName);
             $quote->setCustomerEmail($email);
@@ -382,8 +376,9 @@ class SubscriptionWebhook
      * Fetch the related sales order and verify
      * the payment ID with rzp payment id
      * To avoid duplicate order entry for same quote
-     * @param $quoteId
-     * @param $paymentId
+     *
+     * @param  $quoteId
+     * @param  $paymentId
      * @return bool
      */
     protected function verifyPaymentIdTowardsOrder($quoteId, $paymentId): bool
@@ -409,9 +404,9 @@ class SubscriptionWebhook
     }
 
     /**
-     * @param $data
-     * @param $subscriptionData
-     * @param $quote
+     * @param  $data
+     * @param  $subscriptionData
+     * @param  $quote
      * @return array
      */
     protected function createNewOrderData($data, $subscriptionData, $quote): array
@@ -450,9 +445,10 @@ class SubscriptionWebhook
 
     /**
      * creating new order from quote
-     * @param $quote
-     * @param $amount
-     * @param $paymentId
+     *
+     * @param  $quote
+     * @param  $amount
+     * @param  $paymentId
      * @return mixed
      */
     protected function createOrderFromQuote($quote, $amount, $paymentId)

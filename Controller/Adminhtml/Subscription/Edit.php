@@ -5,6 +5,8 @@ use Magento\Backend\App\Action;
  
 class Edit extends Action
 {
+    const REGISTRY_KEY_POST_ID = 'razorpay_subscriptions_id';
+
     /**
      * Core registry
      *
@@ -23,10 +25,10 @@ class Edit extends Action
     protected $_model;
  
     /**
-     * @param Action\Context $context
+     * @param Action\Context                             $context
      * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
-     * @param \Magento\Framework\Registry $registry
-     * @param \Maxime\Jobs\Model\Department $model
+     * @param \Magento\Framework\Registry                $registry
+     * @param \Maxime\Jobs\Model\Department              $model
      */
     public function __construct(
         Action\Context $context,
@@ -56,9 +58,11 @@ class Edit extends Action
     protected function _initAction()
     {
         // load layout, set active menu and breadcrumbs
-        /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
+      /**
+      * @var \Magento\Backend\Model\View\Result\Page $resultPage
+      */
         $resultPage = $this->_resultPageFactory->create();
-        $resultPage->setActiveMenu('Magento_Sales::sales')
+        $resultPage->setActiveMenu('Razorpay_Subscription::rzp_subscriptions')
             ->addBreadcrumb(__('Subscription'), __('Subscription'))
             ->addBreadcrumb(__('Manage Subscriptions'), __('Manage Subscriptions'));
         return $resultPage;
@@ -67,30 +71,33 @@ class Edit extends Action
     /**
      * Edit Department
      *
-     * @return \Magento\Backend\Model\View\Result\Page|\Magento\Backend\Model\View\Result\Redirect
+     * @return                                  \Magento\Backend\Model\View\Result\Page|\Magento\Backend\Model\View\Result\Redirect
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function execute()
     {
+        $this->_coreRegistry->register(self::REGISTRY_KEY_POST_ID, $this->_request->getParam('id'));
         $id = $this->getRequest()->getParam('id');
         $model = $this->_model;
- 
+
         if ($id) {
             $model->load($id);
             if (!$model->getId()) {
                 $this->messageManager->addError(__('This subscription not exists.'));
-                /** \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+    /**
+    * \Magento\Backend\Model\View\Result\Redirect $resultRedirect
+    */
                 $resultRedirect = $this->resultRedirectFactory->create();
- 
+
                 return $resultRedirect->setPath('*/*/');
             }
         }
- 
+
         $data = $this->_getSession()->getFormData(true);
         if (!empty($data)) {
             $model->setData($data);
         }
- 
+
         $this->_coreRegistry->register('subscribed_subscription', $model);
  
         /** @var \Magento\Backend\Model\View\Result\Page $resultPage */

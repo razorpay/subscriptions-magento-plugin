@@ -46,8 +46,7 @@ class RestrictRecurringProductToCartObserver implements ObserverInterface
         Product $product,
         LoggerInterface $logger,
         Subscription $subscriptionHelper
-    )
-    {
+    ) {
         $this->messageManager = $messageManager;
         $this->cart = $cart;
         $this->logger = $logger;
@@ -82,15 +81,15 @@ class RestrictRecurringProductToCartObserver implements ObserverInterface
     }
 
     /**
-     * @param $allCartItems
-     * @param $cartItemsCount
-     * @param $validateTo
+     * @param  $allCartItems
+     * @param  $cartItemsCount
+     * @param  $validateTo
      * @return string
      */
     private function verifyProductInCart($allCartItems, $cartItemsCount, $validateTo): string
     {
         $message = "";
-        if($this->subscriptionHelper->validateIsASubscriptionProduct($allCartItems, $validateTo)){
+        if($this->subscriptionHelper->validateIsASubscriptionProduct($allCartItems, $validateTo)) {
             $message = "You cannot have regular products and subscriptions product in your shopping cart";
         } else if($cartItemsCount >= 1 && $this->paymentType != "oneTime") {
             $message = "You can only have 1 recurring subscription product in your shopping cart at a time.";

@@ -16,7 +16,7 @@ class Index extends Action
     protected $resultPageFactory;
 
     /**
-     * @param Context $context
+     * @param Context     $context
      * @param PageFactory $resultPageFactory
      *
      * @codeCoverageIgnore
@@ -32,6 +32,7 @@ class Index extends Action
 
     /**
      * Prints the blog from informed order id
+     *
      * @return Page
      * @throws LocalizedException
      */

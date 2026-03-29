@@ -6,6 +6,7 @@ use \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 /**
  * Class Collection
+ *
  * @package Razorpay\Subscription\Model\ResourceModel\Subscrib
  */
 class Collection extends AbstractCollection
@@ -25,6 +26,7 @@ class Collection extends AbstractCollection
 
     /**
      * Define resource model
+     *
      * @return void
      */
     protected function _construct()

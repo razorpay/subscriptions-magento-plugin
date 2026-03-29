@@ -25,17 +25,16 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
     private $objectManagement;
 
     /**
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\App\RequestInterface $request
+     * @param \Magento\Store\Model\StoreManagerInterface       $storeManager
+     * @param \Magento\Framework\App\RequestInterface          $request
      * @param \Magento\Framework\Serialize\SerializerInterface $serializer
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Psr\Log\LoggerInterface                         $logger
      */
     public function __construct(
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\Serialize\SerializerInterface $serializer,
         \Psr\Log\LoggerInterface $logger
-    )
-    {
+    ) {
         $this->request = $request;
         $this->serializer = $serializer;
         $this->logger = $logger;
@@ -44,7 +43,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
     }
 
     /**
-     * @param EventObserver $observer
+     * @param  EventObserver $observer
      * @return void
      */
     public function execute(EventObserver $observer)
@@ -52,7 +51,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
         /* @var \Magento\Quote\Model\Quote\Item $item */
         $item = $observer->getQuoteItem();
         $additionalOptions = array();
-        if ($additionalOption = $item->getOptionByCode('additional_options')){
+        if ($additionalOption = $item->getOptionByCode('additional_options')) {
             $additionalOptions = $this->serializer->unserialize($additionalOption->getValue());
         }
 
@@ -61,8 +60,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
 
         $this->logger->info($planId);
 
-        if($paymentOption == "subscription" )
-        {
+        if($paymentOption == "subscription" ) {
             $planData = $this->objectManagement->get('Razorpay\Subscription\Model\Plans')
                 ->getCollection()
                 ->addFieldToSelect("plan_bill_amount", "price")
@@ -72,7 +70,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
                 ->getFirstItem()
                 ->getData();
 
-            if(!empty($planData)){
+            if(!empty($planData)) {
                 $item->setCustomPrice($planData["price"]);
                 $item->setOriginalCustomPrice($planData["price"]);
                 $item->getProduct()->setIsSuperMode(true);
@@ -85,13 +83,14 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
             ];
 
 
-            if(count($additionalOptions) > 0)
-            {
-                $item->addOption(array(
+            if(count($additionalOptions) > 0) {
+                $item->addOption(
+                    array(
                     'product_id' => $item->getProductId(),
                     'code' => 'additional_options',
                     'value' => $this->serializer->serialize($additionalOptions)
-                ));
+                    )
+                );
             }
         }
 
